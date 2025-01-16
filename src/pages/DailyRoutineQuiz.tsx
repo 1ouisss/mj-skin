@@ -13,13 +13,35 @@ const DailyRoutineQuiz = () => {
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
         {/* Left side with question and options */}
         <div className="space-y-12">
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-center lg:text-left"
-          >
-            Quelle est votre routine quotidienne actuelle ?
-          </motion.h1>
+          <div className="relative">
+            {/* Left star */}
+            <motion.img 
+              src="/lovable-uploads/3aca9e03-e35f-4860-805c-482d5091bb61.png"
+              alt="Decorative star"
+              className="absolute -left-12 top-1/2 -translate-y-1/2 w-8 h-8 opacity-80"
+              initial={{ rotate: -30, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 0.8 }}
+              transition={{ duration: 0.6 }}
+            />
+            
+            <motion.h1 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-center lg:text-left"
+            >
+              Quelle est votre routine quotidienne actuelle ?
+            </motion.h1>
+
+            {/* Right star */}
+            <motion.img 
+              src="/lovable-uploads/3aca9e03-e35f-4860-805c-482d5091bb61.png"
+              alt="Decorative star"
+              className="absolute -right-12 top-1/2 -translate-y-1/2 w-6 h-6 opacity-60"
+              initial={{ rotate: 30, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            />
+          </div>
 
           <div className="grid grid-cols-1 gap-4">
             {[
@@ -44,15 +66,15 @@ const DailyRoutineQuiz = () => {
           </div>
         </div>
 
-        {/* Right side with image */}
+        {/* Right side with new serum image */}
         <div className="hidden lg:block">
           <motion.img 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            src="/lovable-uploads/b8f614db-126f-4f19-8854-b9650da4a3e8.png"
-            alt="Serum"
-            className="w-full h-auto rounded-full"
+            src="/lovable-uploads/1dd473ed-1980-4235-9046-7547df6c278c.png"
+            alt="Serum bottle"
+            className="w-full h-auto rounded-full shadow-xl"
           />
         </div>
       </div>
