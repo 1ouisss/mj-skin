@@ -20,8 +20,8 @@ const SkinTypeQuiz = () => {
         {/* Left side with image */}
         <div className="relative">
           <img 
-            src="/lovable-uploads/e09ec530-10b3-4e88-9643-2271e24f1d92.png"
-            alt="Portrait"
+            src="/lovable-uploads/01a4cc73-1b95-4736-8cb3-7d37a660b156.png"
+            alt="Portrait en noir et blanc avec soleil"
             className="w-full h-auto rounded-none"
           />
         </div>
