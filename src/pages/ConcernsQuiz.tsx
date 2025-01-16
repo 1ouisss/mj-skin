@@ -22,23 +22,16 @@ const ConcernsQuiz = () => {
       {/* Overlay pour assurer la lisibilité */}
       <div className="absolute inset-0 bg-black/40" />
       
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center relative z-10">
-        {/* Left side with question and sun icon */}
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-20">
+        {/* Left side with question */}
         <div className="space-y-12">
-          <div className="flex flex-col items-center lg:items-start gap-6">
-            <img
-              src="/lovable-uploads/462b04ec-8dc1-454d-acf6-d62b18af6f7c.png"
-              alt="Decorative sun"
-              className="w-24 h-24 opacity-90"
-            />
-            <motion.h1 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-white"
-            >
-              Quelles sont vos principales préoccupations ?
-            </motion.h1>
-          </div>
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-white"
+          >
+            Quelles sont vos principales préoccupations ?
+          </motion.h1>
 
           {/* Buttons for mobile view */}
           <div className="grid grid-cols-1 gap-4 lg:hidden">
