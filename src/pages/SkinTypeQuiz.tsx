@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Droplets, Feather, Scale, Sparkles, User } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
@@ -9,76 +10,101 @@ const SkinTypeQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col items-center justify-center px-4 py-8">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-[#0A0A0F] text-white flex flex-col items-center justify-center px-4 py-8"
+    >
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
-        {/* Left side with image and sun icon */}
+        {/* Left side with circular image and sun icon */}
         <div className="relative">
-          <div className="absolute -top-12 -left-12 w-32 h-32">
+          <div className="absolute -top-12 -left-12 w-32 h-32 animate-subtle-spin">
             <img 
-              src="/lovable-uploads/2906bb34-a1e5-4f4e-966c-15e134a52004.png" 
+              src="/lovable-uploads/d7329930-b8d7-42f8-ab32-c4bd23005f4f.png" 
               alt="Sun icon"
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="rounded-3xl overflow-hidden">
+          <div className="rounded-full overflow-hidden aspect-square w-full max-w-md mx-auto relative">
             <img
-              src="/lovable-uploads/1ca729f7-4515-45e6-8945-eab64e647c53.png"
-              alt="Woman portrait"
-              className="w-full object-cover"
+              src="/lovable-uploads/e09ec530-10b3-4e88-9643-2271e24f1d92.png"
+              alt="Portrait"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
 
         {/* Right side with question and options */}
-        <div className="space-y-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-wider leading-tight">
+        <div className="space-y-12">
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-light tracking-wider leading-tight"
+          >
             Quel est votre type de peau principal ?
-          </h1>
+          </motion.h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
+            <motion.button
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
             >
               <Droplets className="w-6 h-6" />
               <span className="text-lg">Sèche</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
             >
               <User className="w-6 h-6" />
               <span className="text-lg">Grasse</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
             >
               <Feather className="w-6 h-6" />
               <span className="text-lg">Sensible</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
             >
               <Sparkles className="w-6 h-6" />
               <span className="text-lg">Mixte</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.7 }}
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors md:col-span-2"
             >
               <Scale className="w-6 h-6" />
               <span className="text-lg">Normale</span>
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

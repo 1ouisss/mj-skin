@@ -60,3 +60,16 @@
 .letter-spacing-wide {
   letter-spacing: 0.25em;
 }
+
+@keyframes subtle-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-subtle-spin {
+  animation: subtle-spin 60s linear infinite;
+}
