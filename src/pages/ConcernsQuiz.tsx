@@ -10,8 +10,19 @@ const ConcernsQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex items-center justify-center px-4">
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
+    <div 
+      className="min-h-screen relative flex items-center justify-center px-4"
+      style={{
+        background: `url('/lovable-uploads/35bdc8ad-d64b-4b0a-b419-486158d19e61.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#0B0F17', // Fallback color
+      }}
+    >
+      {/* Overlay pour assurer la lisibilité */}
+      <div className="absolute inset-0 bg-black/40" />
+      
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center relative z-10">
         {/* Left side with question and sun icon */}
         <div className="space-y-12">
           <div className="flex flex-col items-center lg:items-start gap-6">
@@ -44,7 +55,7 @@ const ConcernsQuiz = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={handleOptionClick}
-                className="flex items-center gap-4 bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 shadow-lg transition-colors w-full"
+                className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-black rounded-full py-4 px-6 shadow-lg transition-colors w-full"
               >
                 {option.icon}
                 <span className="text-lg">{option.text}</span>
@@ -68,7 +79,7 @@ const ConcernsQuiz = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
               onClick={handleOptionClick}
-              className="flex items-center gap-4 bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 shadow-lg transition-colors w-full"
+              className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-black rounded-full py-4 px-6 shadow-lg transition-colors w-full"
             >
               {option.icon}
               <span className="text-lg">{option.text}</span>
