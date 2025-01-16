@@ -14,16 +14,6 @@ const DailyRoutineQuiz = () => {
         {/* Left side with question and options */}
         <div className="space-y-12">
           <div className="relative">
-            {/* Left star */}
-            <motion.img 
-              src="/lovable-uploads/3aca9e03-e35f-4860-805c-482d5091bb61.png"
-              alt="Decorative star"
-              className="absolute -left-4 top-1/2 -translate-y-1/2 w-16 h-16 opacity-80"
-              initial={{ rotate: -30, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 0.8 }}
-              transition={{ duration: 0.6 }}
-            />
-            
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -32,14 +22,14 @@ const DailyRoutineQuiz = () => {
               Quelle est votre routine quotidienne actuelle ?
             </motion.h1>
 
-            {/* Right star */}
+            {/* Single star on the right */}
             <motion.img 
               src="/lovable-uploads/3aca9e03-e35f-4860-805c-482d5091bb61.png"
               alt="Decorative star"
-              className="absolute -right-4 top-1/2 -translate-y-1/2 w-12 h-12 opacity-60"
+              className="absolute -right-8 top-1/2 -translate-y-1/2 w-16 h-16 opacity-90"
               initial={{ rotate: 30, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 0.6 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              animate={{ rotate: 0, opacity: 0.9 }}
+              transition={{ duration: 0.6 }}
             />
           </div>
 
@@ -66,7 +56,7 @@ const DailyRoutineQuiz = () => {
           </div>
         </div>
 
-        {/* Right side with new serum image */}
+        {/* Right side with serum image */}
         <div className="hidden lg:block">
           <motion.img 
             initial={{ opacity: 0 }}
