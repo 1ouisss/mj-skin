@@ -12,17 +12,12 @@ const SkinTypeQuiz = () => {
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
-        {/* Left side with image and sun */}
+        {/* Left side with image */}
         <div className="relative">
           <img
             src="/lovable-uploads/bf5e9159-9193-48e6-9add-09829379a4ef.png"
             alt="Skin type illustration"
             className="w-full h-auto rounded-lg"
-          />
-          <img
-            src="/lovable-uploads/462b04ec-8dc1-454d-acf6-d62b18af6f7c.png"
-            alt="Decorative sun"
-            className="absolute -top-10 -left-10 w-32 h-32"
           />
         </div>
 
