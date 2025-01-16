@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Face, Droplets, Package, XCircle, Cream } from "lucide-react";
+import { Droplets, Package, XCircle, Sparkles, CircleDot } from "lucide-react";
 import { motion } from "framer-motion";
 
 const DailyRoutineQuiz = () => {
@@ -36,7 +36,7 @@ const DailyRoutineQuiz = () => {
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 transition-colors w-full"
             >
-              <Face className="w-6 h-6" />
+              <Sparkles className="w-6 h-6" />
               <span className="text-lg">Nettoyant</span>
             </motion.button>
 
@@ -58,7 +58,7 @@ const DailyRoutineQuiz = () => {
               onClick={handleOptionClick}
               className="flex items-center gap-4 bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 transition-colors w-full"
             >
-              <Cream className="w-6 h-6" />
+              <CircleDot className="w-6 h-6" />
               <span className="text-lg">Crème hydratante</span>
             </motion.button>
 
