@@ -14,11 +14,11 @@ const ConcernsQuiz = () => {
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
         {/* Left side with question and sun icon */}
         <div className="space-y-12">
-          <div className="relative flex items-center gap-6">
+          <div className="flex flex-col items-center lg:items-start gap-6">
             <img
               src="/lovable-uploads/462b04ec-8dc1-454d-acf6-d62b18af6f7c.png"
               alt="Decorative sun"
-              className="w-16 h-16 opacity-90"
+              className="w-24 h-24 opacity-90"
             />
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
