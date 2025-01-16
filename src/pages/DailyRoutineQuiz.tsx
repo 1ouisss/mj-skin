@@ -5,7 +5,7 @@ const DailyRoutineQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/next-question");
+    navigate("/concerns-quiz");
   };
 
   return (
