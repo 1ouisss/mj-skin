@@ -89,7 +89,7 @@ const DailyRoutineQuiz = () => {
         {/* Right side with image */}
         <div className="relative order-first lg:order-last">
           <img 
-            src="/lovable-uploads/17c15527-2658-4f91-ab48-84649bb837d5.png"
+            src="/lovable-uploads/ffdc412d-6d2b-42f8-9217-71cc169cd576.png"
             alt="Portrait en noir et blanc avec soleil"
             className="w-full h-auto rounded-full"
           />
