@@ -15,7 +15,7 @@ const SkinTypeQuiz = () => {
         {/* Left side with image and sun */}
         <div className="relative">
           <img
-            src="/lovable-uploads/9e936184-4f5e-401f-b120-13bfa7aa8a06.png"
+            src="/lovable-uploads/bf5e9159-9193-48e6-9add-09829379a4ef.png"
             alt="Skin type illustration"
             className="w-full h-auto rounded-lg"
           />
