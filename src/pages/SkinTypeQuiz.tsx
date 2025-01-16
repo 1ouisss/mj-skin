@@ -29,8 +29,8 @@ const SkinTypeQuiz = () => {
         {/* Right side with question and options */}
         <div className="space-y-12">
           <div className="relative">
-            {/* Rotating sun icon positioned above the text */}
-            <div className="absolute -top-24 -left-24 w-32 h-32 animate-subtle-spin z-10">
+            {/* Rotating sun icon positioned in the top right */}
+            <div className="absolute -top-24 right-0 w-32 h-32 animate-subtle-spin z-10">
               <img 
                 src="/lovable-uploads/d7329930-b8d7-42f8-ab32-c4bd23005f4f.png" 
                 alt="Sun icon"
