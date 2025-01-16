@@ -1,112 +1,61 @@
-import { useNavigate } from "react-router-dom";
-import { Droplets, Feather, Scale, Sparkles, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/next-question");
+    navigate("/daily-routine-quiz");  // Mise à jour de la navigation vers la page 3
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen bg-[#0A0A0F] text-white flex flex-col items-center justify-center px-4 py-8"
-    >
+    <div className="min-h-screen bg-[#F8F2EA] flex items-center justify-center px-4">
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
-        {/* Left side with image */}
-        <div className="relative">
-          <img 
-            src="/lovable-uploads/6528ed52-0353-4c88-918d-e61b5ce3b189.png"
-            alt="Portrait"
-            className="w-full h-auto rounded-none"
+        {/* Left side with question and options */}
+        <div className="space-y-12">
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-center lg:text-left"
+          >
+            Quel est votre type de peau ?
+          </motion.h1>
+
+          <div className="grid grid-cols-1 gap-4">
+            {[
+              "Peau sèche",
+              "Peau normale",
+              "Peau mixte",
+              "Peau grasse",
+              "Je ne sais pas",
+            ].map((option, index) => (
+              <motion.button
+                key={option}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={handleOptionClick}
+                className="bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 shadow-md transition-colors w-full max-w-md mx-auto"
+              >
+                {option}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right side with image */}
+        <div className="hidden lg:block">
+          <motion.img 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            src="/lovable-uploads/cadfa63b-0022-4e84-b723-153102d8e54f.png"
+            alt="Skin type illustration"
+            className="w-full h-auto"
           />
         </div>
-
-        {/* Right side with question and options */}
-        <div className="space-y-12">
-          <div className="relative">
-            {/* Rotating sun icon positioned higher in the top right */}
-            <div className="absolute -top-32 right-0 w-32 h-32 animate-subtle-spin z-10">
-              <img 
-                src="/lovable-uploads/d7329930-b8d7-42f8-ab32-c4bd23005f4f.png" 
-                alt="Sun icon"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            
-            <motion.h1 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-light tracking-wider leading-tight relative z-0"
-            >
-              Quel est votre type de peau principal ?
-            </motion.h1>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              onClick={handleOptionClick}
-              className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
-            >
-              <Droplets className="w-6 h-6" />
-              <span className="text-lg">Sèche</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              onClick={handleOptionClick}
-              className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
-            >
-              <User className="w-6 h-6" />
-              <span className="text-lg">Grasse</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              onClick={handleOptionClick}
-              className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
-            >
-              <Feather className="w-6 h-6" />
-              <span className="text-lg">Sensible</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              onClick={handleOptionClick}
-              className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors"
-            >
-              <Sparkles className="w-6 h-6" />
-              <span className="text-lg">Mixte</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              onClick={handleOptionClick}
-              className="flex items-center gap-4 bg-white/10 hover:bg-white/20 text-white rounded-full py-4 px-6 transition-colors md:col-span-2"
-            >
-              <Scale className="w-6 h-6" />
-              <span className="text-lg">Normale</span>
-            </motion.button>
-          </div>
-        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
