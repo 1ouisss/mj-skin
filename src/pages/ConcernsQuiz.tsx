@@ -24,10 +24,12 @@ const ConcernsQuiz = () => {
     <div 
       className="concerns-page flex items-center justify-center px-4"
       style={{
-        background: `url('/lovable-uploads/35bdc8ad-d64b-4b0a-b419-486158d19e61.png')`,
-        backgroundSize: 'cover',
+        background: `url('/lovable-uploads/1d440ab2-18af-4c01-8e87-95330abe6284.png')`,
+        backgroundSize: '100% 100%',
         backgroundPosition: 'center',
-        backgroundColor: '#0B0F17',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw'
       }}
     >
       <div className="concerns-overlay" />
