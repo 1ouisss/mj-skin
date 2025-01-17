@@ -31,9 +31,7 @@ const ConcernsQuiz = () => {
         height: '100vh',
         width: '100vw'
       }}
-    >
-      <div className="concerns-overlay" />
-      
+    >      
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-12 pb-12">
         <div className="space-y-8">
           <motion.h1 
