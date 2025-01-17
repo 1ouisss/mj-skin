@@ -10,15 +10,16 @@ const SkinTypeQuiz = () => {
 
   return (
     <div 
-      className="skintype-page flex items-center justify-center px-4 min-h-screen"
+      className="skintype-page flex items-center justify-center px-4 min-h-screen w-full"
       style={{
         background: `url('/lovable-uploads/c2b5ed90-e7e6-484c-84d6-22f4fd7da781.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        transform: 'scaleX(-1)',
       }}
     >
-      <div className="w-full max-w-2xl mx-auto">
+      <div className="w-full max-w-2xl mx-auto" style={{ transform: 'scaleX(-1)' }}>
         <div className="space-y-8">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
