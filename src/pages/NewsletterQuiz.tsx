@@ -15,9 +15,9 @@ const NewsletterQuiz = () => {
     <div 
       className="zones-page flex items-center justify-center px-4 min-h-screen w-full"
       style={{
-        backgroundImage: `url('/lovable-uploads/97193a0c-73fe-4c13-8880-7cf2f1fa98a8.png')`,
+        backgroundImage: `url('/lovable-uploads/3bb0d5d1-2aeb-4444-80b0-e5cfc9cf1a8b.png')`,
         backgroundPosition: 'center',
-        backgroundSize: 'contain',
+        backgroundSize: '100% 100%',
         backgroundRepeat: 'no-repeat',
         position: 'fixed',
         top: 0,
