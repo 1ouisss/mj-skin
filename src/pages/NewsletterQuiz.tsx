@@ -17,7 +17,7 @@ const NewsletterQuiz = () => {
       style={{
         backgroundImage: `url('/lovable-uploads/97193a0c-73fe-4c13-8880-7cf2f1fa98a8.png')`,
         backgroundPosition: 'center',
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
         position: 'fixed',
         top: 0,
@@ -39,8 +39,8 @@ const NewsletterQuiz = () => {
 
         <div className="grid grid-cols-1 gap-4 max-w-md mx-auto">
           {[
-            { text: "Oui", value: "yes" },
-            { text: "Non", value: "no" },
+            { text: "Oui", value: "yes", icon: "✨" },
+            { text: "Non", value: "no", icon: "🤍" },
           ].map((option, index) => (
             <motion.button
               key={option.value}
@@ -50,6 +50,7 @@ const NewsletterQuiz = () => {
               onClick={() => handleOptionClick(option.value)}
               className="elegant-button bg-white/80 backdrop-blur-sm hover:bg-white/90 text-[#4A4A4A] border border-[#4A4A4A]/20 py-6"
             >
+              <span className="text-2xl mr-2">{option.icon}</span>
               <span className="text-lg tracking-wider">{option.text}</span>
             </motion.button>
           ))}
