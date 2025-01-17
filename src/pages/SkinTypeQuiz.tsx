@@ -25,16 +25,15 @@ const SkinTypeQuiz = () => {
             animate={{ y: 0, opacity: 1 }}
             className="skintype-title"
           >
-            Quel est votre type de peau ?
+            Quel type de texture préférez-vous pour vos produits ?
           </motion.h1>
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {[
-              { text: "Sèche", icon: "💧" },
-              { text: "Sensible", icon: "🪶" },
-              { text: "Grasse", icon: "👤" },
-              { text: "Mixte", icon: "✨" },
-              { text: "Normale", icon: "⚖️" },
+              { text: "Légère", icon: "🪶" },
+              { text: "Fluide", icon: "💧" },
+              { text: "Crémeuse", icon: "🥄" },
+              { text: "Riche", icon: "✨" },
             ].map((option, index) => (
               <motion.button
                 key={option.text}
