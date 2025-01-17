@@ -13,13 +13,6 @@ const SkinTypeQuiz = () => {
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
         {/* Left side with image */}
         <div className="relative">
-          <div className="absolute -top-12 -left-12 w-32 h-32">
-            <img 
-              src="/lovable-uploads/8a909872-4a03-4f57-bed1-013473c03d8b.png" 
-              alt="Decorative sun"
-              className="w-full h-full object-contain"
-            />
-          </div>
           <img 
             src="/lovable-uploads/8a909872-4a03-4f57-bed1-013473c03d8b.png"
             alt="Woman portrait"
