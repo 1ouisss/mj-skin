@@ -24,18 +24,19 @@ const ZonesQuiz = () => {
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="zones-title"
+          className="elegant-title !text-white mb-16"
         >
-          Quelles zones nécessitent une attention particulière ?
+          Quelles zones souhaitez-vous traiter en priorité ?
         </motion.h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {[
             { text: "Contour des yeux", icon: "👁️" },
             { text: "Front", icon: "✨" },
             { text: "Joues", icon: "🌸" },
             { text: "Menton", icon: "🎯" },
             { text: "Cou", icon: "💫" },
+            { text: "Décolleté", icon: "✨" },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -43,7 +44,7 @@ const ZonesQuiz = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
               onClick={handleOptionClick}
-              className="zones-button"
+              className="elegant-button bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
             >
               <span className="text-2xl">{option.icon}</span>
               <span className="text-lg">{option.text}</span>
