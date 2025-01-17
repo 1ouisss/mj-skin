@@ -25,7 +25,7 @@ const SkinTypeQuiz = () => {
             animate={{ y: 0, opacity: 1 }}
             className="skintype-title"
           >
-            Quel est votre type de peau principal ?
+            Quel est votre type de peau ?
           </motion.h1>
 
           <div className="grid grid-cols-1 gap-4 mt-8">
