@@ -8,6 +8,7 @@ import SkinTypeQuiz from "./pages/SkinTypeQuiz";
 import ConcernsQuiz from "./pages/ConcernsQuiz";
 import ZonesQuiz from "./pages/ZonesQuiz";
 import TreatmentQuiz from "./pages/TreatmentQuiz";
+import FragranceQuiz from "./pages/FragranceQuiz";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/concerns-quiz" element={<ConcernsQuiz />} />
           <Route path="/zones-quiz" element={<ZonesQuiz />} />
           <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
+          <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

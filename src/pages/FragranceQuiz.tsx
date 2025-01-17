@@ -1,40 +1,39 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const TreatmentQuiz = () => {
+const FragranceQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = (texture: string) => {
-    // Navigate to the fragrance quiz
-    navigate("/fragrance-quiz");
+  const handleOptionClick = (fragrance: string) => {
+    // Navigate to the next step based on the answer
+    navigate("/next-step");
   };
 
   return (
     <div 
-      className="treatment-page flex items-center justify-center px-4"
+      className="zones-page flex items-center justify-center px-4"
       style={{
-        background: `url('/lovable-uploads/e4d6398e-4d46-4f6c-9e47-7bf72ff4a9a9.png')`,
+        background: `url('/lovable-uploads/92cbd281-4b9a-44d7-b3d1-06802348e434.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
       }}
     >
-      <div className="treatment-overlay" />
+      <div className="zones-overlay" />
       
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="treatment-title"
+          className="zones-title"
         >
-          Quel type de texture préférez-vous pour vos produits ?
+          Préférez-vous des produits avec ou sans odeur ?
         </motion.h1>
 
-        <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {[
-            { text: "Légère", icon: "🌱" },
-            { text: "Fluide", icon: "💧" },
-            { text: "Crémeuse", icon: "🌸" },
-            { text: "Riche", icon: "✨" },
+            { text: "Avec parfum naturel", icon: "🌺" },
+            { text: "Sans huiles essentielles", icon: "🌿" },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -42,9 +41,9 @@ const TreatmentQuiz = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
               onClick={() => handleOptionClick(option.text)}
-              className="treatment-button"
+              className="zones-button bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
             >
-              <span className="text-2xl mr-2">{option.icon}</span>
+              <span className="text-2xl">{option.icon}</span>
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}
@@ -54,4 +53,4 @@ const TreatmentQuiz = () => {
   );
 };
 
-export default TreatmentQuiz;
+export default FragranceQuiz;
