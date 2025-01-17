@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Check, X } from "lucide-react";
 
 const TreatmentQuiz = () => {
   const navigate = useNavigate();
@@ -31,8 +32,8 @@ const TreatmentQuiz = () => {
 
         <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto mt-12">
           {[
-            { text: "Oui", value: true },
-            { text: "Non", value: false },
+            { text: "Oui", value: true, icon: Check },
+            { text: "Non", value: false, icon: X },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -42,6 +43,7 @@ const TreatmentQuiz = () => {
               onClick={() => handleOptionClick(option.value)}
               className="treatment-button"
             >
+              <option.icon className="w-5 h-5" />
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}
