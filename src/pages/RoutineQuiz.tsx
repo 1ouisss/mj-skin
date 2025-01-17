@@ -5,8 +5,8 @@ const RoutineQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (duration: string) => {
-    // Navigate to the next step based on the answer
-    navigate("/next-step");
+    // Naviguer vers la page newsletter après la sélection
+    navigate("/newsletter-quiz");
   };
 
   return (
