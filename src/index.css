@@ -22,13 +22,40 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Playfair Display', serif;
   }
-
-  h1 {
-    @apply text-[#333333] tracking-wide leading-relaxed;
-    font-family: 'Playfair Display', serif;
-  }
 }
 
+/* Styles spécifiques à la page Index */
+.index-page {
+  font-family: 'Playfair Display', serif;
+}
+
+.index-title {
+  color: #333333;
+  letter-spacing: 0.2em;
+}
+
+.index-subtitle {
+  color: #333333;
+  letter-spacing: 0.3em;
+}
+
+.index-description {
+  color: #4a4a4a;
+  letter-spacing: 0.15em;
+}
+
+.index-button {
+  background: transparent;
+  border: 1px solid #666666;
+  letter-spacing: 0.2em;
+  transition: all 0.3s ease;
+}
+
+.index-button:hover {
+  border-color: #333333;
+}
+
+/* Styles généraux existants */
 .hero-background {
   background: linear-gradient(45deg, #f6f6f7 0%, #ffffff 100%);
   position: relative;
