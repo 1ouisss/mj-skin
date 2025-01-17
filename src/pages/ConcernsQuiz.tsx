@@ -6,7 +6,7 @@ const ConcernsQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/next-question");
+    navigate("/zones-quiz");
   };
 
   return (
