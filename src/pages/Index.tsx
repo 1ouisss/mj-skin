@@ -5,7 +5,14 @@ const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-screen hero-background">
+    <div 
+      className="relative min-h-screen"
+      style={{
+        background: `url('/lovable-uploads/bd24b52e-f34b-46c2-b3cd-536c17c81cb7.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/30 backdrop-blur-[2px]" />
       
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center">

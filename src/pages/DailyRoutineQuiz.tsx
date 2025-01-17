@@ -12,12 +12,12 @@ const DailyRoutineQuiz = () => {
     <div className="min-h-screen bg-[#F8F2EA] flex items-center justify-center px-4">
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
         {/* Left side with question and options */}
-        <div className="space-y-12">
-          <div className="relative">
+        <div className="space-y-12 w-full">
+          <div className="relative w-full">
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-center lg:text-left"
+              className="elegant-title mx-auto text-center w-full max-w-2xl"
             >
               Quelle est votre routine quotidienne actuelle ?
             </motion.h1>
@@ -37,7 +37,7 @@ const DailyRoutineQuiz = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={handleOptionClick}
-                className="flex items-center gap-4 bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 shadow-md transition-colors w-full max-w-md mx-auto"
+                className="elegant-button"
               >
                 <span className="text-xl">{option.icon}</span>
                 <span className="text-lg">{option.text}</span>
