@@ -1,15 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  Wrench, 
-  EyeOff, 
-  CircleDot, 
-  Droplet, 
-  Flame, 
-  XCircle, 
-  CirclePlus, 
-  ArrowDown 
-} from "lucide-react";
 
 const ConcernsQuiz = () => {
   const navigate = useNavigate();
@@ -19,15 +9,15 @@ const ConcernsQuiz = () => {
   };
 
   const concerns = [
-    { text: "Rides", icon: <Wrench className="w-5 h-5" /> },
-    { text: "Cernes", icon: <EyeOff className="w-5 h-5" /> },
-    { text: "Points noirs", icon: <CircleDot className="w-5 h-5" /> },
-    { text: "Taches pigmentaires", icon: <Droplet className="w-5 h-5" /> },
-    { text: "Rougeurs", icon: <Flame className="w-5 h-5" /> },
-    { text: "Boutons", icon: <CircleDot className="w-5 h-5" /> },
-    { text: "Imperfections", icon: <XCircle className="w-5 h-5" /> },
-    { text: "Pores dilatés", icon: <CirclePlus className="w-5 h-5" /> },
-    { text: "Perte de fermeté", icon: <ArrowDown className="w-5 h-5" /> },
+    { text: "Rides", icon: "👵" },
+    { text: "Cernes", icon: "👁" },
+    { text: "Points noirs", icon: "⚫" },
+    { text: "Taches pigmentaires", icon: "🔆" },
+    { text: "Rougeurs", icon: "🔴" },
+    { text: "Boutons", icon: "💢" },
+    { text: "Imperfections", icon: "❌" },
+    { text: "Pores dilatés", icon: "⭕" },
+    { text: "Perte de fermeté", icon: "↘️" },
   ];
 
   return (
@@ -42,8 +32,8 @@ const ConcernsQuiz = () => {
     >
       <div className="concerns-overlay" />
       
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-20 pb-20">
-        <div className="space-y-12">
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-12 pb-12">
+        <div className="space-y-8">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -62,7 +52,7 @@ const ConcernsQuiz = () => {
                 onClick={handleOptionClick}
                 className="concerns-button"
               >
-                {option.icon}
+                <span className="text-2xl">{option.icon}</span>
                 <span className="text-lg">{option.text}</span>
               </motion.button>
             ))}
@@ -79,7 +69,7 @@ const ConcernsQuiz = () => {
               onClick={handleOptionClick}
               className="concerns-button"
             >
-              {option.icon}
+              <span className="text-2xl">{option.icon}</span>
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}
