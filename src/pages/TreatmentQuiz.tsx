@@ -17,9 +17,7 @@ const TreatmentQuiz = () => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
-    >
-      <div className="treatment-overlay" />
-      
+    >      
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
