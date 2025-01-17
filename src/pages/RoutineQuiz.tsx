@@ -14,7 +14,10 @@ const RoutineQuiz = () => {
       className="zones-page flex items-center justify-center px-4 min-h-screen w-full"
       style={{
         backgroundColor: '#000000',
-        background: `url('/lovable-uploads/5401c816-4c02-4bd5-a9d6-da961b3e152d.png') center/contain no-repeat fixed`,
+        backgroundImage: `url('/lovable-uploads/5401c816-4c02-4bd5-a9d6-da961b3e152d.png')`,
+        backgroundPosition: 'center',
+        backgroundSize: '100% 100%',
+        backgroundRepeat: 'no-repeat',
         position: 'fixed',
         top: 0,
         left: 0,
