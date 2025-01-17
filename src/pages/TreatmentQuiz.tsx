@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Check, X } from "lucide-react";
 
 const TreatmentQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = (answer: boolean) => {
+  const handleOptionClick = (texture: string) => {
     // Navigate to the next step based on the answer
     navigate("/next-step");
   };
@@ -27,23 +26,25 @@ const TreatmentQuiz = () => {
           animate={{ y: 0, opacity: 1 }}
           className="treatment-title"
         >
-          Êtes-vous actuellement sous traitement dermatologique ?
+          Quel type de texture préférez-vous pour vos produits ?
         </motion.h1>
 
         <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto mt-12">
           {[
-            { text: "Oui", value: true, icon: Check },
-            { text: "Non", value: false, icon: X },
+            { text: "Légère", icon: "🌱" },
+            { text: "Fluide", icon: "💧" },
+            { text: "Crémeuse", icon: "🌸" },
+            { text: "Riche", icon: "✨" },
           ].map((option, index) => (
             <motion.button
               key={option.text}
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
-              onClick={() => handleOptionClick(option.value)}
+              onClick={() => handleOptionClick(option.text)}
               className="treatment-button"
             >
-              <option.icon className="w-5 h-5" />
+              <span className="text-2xl mr-2">{option.icon}</span>
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}
