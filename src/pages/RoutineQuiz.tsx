@@ -11,13 +11,17 @@ const RoutineQuiz = () => {
 
   return (
     <div 
-      className="zones-page flex items-center justify-center px-4 min-h-screen"
+      className="zones-page flex items-center justify-center px-4 min-h-screen w-full"
       style={{
-        background: `url('/lovable-uploads/926443fe-f7a9-4dff-a3de-56b3cb55ac75.png')`,
+        background: `url('/lovable-uploads/a1fcd719-cf5c-4c26-8508-367ca3aa1e53.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
+        width: '100vw',
+        height: '100vh',
+        position: 'fixed',
+        top: 0,
+        left: 0,
       }}
     >      
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
