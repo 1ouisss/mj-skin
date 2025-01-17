@@ -12,9 +12,10 @@ const SkinTypeQuiz = () => {
     <div 
       className="skintype-page flex items-center justify-center px-4 min-h-screen"
       style={{
-        background: `url('/lovable-uploads/023e5351-5cc1-4502-90a3-cd55c93e82c3.png')`,
+        background: `url('/lovable-uploads/c2b5ed90-e7e6-484c-84d6-22f4fd7da781.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
       }}
     >
       <div className="w-full max-w-2xl mx-auto">
