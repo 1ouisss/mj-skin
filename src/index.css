@@ -115,6 +115,28 @@
   @apply elegant-button text-white;
 }
 
+/* Styles spécifiques à la page TreatmentQuiz */
+.treatment-page {
+  @apply min-h-screen relative;
+  background-color: #F5E6E0;
+}
+
+.treatment-overlay {
+  @apply absolute inset-0 bg-black/10;
+}
+
+.treatment-title {
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-[#2C2C2C];
+  letter-spacing: 0.1em;
+}
+
+.treatment-button {
+  @apply flex items-center justify-center gap-4 bg-white/90 backdrop-blur-sm 
+         hover:bg-white text-[#2C2C2C] rounded-full py-6 px-8 
+         shadow-lg transition-all duration-300 w-full
+         hover:shadow-xl hover:transform hover:scale-[1.02];
+}
+
 /* Styles généraux existants */
 .hero-background {
   background: linear-gradient(45deg, #f6f6f7 0%, #ffffff 100%);
