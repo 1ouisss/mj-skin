@@ -12,7 +12,7 @@ const SkinTypeQuiz = () => {
     <div 
       className="skintype-page flex items-center justify-center px-4 min-h-screen"
       style={{
-        background: `url('/lovable-uploads/696e4663-023f-407e-987d-fbe53856877b.png')`,
+        background: `url('/lovable-uploads/023e5351-5cc1-4502-90a3-cd55c93e82c3.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -24,15 +24,17 @@ const SkinTypeQuiz = () => {
             animate={{ y: 0, opacity: 1 }}
             className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-[#222222] text-center mb-12"
           >
-            Quel type de texture préférez-vous pour vos produits ?
+            Quel est votre type de peau ?
           </motion.h1>
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {[
-              { text: "Légère", icon: "🪶" },
-              { text: "Fluide", icon: "💧" },
-              { text: "Crémeuse", icon: "🥄" },
-              { text: "Riche", icon: "✨" },
+              { text: "Sèche", icon: "🌵" },
+              { text: "Grasse", icon: "💧" },
+              { text: "Mixte", icon: "⚖️" },
+              { text: "Sensible", icon: "🌸" },
+              { text: "Terne", icon: "🌫️" },
+              { text: "Normale", icon: "✨" },
             ].map((option, index) => (
               <motion.button
                 key={option.text}
