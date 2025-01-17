@@ -5,7 +5,7 @@ const SkinTypeQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/daily-routine-quiz");
+    navigate("/concerns-quiz");
   };
 
   return (
