@@ -126,7 +126,7 @@
 }
 
 .treatment-title {
-  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-[#2C2C2C];
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white;
   letter-spacing: 0.1em;
 }
 

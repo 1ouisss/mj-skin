@@ -5,7 +5,7 @@ const ZonesQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/results");
+    navigate("/treatment-quiz");
   };
 
   return (
