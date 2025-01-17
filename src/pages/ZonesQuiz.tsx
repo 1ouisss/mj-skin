@@ -43,7 +43,7 @@ const ZonesQuiz = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
               onClick={handleOptionClick}
-              className="elegant-button"
+              className="elegant-button text-white"
             >
               <span className="text-2xl">{option.icon}</span>
               <span className="text-lg">{option.text}</span>
