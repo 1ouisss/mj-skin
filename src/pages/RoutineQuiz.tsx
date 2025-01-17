@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const FragranceQuiz = () => {
+const RoutineQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = (fragrance: string) => {
-    // Navigate to the routine quiz
-    navigate("/routine-quiz");
+  const handleOptionClick = (duration: string) => {
+    // Navigate to the next step based on the answer
+    navigate("/next-step");
   };
 
   return (
     <div 
       className="zones-page flex items-center justify-center px-4"
       style={{
-        background: `url('/lovable-uploads/92cbd281-4b9a-44d7-b3d1-06802348e434.png')`,
+        background: `url('/lovable-uploads/6c98b636-504d-44a5-a016-55db5304a881.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -27,13 +27,14 @@ const FragranceQuiz = () => {
           animate={{ y: 0, opacity: 1 }}
           className="zones-title"
         >
-          Préférez-vous des produits avec ou sans odeur ?
+          Combien de temps consacrez-vous à votre routine beauté ?
         </motion.h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {[
-            { text: "Avec parfum naturel", icon: "🌺" },
-            { text: "Sans huiles essentielles", icon: "🌿" },
+            { text: "Moins de 5 minutes", icon: "⚡" },
+            { text: "5-10 minutes", icon: "⏱️" },
+            { text: "Plus de 10 minutes", icon: "✨" },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -53,4 +54,4 @@ const FragranceQuiz = () => {
   );
 };
 
-export default FragranceQuiz;
+export default RoutineQuiz;
