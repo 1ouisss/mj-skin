@@ -10,7 +10,7 @@ const ZonesQuiz = () => {
 
   return (
     <div 
-      className="min-h-screen relative flex items-center justify-center px-4"
+      className="zones-page flex items-center justify-center px-4"
       style={{
         background: `url('/lovable-uploads/cf598709-aebb-43ae-a563-db5d85c45d4c.png')`,
         backgroundSize: 'cover',
@@ -18,13 +18,13 @@ const ZonesQuiz = () => {
         backgroundAttachment: 'fixed',
       }}
     >
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="zones-overlay" />
       
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="elegant-title text-white mb-16 !text-white"
+          className="zones-title"
         >
           Quelles zones nécessitent une attention particulière ?
         </motion.h1>
@@ -43,7 +43,7 @@ const ZonesQuiz = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
               onClick={handleOptionClick}
-              className="elegant-button text-white"
+              className="zones-button"
             >
               <span className="text-2xl">{option.icon}</span>
               <span className="text-lg">{option.text}</span>

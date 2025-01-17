@@ -9,9 +9,8 @@ const SkinTypeQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
+    <div className="skintype-page flex items-center justify-center px-4">
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-        {/* Left side with image */}
         <div className="relative">
           <img 
             src="/lovable-uploads/8a909872-4a03-4f57-bed1-013473c03d8b.png"
@@ -20,12 +19,11 @@ const SkinTypeQuiz = () => {
           />
         </div>
 
-        {/* Right side with question and options */}
         <div className="space-y-8">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-5xl font-light text-white tracking-wider leading-tight"
+            className="skintype-title"
           >
             Quel est votre type de peau principal ?
           </motion.h1>
@@ -44,7 +42,7 @@ const SkinTypeQuiz = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={handleOptionClick}
-                className="flex items-center gap-4 bg-white rounded-full py-4 px-6 hover:bg-gray-100 transition-colors"
+                className="skintype-button"
               >
                 <span className="text-2xl">{option.icon}</span>
                 <span className="text-lg text-gray-900">{option.text}</span>
