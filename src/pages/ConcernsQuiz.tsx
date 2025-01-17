@@ -1,6 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { List, Heart, Sun, XOctagon, Hand } from "lucide-react";
+import { 
+  Wrench, 
+  EyeOff, 
+  CircleDot, 
+  Droplet, 
+  Flame, 
+  XCircle, 
+  CirclePlus, 
+  ArrowDown 
+} from "lucide-react";
 
 const ConcernsQuiz = () => {
   const navigate = useNavigate();
@@ -8,6 +17,18 @@ const ConcernsQuiz = () => {
   const handleOptionClick = () => {
     navigate("/zones-quiz");
   };
+
+  const concerns = [
+    { text: "Rides", icon: <Wrench className="w-5 h-5" /> },
+    { text: "Cernes", icon: <EyeOff className="w-5 h-5" /> },
+    { text: "Points noirs", icon: <CircleDot className="w-5 h-5" /> },
+    { text: "Taches pigmentaires", icon: <Droplet className="w-5 h-5" /> },
+    { text: "Rougeurs", icon: <Flame className="w-5 h-5" /> },
+    { text: "Boutons", icon: <CircleDot className="w-5 h-5" /> },
+    { text: "Imperfections", icon: <XCircle className="w-5 h-5" /> },
+    { text: "Pores dilatés", icon: <CirclePlus className="w-5 h-5" /> },
+    { text: "Perte de fermeté", icon: <ArrowDown className="w-5 h-5" /> },
+  ];
 
   return (
     <div 
@@ -21,7 +42,7 @@ const ConcernsQuiz = () => {
     >
       <div className="concerns-overlay" />
       
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-20">
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-20 pb-20">
         <div className="space-y-12">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
@@ -32,13 +53,7 @@ const ConcernsQuiz = () => {
           </motion.h1>
 
           <div className="grid grid-cols-1 gap-4 lg:hidden">
-            {[
-              { text: "Rides", icon: <List className="w-5 h-5" /> },
-              { text: "Rougeurs", icon: <Heart className="w-5 h-5" /> },
-              { text: "Taches pigmentaires", icon: <Sun className="w-5 h-5" /> },
-              { text: "Imperfections", icon: <XOctagon className="w-5 h-5" /> },
-              { text: "Perte de fermeté", icon: <Hand className="w-5 h-5" /> },
-            ].map((option, index) => (
+            {concerns.map((option, index) => (
               <motion.button
                 key={option.text}
                 initial={{ x: -20, opacity: 0 }}
@@ -55,13 +70,7 @@ const ConcernsQuiz = () => {
         </div>
 
         <div className="hidden lg:grid grid-cols-1 gap-4">
-          {[
-            { text: "Rides", icon: <List className="w-5 h-5" /> },
-            { text: "Rougeurs", icon: <Heart className="w-5 h-5" /> },
-            { text: "Taches pigmentaires", icon: <Sun className="w-5 h-5" /> },
-            { text: "Imperfections", icon: <XOctagon className="w-5 h-5" /> },
-            { text: "Perte de fermeté", icon: <Hand className="w-5 h-5" /> },
-          ].map((option, index) => (
+          {concerns.map((option, index) => (
             <motion.button
               key={option.text}
               initial={{ x: 20, opacity: 0 }}
