@@ -1,6 +1,5 @@
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Droplet, Feather, Scale, User, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
@@ -10,83 +9,46 @@ const SkinTypeQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
-        {/* Left side with image */}
-        <div className="relative">
-          <img
-            src="/lovable-uploads/bf5e9159-9193-48e6-9add-09829379a4ef.png"
-            alt="Skin type illustration"
-            className="w-full h-auto rounded-lg"
-          />
-        </div>
+    <div 
+      className="min-h-screen relative flex items-center justify-center px-4"
+      style={{
+        background: `url('/lovable-uploads/cf598709-aebb-43ae-a563-db5d85c45d4c.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
+      <div className="absolute inset-0 bg-black/40" />
+      
+      <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
+        <motion.h1 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="elegant-title text-white mb-16"
+        >
+          Quel est votre type de peau ?
+        </motion.h1>
 
-        {/* Right side with question and options */}
-        <div className="space-y-8">
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-white mb-12"
-          >
-            Quel est votre type de peau principal ?
-          </motion.h1>
-
-          <div className="grid grid-cols-1 gap-4 max-w-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          {[
+            { text: "Peau normale", icon: "✨" },
+            { text: "Peau sèche", icon: "🌵" },
+            { text: "Peau grasse", icon: "💧" },
+            { text: "Peau mixte", icon: "🔄" },
+            { text: "Peau sensible", icon: "🌸" },
+          ].map((option, index) => (
             <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
+              key={option.text}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: index * 0.1 }}
               onClick={handleOptionClick}
-              className="bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 flex items-center gap-3 transition-colors"
+              className="elegant-button"
             >
-              <Droplet className="w-5 h-5" />
-              <span>Sèche</span>
+              <span className="text-2xl">{option.icon}</span>
+              <span className="text-lg">{option.text}</span>
             </motion.button>
-
-            <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              onClick={handleOptionClick}
-              className="bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 flex items-center gap-3 transition-colors"
-            >
-              <Feather className="w-5 h-5" />
-              <span>Sensible</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              onClick={handleOptionClick}
-              className="bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 flex items-center gap-3 transition-colors"
-            >
-              <User className="w-5 h-5" />
-              <span>Grasse</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              onClick={handleOptionClick}
-              className="bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 flex items-center gap-3 transition-colors"
-            >
-              <Sparkles className="w-5 h-5" />
-              <span>Mixte</span>
-            </motion.button>
-
-            <motion.button
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              onClick={handleOptionClick}
-              className="bg-white hover:bg-white/90 text-black rounded-full py-4 px-6 flex items-center gap-3 transition-colors"
-            >
-              <Scale className="w-5 h-5" />
-              <span>Normale</span>
-            </motion.button>
-          </div>
+          ))}
         </div>
       </div>
     </div>
