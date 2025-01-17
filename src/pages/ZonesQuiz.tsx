@@ -24,7 +24,7 @@ const ZonesQuiz = () => {
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="elegant-title text-white mb-16"
+          className="elegant-title text-white mb-16 !text-white"
         >
           Quelles zones nécessitent une attention particulière ?
         </motion.h1>
