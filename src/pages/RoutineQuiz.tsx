@@ -11,11 +11,12 @@ const RoutineQuiz = () => {
 
   return (
     <div 
-      className="zones-page flex items-center justify-center px-4"
+      className="zones-page flex items-center justify-center px-4 min-h-screen"
       style={{
-        background: `url('/lovable-uploads/6ef99634-4ce9-4585-afeb-b374b82d03df.png')`,
+        background: `url('/lovable-uploads/926443fe-f7a9-4dff-a3de-56b3cb55ac75.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
       }}
     >      
