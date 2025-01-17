@@ -11,6 +11,7 @@ import TreatmentQuiz from "./pages/TreatmentQuiz";
 import FragranceQuiz from "./pages/FragranceQuiz";
 import RoutineQuiz from "./pages/RoutineQuiz";
 import NewsletterQuiz from "./pages/NewsletterQuiz";
+import Recommendations from "./pages/Recommendations";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
           <Route path="/routine-quiz" element={<RoutineQuiz />} />
           <Route path="/newsletter-quiz" element={<NewsletterQuiz />} />
+          <Route path="/recommendations" element={<Recommendations />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
