@@ -9,21 +9,20 @@ const SkinTypeQuiz = () => {
   };
 
   return (
-    <div className="skintype-page flex items-center justify-center px-4">
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-        <div className="relative">
-          <img 
-            src="/lovable-uploads/8a909872-4a03-4f57-bed1-013473c03d8b.png"
-            alt="Woman portrait"
-            className="w-full h-auto rounded-3xl"
-          />
-        </div>
-
+    <div 
+      className="skintype-page flex items-center justify-center px-4 min-h-screen"
+      style={{
+        background: `url('/lovable-uploads/696e4663-023f-407e-987d-fbe53856877b.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="w-full max-w-2xl mx-auto">
         <div className="space-y-8">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="skintype-title"
+            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-[#222222] text-center mb-12"
           >
             Quel type de texture préférez-vous pour vos produits ?
           </motion.h1>
@@ -41,10 +40,10 @@ const SkinTypeQuiz = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={handleOptionClick}
-                className="skintype-button"
+                className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 shadow-lg transition-colors"
               >
                 <span className="text-2xl">{option.icon}</span>
-                <span className="text-lg text-gray-900">{option.text}</span>
+                <span className="text-lg">{option.text}</span>
               </motion.button>
             ))}
           </div>
