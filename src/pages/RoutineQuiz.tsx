@@ -13,8 +13,8 @@ const RoutineQuiz = () => {
     <div 
       className="zones-page flex items-center justify-center px-4"
       style={{
-        background: `url('/lovable-uploads/6c98b636-504d-44a5-a016-55db5304a881.png')`,
-        backgroundSize: '100%',
+        background: `url('/lovable-uploads/d7a51323-1860-4783-9e50-e5c850c1192f.png')`,
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}
