@@ -5,7 +5,6 @@ const ZonesQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    // Navigation vers la prochaine page
     navigate("/results");
   };
 
@@ -13,7 +12,7 @@ const ZonesQuiz = () => {
     <div 
       className="min-h-screen relative flex items-center justify-center px-4"
       style={{
-        background: `url('/lovable-uploads/bd24b52e-f34b-46c2-b3cd-536c17c81cb7.png')`,
+        background: `url('/lovable-uploads/cf598709-aebb-43ae-a563-db5d85c45d4c.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
