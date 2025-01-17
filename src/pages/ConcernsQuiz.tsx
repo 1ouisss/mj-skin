@@ -9,14 +9,14 @@ const ConcernsQuiz = () => {
   };
 
   const concerns = [
-    { text: "Rides", icon: "👵" },
+    { text: "Rides", icon: "🌊" },
     { text: "Cernes", icon: "👁" },
     { text: "Points noirs", icon: "⚫" },
     { text: "Taches pigmentaires", icon: "🔆" },
     { text: "Rougeurs", icon: "🔴" },
     { text: "Boutons", icon: "💢" },
-    { text: "Imperfections", icon: "❌" },
-    { text: "Pores dilatés", icon: "⭕" },
+    { text: "Imperfections", icon: "✨" },
+    { text: "Pores dilatés", icon: "🔍" },
     { text: "Perte de fermeté", icon: "↘️" },
   ];
 
