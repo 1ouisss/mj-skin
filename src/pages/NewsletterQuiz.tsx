@@ -7,8 +7,8 @@ const NewsletterQuiz = () => {
   const handleOptionClick = (choice: string) => {
     // Ici vous pourriez ajouter la logique pour gérer l'inscription à la newsletter
     console.log("Newsletter choice:", choice);
-    // Pour l'instant, on navigue simplement vers la page suivante
-    navigate("/");
+    // On redirige vers la page de recommandations au lieu de la page d'accueil
+    navigate("/recommendations");
   };
 
   return (
