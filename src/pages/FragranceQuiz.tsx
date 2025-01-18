@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Flower, Leaf } from "lucide-react";
 
 const FragranceQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (fragrance: string) => {
-    // Navigate to the routine quiz
     navigate("/routine-quiz");
   };
 
@@ -30,8 +30,8 @@ const FragranceQuiz = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {[
-            { text: "Avec parfum naturel", icon: "🌺" },
-            { text: "Sans huiles essentielles", icon: "🌿" },
+            { text: "Avec parfum naturel", icon: Flower },
+            { text: "Sans huiles essentielles", icon: Leaf },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -41,7 +41,7 @@ const FragranceQuiz = () => {
               onClick={() => handleOptionClick(option.text)}
               className="zones-button bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
             >
-              <span className="text-2xl">{option.icon}</span>
+              <option.icon className="w-6 h-6 stroke-current" />
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}

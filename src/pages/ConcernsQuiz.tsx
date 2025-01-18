@@ -1,5 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { 
+  Waves, 
+  Eye, 
+  Circle, 
+  Sun, 
+  Heart, 
+  Zap, 
+  Sparkles, 
+  Search, 
+  ArrowDown 
+} from "lucide-react";
 
 const ConcernsQuiz = () => {
   const navigate = useNavigate();
@@ -9,15 +20,15 @@ const ConcernsQuiz = () => {
   };
 
   const concerns = [
-    { text: "Rides", icon: "🌊" },
-    { text: "Cernes", icon: "👁" },
-    { text: "Points noirs", icon: "⚫" },
-    { text: "Taches pigmentaires", icon: "🔆" },
-    { text: "Rougeurs", icon: "🔴" },
-    { text: "Boutons", icon: "💢" },
-    { text: "Imperfections", icon: "✨" },
-    { text: "Pores dilatés", icon: "🔍" },
-    { text: "Perte de fermeté", icon: "↘️" },
+    { text: "Rides", icon: Waves },
+    { text: "Cernes", icon: Eye },
+    { text: "Points noirs", icon: Circle },
+    { text: "Taches pigmentaires", icon: Sun },
+    { text: "Rougeurs", icon: Heart },
+    { text: "Boutons", icon: Zap },
+    { text: "Imperfections", icon: Sparkles },
+    { text: "Pores dilatés", icon: Search },
+    { text: "Perte de fermeté", icon: ArrowDown },
   ];
 
   return (
@@ -52,7 +63,7 @@ const ConcernsQuiz = () => {
                 onClick={handleOptionClick}
                 className="concerns-button"
               >
-                <span className="text-2xl">{option.icon}</span>
+                <option.icon className="w-6 h-6 stroke-current" />
                 <span className="text-lg">{option.text}</span>
               </motion.button>
             ))}
@@ -69,7 +80,7 @@ const ConcernsQuiz = () => {
               onClick={handleOptionClick}
               className="concerns-button"
             >
-              <span className="text-2xl">{option.icon}</span>
+              <option.icon className="w-6 h-6 stroke-current" />
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}

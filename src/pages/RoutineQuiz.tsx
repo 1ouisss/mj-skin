@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Zap, Timer, Sparkles } from "lucide-react";
 
 const RoutineQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (duration: string) => {
-    // Naviguer vers la page newsletter après la sélection
     navigate("/newsletter-quiz");
   };
 
@@ -38,9 +38,9 @@ const RoutineQuiz = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {[
-            { text: "Moins de 5 minutes", icon: "⚡" },
-            { text: "5-10 minutes", icon: "⏱️" },
-            { text: "Plus de 10 minutes", icon: "✨" },
+            { text: "Moins de 5 minutes", icon: Zap },
+            { text: "5-10 minutes", icon: Timer },
+            { text: "Plus de 10 minutes", icon: Sparkles },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -50,7 +50,7 @@ const RoutineQuiz = () => {
               onClick={() => handleOptionClick(option.text)}
               className="zones-button bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
             >
-              <span className="text-2xl">{option.icon}</span>
+              <option.icon className="w-6 h-6 stroke-current" />
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}

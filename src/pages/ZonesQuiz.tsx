@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Eye, Sparkles, Flower, Target, Star, Sunrise } from "lucide-react";
 
 const ZonesQuiz = () => {
   const navigate = useNavigate();
@@ -29,12 +30,12 @@ const ZonesQuiz = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {[
-            { text: "Contour des yeux", icon: "👁️" },
-            { text: "Front", icon: "✨" },
-            { text: "Joues", icon: "🌸" },
-            { text: "Menton", icon: "🎯" },
-            { text: "Cou", icon: "💫" },
-            { text: "Décolleté", icon: "✨" },
+            { text: "Contour des yeux", icon: Eye },
+            { text: "Front", icon: Sparkles },
+            { text: "Joues", icon: Flower },
+            { text: "Menton", icon: Target },
+            { text: "Cou", icon: Star },
+            { text: "Décolleté", icon: Sunrise },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -44,7 +45,7 @@ const ZonesQuiz = () => {
               onClick={handleOptionClick}
               className="elegant-button bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
             >
-              <span className="text-2xl">{option.icon}</span>
+              <option.icon className="w-6 h-6 stroke-current" />
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}
