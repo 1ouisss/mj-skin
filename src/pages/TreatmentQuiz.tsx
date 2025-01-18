@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Feather, Droplets, Flower2, Sparkles } from "lucide-react";
 
 const TreatmentQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (texture: string) => {
-    // Navigate to the fragrance quiz
     navigate("/fragrance-quiz");
   };
 
@@ -29,10 +29,10 @@ const TreatmentQuiz = () => {
 
         <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto mt-12">
           {[
-            { text: "Légère", icon: "🌱" },
-            { text: "Fluide", icon: "💧" },
-            { text: "Crémeuse", icon: "🌸" },
-            { text: "Riche", icon: "✨" },
+            { text: "Légère", icon: Feather },
+            { text: "Fluide", icon: Droplets },
+            { text: "Crémeuse", icon: Flower2 },
+            { text: "Riche", icon: Sparkles },
           ].map((option, index) => (
             <motion.button
               key={option.text}
@@ -42,7 +42,7 @@ const TreatmentQuiz = () => {
               onClick={() => handleOptionClick(option.text)}
               className="treatment-button"
             >
-              <span className="text-2xl mr-2">{option.icon}</span>
+              <option.icon className="w-6 h-6 stroke-[1.5]" />
               <span className="text-lg">{option.text}</span>
             </motion.button>
           ))}

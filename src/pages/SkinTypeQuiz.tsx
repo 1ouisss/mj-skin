@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Cactus, Droplets, Scale, Flower2, Cloud, Sparkles } from "lucide-react";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
@@ -32,12 +33,12 @@ const SkinTypeQuiz = () => {
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {[
-              { text: "Sèche", icon: "🌵" },
-              { text: "Grasse", icon: "💧" },
-              { text: "Mixte", icon: "⚖️" },
-              { text: "Sensible", icon: "🌸" },
-              { text: "Terne", icon: "🌫️" },
-              { text: "Normale", icon: "✨" },
+              { text: "Sèche", icon: Cactus },
+              { text: "Grasse", icon: Droplets },
+              { text: "Mixte", icon: Scale },
+              { text: "Sensible", icon: Flower2 },
+              { text: "Terne", icon: Cloud },
+              { text: "Normale", icon: Sparkles },
             ].map((option, index) => (
               <motion.button
                 key={option.text}
@@ -47,7 +48,7 @@ const SkinTypeQuiz = () => {
                 onClick={handleOptionClick}
                 className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 shadow-lg transition-colors"
               >
-                <span className="text-2xl">{option.icon}</span>
+                <option.icon className="w-6 h-6 stroke-[1.5]" />
                 <span className="text-lg">{option.text}</span>
               </motion.button>
             ))}
