@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Cactus, Droplets, Scale, Flower2, Cloud, Sparkles } from "lucide-react";
+import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
@@ -33,10 +33,10 @@ const SkinTypeQuiz = () => {
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {[
-              { text: "Sèche", icon: Cactus },
+              { text: "Sèche", icon: Flower2 },
               { text: "Grasse", icon: Droplets },
               { text: "Mixte", icon: Scale },
-              { text: "Sensible", icon: Flower2 },
+              { text: "Sensible", icon: Cloud },
               { text: "Terne", icon: Cloud },
               { text: "Normale", icon: Sparkles },
             ].map((option, index) => (
