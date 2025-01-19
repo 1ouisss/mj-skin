@@ -1,9 +1,83 @@
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 const Recommendations = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState({
+    products: [],
+    routine: ""
+  });
+
+  useEffect(() => {
+    const submitQuizData = async () => {
+      try {
+        // Get quiz data from localStorage
+        const quizData = {
+          skinType: localStorage.getItem('skinType'),
+          conditions: localStorage.getItem('conditions'),
+          concerns: localStorage.getItem('concerns'),
+          zones: localStorage.getItem('zones'),
+          treatment: localStorage.getItem('treatment'),
+          fragrance: localStorage.getItem('fragrance'),
+          routine: localStorage.getItem('routine')
+        };
+
+        const response = await fetch('/openai/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userResponses: quizData }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          // Parse recommendations from OpenAI response
+          const parsedRecommendations = parseRecommendations(data.recommendations);
+          setRecommendations(parsedRecommendations);
+        }
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    submitQuizData();
+  }, []);
+
+  const parseRecommendations = (text) => {
+    // Simple parser for demonstration - you may need to adjust based on actual response format
+    const sections = text.split('\n\n');
+    return {
+      products: sections.find(s => s.includes('Recommended Products'))?.split('\n').slice(1) || [],
+      routine: sections.find(s => s.includes('Daily Routine')) || ''
+    };
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center"
+        style={{
+          backgroundImage: `url('/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+        }}>
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-[#4A4A4A]" />
+          <h2 className="text-2xl font-playfair text-[#4A4A4A]">
+            Préparation de vos recommandations...
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -21,7 +95,6 @@ const Recommendations = () => {
       }}
     >
       <div className="w-full max-w-7xl mx-auto relative z-10">
-        {/* Products Section */}
         <motion.section 
           className="results-section mb-16"
           initial={{ opacity: 0, y: 20 }}
@@ -33,15 +106,14 @@ const Recommendations = () => {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
-            {[1, 2, 3].map((index) => (
+            {recommendations.products.map((product, index) => (
               <Card 
                 key={index}
                 className="product-card bg-white/80 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-                data-product-placeholder={`product-${index}`}
               >
-                <CardContent className="flex items-center justify-center p-8 h-48">
-                  <p className="text-lg text-[#8E9196] text-center font-playfair">
-                    Votre produit s'affiche ici
+                <CardContent className="flex items-center justify-center p-8">
+                  <p className="text-lg text-[#4A4A4A] text-center font-playfair">
+                    {product}
                   </p>
                 </CardContent>
               </Card>
@@ -49,7 +121,6 @@ const Recommendations = () => {
           </div>
         </motion.section>
 
-        {/* Routine Section */}
         <motion.section 
           className="routine-section"
           initial={{ opacity: 0, y: 20 }}
@@ -62,13 +133,8 @@ const Recommendations = () => {
           
           <Card className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 shadow-sm">
             <CardContent className="p-8">
-              <div 
-                className="min-h-[200px] flex items-center justify-center text-center"
-                data-routine-placeholder="routine-text"
-              >
-                <p className="text-lg text-[#8E9196] font-playfair">
-                  Votre routine personnalisée s'affiche ici
-                </p>
+              <div className="whitespace-pre-wrap text-lg text-[#4A4A4A] font-playfair">
+                {recommendations.routine}
               </div>
             </CardContent>
           </Card>
