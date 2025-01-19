@@ -192,6 +192,50 @@ app.post('/openai/analyze', async (req, res) => {
   }
 });
 
+app.get('/airtable/recommendations', async (req, res) => {
+  console.group('\n=== GET /airtable/recommendations ===');
+  console.time('request-duration');
+  console.log('Query params:', req.query);
+  
+  try {
+    console.log('Fetching recommendations from Airtable...');
+    const records = await base('Recommendations').select().all();
+    
+    console.log('Airtable Response:', {
+      totalRecords: records.length,
+      firstRecord: records[0]?.fields,
+      lastRecord: records[records.length - 1]?.fields
+    });
+
+    const formattedRecords = records.map(record => ({
+      id: record.id,
+      ...record.fields
+    }));
+
+    console.log('Response being sent:', {
+      recordCount: formattedRecords.length,
+      fields: Object.keys(formattedRecords[0] || {})
+    });
+    
+    console.timeEnd('request-duration');
+    console.groupEnd();
+    res.json(formattedRecords);
+  } catch (error) {
+    console.error('Airtable Error:', {
+      name: error.name,
+      message: error.message,
+      status: error.status,
+      stack: error.stack
+    });
+    
+    res.status(500).json({
+      error: 'Failed to fetch recommendations',
+      code: 'AIRTABLE_ERROR',
+      message: error.message
+    });
+  }
+});
+
 app.post('/api/analyze', async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
