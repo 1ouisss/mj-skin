@@ -245,22 +245,62 @@ app.post('/openai/analyze', async (req, res) => {
 });
 
 app.get('/airtable/recommendations', async (req, res) => {
-  console.group('\n=== GET /airtable/recommendations ===');
-  console.time('request-duration');
-  console.log('Query params:', req.query);
+  const requestId = Date.now().toString(36);
+  console.group(`\n=== GET /airtable/recommendations (${requestId}) ===`);
+  console.time(`request-${requestId}`);
+  
+  // Log request details
+  console.log({
+    timestamp: new Date().toISOString(),
+    requestId,
+    method: req.method,
+    path: req.path,
+    query: req.query,
+    headers: req.headers,
+    ip: req.ip
+  });
   
   try {
-    console.log('Fetching recommendations from Airtable...');
-    const records = await base('Recommendations').select().all();
+    console.log('Initiating Airtable request...');
+    console.time(`airtable-fetch-${requestId}`);
+    
+    const airtableQuery = {
+      maxRecords: 100,
+      view: 'Grid view',
+      filterByFormula: req.query.filter || ''
+    };
+    console.log('Airtable query parameters:', airtableQuery);
+    
+    const records = await base('Recommendations').select(airtableQuery).all();
+    console.timeEnd(`airtable-fetch-${requestId}`);
+    console.log('Airtable response received:', {
+      recordCount: records.length,
+      firstRecordId: records[0]?.id
+    });
     
     if (!Array.isArray(records)) {
-      throw new Error('Invalid response format from Airtable');
+      const error = new Error('Invalid response format from Airtable');
+      error.code = 'INVALID_RESPONSE_FORMAT';
+      error.status = 502;
+      throw error;
     }
 
     // Validate and format each record
+    const validationResults = {
+      total: records.length,
+      valid: 0,
+      invalid: 0,
+      validationErrors: []
+    };
+
     const formattedRecords = records.map((record, index) => {
       if (!record || !record.fields) {
-        console.warn(`Malformed record at index ${index}:`, record);
+        validationResults.invalid++;
+        validationResults.validationErrors.push({
+          index,
+          error: 'Malformed record structure',
+          recordId: record?.id
+        });
         return null;
       }
 
@@ -269,7 +309,13 @@ app.get('/airtable/recommendations', async (req, res) => {
       const missingFields = requiredFields.filter(field => !record.fields[field]);
       
       if (missingFields.length > 0) {
-        console.warn(`Record ${record.id} missing required fields:`, missingFields);
+        validationResults.invalid++;
+        validationResults.validationErrors.push({
+          index,
+          error: 'Missing required fields',
+          recordId: record.id,
+          missingFields
+        });
         return null;
       }
 
@@ -301,27 +347,63 @@ app.get('/airtable/recommendations', async (req, res) => {
     console.timeEnd('request-duration');
     console.groupEnd();
     
-    res.json({
+    validationResults.valid = formattedRecords.filter(Boolean).length;
+    
+    console.log('Validation results:', validationResults);
+    
+    const response = {
       success: true,
-      count: formattedRecords.length,
-      data: formattedRecords
+      requestId,
+      timestamp: new Date().toISOString(),
+      metrics: {
+        totalRecords: validationResults.total,
+        validRecords: validationResults.valid,
+        invalidRecords: validationResults.invalid,
+        processingTimeMs: Date.now() - parseInt(requestId, 36)
+      },
+      data: formattedRecords.filter(Boolean)
+    };
+
+    if (validationResults.validationErrors.length > 0) {
+      response.warnings = validationResults.validationErrors;
+    }
+
+    console.log('Sending response:', {
+      statusCode: 200,
+      responseSize: JSON.stringify(response).length,
+      recordCount: response.data.length
     });
+
+    console.timeEnd(`request-${requestId}`);
+    console.groupEnd();
+    res.json(response);
+
   } catch (error) {
-    console.error('Airtable Error:', {
+    console.error('Error processing request:', {
+      requestId,
       name: error.name,
       message: error.message,
+      code: error.code,
       status: error.status,
-      stack: error.stack,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       timestamp: new Date().toISOString()
     });
     
-    res.status(error.status || 500).json({
+    const errorResponse = {
       success: false,
-      error: 'Failed to fetch recommendations',
-      code: error.name || 'AIRTABLE_ERROR',
-      message: error.message,
-      timestamp: new Date().toISOString()
-    });
+      requestId,
+      timestamp: new Date().toISOString(),
+      error: {
+        message: error.message,
+        code: error.code || error.name || 'INTERNAL_ERROR',
+        status: error.status || 500,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      }
+    };
+
+    console.timeEnd(`request-${requestId}`);
+    console.groupEnd();
+    res.status(error.status || 500).json(errorResponse);
   }
 });
 
