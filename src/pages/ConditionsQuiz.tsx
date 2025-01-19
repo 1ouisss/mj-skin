@@ -1,22 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
+import { Sparkles, Flower2, Check } from "lucide-react";
 
-const SkinTypeQuiz = () => {
+const ConditionsQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/conditions-quiz");
+    navigate("/treatment-quiz");
   };
 
   return (
     <div 
-      className="skintype-page flex items-center justify-center px-4 min-h-screen w-full"
+      className="flex items-center justify-center px-4 min-h-screen w-full"
       style={{
-        background: `url('/lovable-uploads/686da753-061a-4c41-8ca0-ddada141a419.png')`,
-        backgroundSize: '100% 100%',
+        background: `url('/lovable-uploads/ada41ff7-d054-4869-8e8a-8138b7c1aa81.png')`,
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
         height: '100vh',
         width: '100vw'
       }}
@@ -28,17 +27,14 @@ const SkinTypeQuiz = () => {
             animate={{ y: 0, opacity: 1 }}
             className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-[#222222] text-center mb-12"
           >
-            Quel est votre type de peau ?
+            Avez-vous une condition particulière ?
           </motion.h1>
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {[
-              { text: "Sèche", icon: Flower2 },
-              { text: "Grasse", icon: Droplets },
-              { text: "Mixte", icon: Scale },
-              { text: "Sensible", icon: Cloud },
-              { text: "Terne", icon: Cloud },
-              { text: "Normale", icon: Sparkles },
+              { text: "Acné", icon: Sparkles },
+              { text: "Eczéma", icon: Flower2 },
+              { text: "Aucune", icon: Check },
             ].map((option, index) => (
               <motion.button
                 key={option.text}
@@ -59,4 +55,4 @@ const SkinTypeQuiz = () => {
   );
 };
 
-export default SkinTypeQuiz;
+export default ConditionsQuiz;
