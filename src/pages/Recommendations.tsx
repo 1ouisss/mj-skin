@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -7,7 +8,7 @@ import { Loader2 } from "lucide-react";
 const Recommendations = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ type: string; message: string } | null>(null);
   const [recommendations, setRecommendations] = useState({
     products: [],
     routine: ""
@@ -16,10 +17,24 @@ const Recommendations = () => {
   const MAX_RETRIES = 3;
   const INITIAL_DELAY = 1000;
 
+  const getErrorMessage = (status: number, defaultMessage: string) => {
+    switch (status) {
+      case 404:
+        return "Recommendations not found. Please complete all quizzes first.";
+      case 401:
+        return "Authorization error. Please try logging in again.";
+      case 429:
+        return "Too many requests. Please wait a moment and try again.";
+      case 500:
+        return "Server error. Our team has been notified.";
+      default:
+        return defaultMessage;
+    }
+  };
+
   const submitQuizDataWithRetry = async (attempt = 1) => {
     try {
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
-      // Get quiz data from localStorage
       const quizData = {
         skinType: localStorage.getItem('skinType'),
         conditions: localStorage.getItem('conditions'),
@@ -33,13 +48,13 @@ const Recommendations = () => {
       console.log('\n=== Submitting Quiz Data ===');
       console.log('Quiz data from localStorage:', quizData);
 
-      // Validate quiz data
       const missingFields = Object.entries(quizData)
         .filter(([_, value]) => !value)
         .map(([key]) => key);
 
       if (missingFields.length > 0) {
         console.warn('Missing quiz data fields:', missingFields);
+        throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
       }
 
       console.group('API Request Details');
@@ -54,70 +69,49 @@ const Recommendations = () => {
         },
         body: JSON.stringify({ userResponses: quizData }),
       });
-      console.timeEnd('API Request Duration');
 
+      console.timeEnd('API Request Duration');
       console.log('\n=== Response Details ===');
       console.log('Status:', response.status);
       console.log('Status Text:', response.statusText);
-      console.log('Headers:', {
-        'content-type': response.headers.get('content-type'),
-        'content-length': response.headers.get('content-length'),
-        'cache-control': response.headers.get('cache-control')
-      });
-      
-      const responseText = await response.text();
-      try {
-        const parsedResponse = JSON.parse(responseText);
-        console.log('Parsed Response:', parsedResponse);
-      } catch (parseError) {
-        console.warn('Failed to parse response as JSON:', parseError);
-        console.log('Raw Response:', responseText);
-      }
-      console.groupEnd();
+      console.log('Headers:', Object.fromEntries([...response.headers]));
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
+
         if (attempt < MAX_RETRIES) {
           const delay = INITIAL_DELAY * Math.pow(2, attempt - 1);
-          console.warn(`API request failed (status ${response.status}). Retrying in ${delay}ms...`);
-          setTimeout(() => submitQuizDataWithRetry(attempt + 1), delay);
-          return;
-        } else {
-          const errorData = {
-            status: response.status,
-            statusText: response.statusText,
-            body: responseText
-          }
-          console.error('API request failed repeatedly:', errorData);
-          throw new Error(`HTTP error! status: ${response.status}, message: ${responseText}`);
+          console.warn(`Retrying in ${delay}ms... (Attempt ${attempt + 1}/${MAX_RETRIES})`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return submitQuizDataWithRetry(attempt + 1);
         }
+
+        throw new Error(getErrorMessage(response.status, errorText));
       }
 
-      let data;
-      try {
-        data = JSON.parse(responseText);
-        console.log('\n=== Parsed Response Data ===');
-        console.log('Success:', data.success);
-        console.log('Recommendations length:', data.recommendations?.length);
-        console.log('Full data:', data);
-      } catch (err) {
-        console.error('JSON parse error:', err);
-        throw new Error('Failed to parse response as JSON');
+      const data = await response.json();
+      console.log('Parsed response:', data);
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to generate recommendations');
       }
 
-      if (data.success) {
-        const parsedRecommendations = parseRecommendations(data.recommendations);
-        console.log('Parsed recommendations:', parsedRecommendations);
-        setRecommendations(parsedRecommendations);
-      } else {
-        console.error('Backend indicated failure:', data.message || data.error);
-        throw new Error(data.message || data.error || "An unknown error occurred");
-      }
+      const parsedRecommendations = parseRecommendations(data.recommendations);
+      setRecommendations(parsedRecommendations);
+      setError(null);
+
     } catch (error) {
-      console.error('Error fetching recommendations:', error);
-      setError(error instanceof Error ? error.message : "An unknown error occurred.");
+      console.error('Error processing request:', error);
+      setError({
+        type: error instanceof Error ? error.name : 'UnknownError',
+        message: error instanceof Error ? error.message : 'An unexpected error occurred'
+      });
     } finally {
-      console.log('\n=== Request Complete ===');
-      console.log('Final state:', { loading: false, error: error });
       setLoading(false);
       console.groupEnd();
     }
@@ -127,8 +121,7 @@ const Recommendations = () => {
     submitQuizDataWithRetry();
   }, []);
 
-  const parseRecommendations = (text) => {
-    // Simple parser for demonstration - you may need to adjust based on actual response format
+  const parseRecommendations = (text: string) => {
     const sections = text.split('\n\n');
     return {
       products: sections.find(s => s.includes('Recommended Products'))?.split('\n').slice(1) || [],
@@ -145,11 +138,14 @@ const Recommendations = () => {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
         }}>
-        <div className="text-center">
+        <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-lg shadow-lg">
           <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-[#4A4A4A]" />
           <h2 className="text-2xl font-playfair text-[#4A4A4A]">
             Préparation de vos recommandations...
           </h2>
+          <p className="text-sm text-gray-600 mt-2">
+            Veuillez patienter pendant que nous analysons vos réponses
+          </p>
         </div>
       </div>
     );
@@ -167,7 +163,7 @@ const Recommendations = () => {
         <div className="bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-lg max-w-2xl">
           <h2 className="text-2xl font-playfair text-red-600 mb-4">Une erreur s'est produite</h2>
           <div className="space-y-4">
-            <p className="text-gray-800 text-lg">{error}</p>
+            <p className="text-gray-800 text-lg">{error.message}</p>
             <div className="bg-gray-100 p-4 rounded-md">
               <h3 className="text-sm font-medium text-gray-700 mb-2">Suggestions:</h3>
               <ul className="text-sm text-gray-600 list-disc list-inside">
@@ -179,7 +175,11 @@ const Recommendations = () => {
           </div>
           <div className="mt-6 flex gap-4">
             <button 
-              onClick={() => window.location.reload()} 
+              onClick={() => {
+                setLoading(true);
+                setError(null);
+                submitQuizDataWithRetry();
+              }} 
               className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
             >
               Réessayer
