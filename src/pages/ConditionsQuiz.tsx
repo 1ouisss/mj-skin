@@ -6,7 +6,7 @@ const ConditionsQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/treatment-quiz");
+    navigate("/concerns-quiz");
   };
 
   return (
