@@ -95,7 +95,21 @@ const Recommendations = () => {
       }
 
       const data = await response.json();
-      console.log('Parsed response:', data);
+      console.log('Data received from backend:', {
+        raw: data,
+        timestamp: new Date().toISOString(),
+        recommendations: data.recommendations,
+        success: data.success,
+        fields: {
+          skinType: data.skinType,
+          conditions: data.conditions,
+          concerns: data.concerns,
+          zones: data.zones,
+          treatment: data.treatment,
+          fragrance: data.fragrance,
+          routine: data.routine
+        }
+      });
 
       if (!data.success) {
         throw new Error(data.message || 'Failed to generate recommendations');

@@ -167,13 +167,25 @@ app.post('/openai/analyze', async (req, res) => {
     // Fetch relevant recommendations from Airtable
     console.log('Fetching Airtable recommendations for:', userResponses.skinType, userResponses.concerns);
     try {
-      console.log('Querying Airtable with filter:', {
-        skinType: userResponses.skinType,
-        concerns: userResponses.concerns
-      });
+      // Validate required fields
+      const requiredFields = ['skinType', 'conditions', 'concerns', 'zones', 'treatment', 'fragrance', 'routine'];
+      const missingFields = requiredFields.filter(field => !userResponses[field]);
+      
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          error: 'Missing required fields',
+          missingFields: missingFields.reduce((acc, field) => ({
+            ...acc,
+            [field]: !userResponses[field]
+          }), {})
+        });
+      }
+
+      console.log('Querying Airtable with all fields:', userResponses);
       
       const recommendations = await base('Recommendations')
         .select({
+          fields: ['SkinType', 'Conditions', 'Concerns', 'Zones', 'Treatment', 'Fragrance', 'Routine'],
           filterByFormula: `AND(
             FIND("${userResponses.skinType}", {SkinType}),
             FIND("${userResponses.concerns}", {Concerns})
