@@ -50,8 +50,10 @@ app.get('/airtable/recommendations', async (req, res) => {
 app.post('/openai/analyze', async (req, res) => {
   try {
     const { userResponses } = req.body;
+    console.log('Received user responses:', userResponses);
     
     if (!userResponses) {
+      console.error('Missing user responses');
       return res.status(400).json({
         error: 'Missing user responses',
         code: 'MISSING_USER_RESPONSES'
@@ -59,13 +61,24 @@ app.post('/openai/analyze', async (req, res) => {
     }
     
     // Fetch relevant recommendations from Airtable
-    const recommendations = await base('Recommendations')
-      .select({
-        filterByFormula: `AND(
-          FIND("${userResponses.skinType}", {SkinType}),
-          FIND("${userResponses.concerns}", {Concerns})
-        )`
-      }).all();
+    console.log('Fetching Airtable recommendations for:', userResponses.skinType, userResponses.concerns);
+    try {
+      const recommendations = await base('Recommendations')
+        .select({
+          filterByFormula: `AND(
+            FIND("${userResponses.skinType}", {SkinType}),
+            FIND("${userResponses.concerns}", {Concerns})
+          )`
+        }).all();
+      console.log('Airtable recommendations found:', recommendations.length);
+    } catch (airtableError) {
+      console.error('Airtable error:', airtableError);
+      return res.status(500).json({
+        error: 'Failed to fetch recommendations',
+        code: 'AIRTABLE_ERROR',
+        details: airtableError.message
+      });
+    }
 
     // Prepare the prompt for OpenAI with Airtable data
     const prompt = `Based on the following user responses and product recommendations, provide personalized skincare advice:
@@ -81,19 +94,35 @@ app.post('/openai/analyze', async (req, res) => {
       3. Recommended Products (use products from the available list)
       4. Daily Routine`;
 
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
-      temperature: 0.7,
-      max_tokens: 1000,
-    });
+    console.log('Sending request to OpenAI');
+    try {
+      const completion = await openai.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+        max_tokens: 1000,
+      });
+      console.log('Received OpenAI response');
 
-    res.json({ 
-      recommendations: completion.choices[0].message.content,
-      success: true 
-    });
+      res.json({ 
+        recommendations: completion.choices[0].message.content,
+        success: true 
+      });
+    } catch (openaiError) {
+      console.error('OpenAI error:', openaiError);
+      return res.status(500).json({
+        error: 'Failed to generate recommendations',
+        code: 'OPENAI_ERROR',
+        details: openaiError.message
+      });
+    }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('General error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      code: 'INTERNAL_ERROR',
+      details: error.message
+    });
   }
 });
 
