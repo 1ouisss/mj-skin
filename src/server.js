@@ -150,11 +150,14 @@ app.get('/airtable/recommendations', async (req, res) => {
 app.post('/openai/analyze', async (req, res) => {
   console.group('\n=== Backend: POST /openai/analyze ===');
   console.time('analyze-request');
-  console.log('Request body:', req.body);
+  console.log('Full Request Data:', {
+    body: req.body,
+    headers: req.headers,
+    timestamp: new Date().toISOString()
+  });
   
   try {
     const { userResponses } = req.body;
-    console.log('Processing user responses:', userResponses);
     
     if (!userResponses) {
       console.error('Error: Missing user responses');
@@ -163,6 +166,24 @@ app.post('/openai/analyze', async (req, res) => {
         code: 'MISSING_USER_RESPONSES'
       });
     }
+
+    // Validate required fields
+    const requiredFields = ['skinType', 'conditions', 'concerns', 'zones', 'treatment', 'fragrance', 'routine'];
+    const missingFields = requiredFields.filter(field => !userResponses[field]);
+
+    if (missingFields.length) {
+      console.error('Validation Error: Missing required fields:', missingFields);
+      return res.status(400).json({
+        error: "Missing required fields",
+        code: 'MISSING_REQUIRED_FIELDS',
+        missingFields,
+      });
+    }
+
+    console.log('Validated Data:', {
+      ...userResponses,
+      timestamp: new Date().toISOString()
+    });
     
     // Fetch relevant recommendations from Airtable
     console.log('Fetching Airtable recommendations for:', userResponses.skinType, userResponses.concerns);
