@@ -42,8 +42,11 @@ const Recommendations = () => {
         console.warn('Missing quiz data fields:', missingFields);
       }
 
-      console.log('Sending POST request to /openai/analyze');
-      console.time('API Request Time');
+      console.group('API Request Details');
+      console.log('Endpoint:', '/openai/analyze');
+      console.log('Request payload:', JSON.stringify(quizData, null, 2));
+      console.time('API Request Duration');
+      
       const response = await fetch('/openai/analyze', {
         method: 'POST',
         headers: {
@@ -51,14 +54,26 @@ const Recommendations = () => {
         },
         body: JSON.stringify({ userResponses: quizData }),
       });
-      console.timeEnd('API Request Time');
+      console.timeEnd('API Request Duration');
 
-      console.log('Response status:', response.status);
-      const responseText = await response.text();
-      console.log('\n=== Backend Response ===');
+      console.log('\n=== Response Details ===');
       console.log('Status:', response.status);
-      console.log('Headers:', Object.fromEntries(response.headers));
-      console.log('Raw response:', responseText);
+      console.log('Status Text:', response.statusText);
+      console.log('Headers:', {
+        'content-type': response.headers.get('content-type'),
+        'content-length': response.headers.get('content-length'),
+        'cache-control': response.headers.get('cache-control')
+      });
+      
+      const responseText = await response.text();
+      try {
+        const parsedResponse = JSON.parse(responseText);
+        console.log('Parsed Response:', parsedResponse);
+      } catch (parseError) {
+        console.warn('Failed to parse response as JSON:', parseError);
+        console.log('Raw Response:', responseText);
+      }
+      console.groupEnd();
 
       if (!response.ok) {
         if (attempt < MAX_RETRIES) {
