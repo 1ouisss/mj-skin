@@ -27,6 +27,7 @@ const Recommendations = () => {
           routine: localStorage.getItem('routine')
         };
 
+        console.log('Sending request with quiz data:', quizData);
         const response = await fetch('/openai/analyze', {
           method: 'POST',
           headers: {
@@ -35,20 +36,29 @@ const Recommendations = () => {
           body: JSON.stringify({ userResponses: quizData }),
         });
 
+        console.log('Response status:', response.status);
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(errorText || `HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}, message: ${responseText}`);
         }
 
-        const data = await response.json().catch(err => {
+        let data;
+        try {
+          data = JSON.parse(responseText);
+          console.log('Parsed response data:', data);
+        } catch (err) {
+          console.error('JSON parse error:', err);
           throw new Error('Failed to parse response as JSON');
-        });
+        }
 
         if (data.success) {
           const parsedRecommendations = parseRecommendations(data.recommendations);
+          console.log('Parsed recommendations:', parsedRecommendations);
           setRecommendations(parsedRecommendations);
         } else {
-          throw new Error(data.message || "An unknown error occurred");
+          throw new Error(data.message || data.error || "An unknown error occurred");
         }
       } catch (error) {
         console.error('Error fetching recommendations:', error);
@@ -91,8 +101,23 @@ const Recommendations = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center">
-        <p className="text-red-500 text-center text-xl">{error}</p>
+      <div className="min-h-screen w-full flex items-center justify-center"
+        style={{
+          backgroundImage: `url('/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+        }}>
+        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-lg max-w-2xl">
+          <h2 className="text-2xl font-playfair text-red-600 mb-4">Une erreur s'est produite</h2>
+          <p className="text-gray-800 text-lg">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+          >
+            Réessayer
+          </button>
+        </div>
       </div>
     );
   }
