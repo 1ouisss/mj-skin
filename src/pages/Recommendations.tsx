@@ -27,7 +27,19 @@ const Recommendations = () => {
           routine: localStorage.getItem('routine')
         };
 
-        console.log('Sending request with quiz data:', quizData);
+        console.log('\n=== Submitting Quiz Data ===');
+        console.log('Quiz data from localStorage:', quizData);
+        
+        // Validate quiz data
+        const missingFields = Object.entries(quizData)
+          .filter(([_, value]) => !value)
+          .map(([key]) => key);
+          
+        if (missingFields.length > 0) {
+          console.warn('Missing quiz data fields:', missingFields);
+        }
+
+        console.log('Sending POST request to /openai/analyze');
         const response = await fetch('/openai/analyze', {
           method: 'POST',
           headers: {
@@ -38,16 +50,27 @@ const Recommendations = () => {
 
         console.log('Response status:', response.status);
         const responseText = await response.text();
+        console.log('\n=== Backend Response ===');
+        console.log('Status:', response.status);
+        console.log('Headers:', Object.fromEntries(response.headers));
         console.log('Raw response:', responseText);
 
         if (!response.ok) {
+          console.error('Response error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: responseText
+          });
           throw new Error(`HTTP error! status: ${response.status}, message: ${responseText}`);
         }
 
         let data;
         try {
           data = JSON.parse(responseText);
-          console.log('Parsed response data:', data);
+          console.log('\n=== Parsed Response Data ===');
+          console.log('Success:', data.success);
+          console.log('Recommendations length:', data.recommendations?.length);
+          console.log('Full data:', data);
         } catch (err) {
           console.error('JSON parse error:', err);
           throw new Error('Failed to parse response as JSON');
@@ -61,9 +84,16 @@ const Recommendations = () => {
           throw new Error(data.message || data.error || "An unknown error occurred");
         }
       } catch (error) {
-        console.error('Error fetching recommendations:', error);
+        console.error('\n=== Error in Recommendations ===');
+        console.error('Error type:', error.constructor.name);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+        console.error('Full error object:', error);
+        
         setError("Failed to fetch recommendations. Please try again later.");
       } finally {
+        console.log('\n=== Request Complete ===');
+        console.log('Final state:', { loading: false, error: error });
         setLoading(false);
       }
     };
