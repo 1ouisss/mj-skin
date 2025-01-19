@@ -42,6 +42,36 @@ app.get('/airtable/recommendations', async (req, res) => {
   }
 });
 
+app.post('/openai/analyze', async (req, res) => {
+  try {
+    const { userResponses } = req.body;
+    
+    // Prepare the prompt for OpenAI
+    const prompt = `Based on the following user responses to a skincare quiz, provide personalized skincare recommendations:
+      ${JSON.stringify(userResponses, null, 2)}
+      
+      Please provide recommendations in the following format:
+      1. Skin Type Analysis
+      2. Main Concerns
+      3. Recommended Products
+      4. Daily Routine`;
+
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-3.5-turbo",
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
+
+    res.json({ 
+      recommendations: completion.choices[0].message.content,
+      success: true 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.post('/api/analyze', async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
