@@ -140,13 +140,36 @@ const Recommendations = () => {
         }}>
         <div className="bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-lg max-w-2xl">
           <h2 className="text-2xl font-playfair text-red-600 mb-4">Une erreur s'est produite</h2>
-          <p className="text-gray-800 text-lg">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="mt-4 px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-          >
-            Réessayer
-          </button>
+          <div className="space-y-4">
+            <p className="text-gray-800 text-lg">{error}</p>
+            {error instanceof Error && error.cause && (
+              <p className="text-sm text-gray-600">
+                Détails: {JSON.stringify(error.cause)}
+              </p>
+            )}
+            <div className="bg-gray-100 p-4 rounded-md">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Suggestions:</h3>
+              <ul className="text-sm text-gray-600 list-disc list-inside">
+                <li>Vérifiez votre connexion internet</li>
+                <li>Assurez-vous d'avoir complété tous les questionnaires</li>
+                <li>Essayez de rafraîchir la page</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-6 flex gap-4">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+            >
+              Réessayer
+            </button>
+            <button 
+              onClick={() => navigate('/')}
+              className="px-6 py-2 border border-gray-800 text-gray-800 rounded hover:bg-gray-100 transition-colors"
+            >
+              Retour à l'accueil
+            </button>
+          </div>
         </div>
       </div>
     );

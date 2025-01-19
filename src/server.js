@@ -7,6 +7,24 @@ const dotenv = require('dotenv');
 const app = express();
 app.use(express.json());
 
+// Global error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Global error:', {
+    message: err.message,
+    stack: err.stack,
+    code: err.code
+  });
+
+  const errorResponse = {
+    error: true,
+    message: err.message || 'Une erreur interne est survenue',
+    code: err.code || 'INTERNAL_ERROR',
+    details: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  };
+
+  res.status(err.status || 500).json(errorResponse);
+});
+
 // Initialize Airtable
 const base = new Airtable({
   apiKey: process.env.AIRTABLE_API_KEY
