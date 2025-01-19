@@ -35,9 +35,9 @@ const Recommendations = () => {
   const submitQuizDataWithRetry = async (attempt = 1) => {
     try {
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
+      console.time('request-duration');
       
-      // Debug localStorage values
-      console.log('localStorage Debug Values:', {
+      const requestData = {
         skinType: localStorage.getItem('skinType'),
         conditions: localStorage.getItem('conditions'),
         concerns: localStorage.getItem('concerns'),
@@ -45,6 +45,25 @@ const Recommendations = () => {
         treatment: localStorage.getItem('treatment'),
         fragrance: localStorage.getItem('fragrance'),
         routine: localStorage.getItem('routine'),
+      };
+
+      console.log('Sending to Backend:', {
+        ...requestData,
+        timestamp: new Date().toISOString(),
+        attempt,
+        maxRetries: MAX_RETRIES
+      });
+
+      // Detailed validation logging
+      const emptyFields = Object.entries(requestData)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);
+
+      console.log('Request Validation:', {
+        totalFields: Object.keys(requestData).length,
+        filledFields: Object.keys(requestData).length - emptyFields.length,
+        emptyFields,
+        isValid: emptyFields.length === 0
       });
       
       const quizData = {
