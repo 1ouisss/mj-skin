@@ -7,6 +7,44 @@ const dotenv = require('dotenv');
 const app = express();
 app.use(express.json());
 
+// Test route with static data
+app.get('/test/recommendations', (req, res) => {
+  const mockRecommendations = {
+    success: true,
+    recommendations: `1. Skin Type Analysis
+Your skin appears to be combination type with both oily and dry areas.
+
+2. Main Concerns
+- Acne-prone areas in T-zone
+- Dryness on cheeks
+- Uneven texture
+
+3. Recommended Products
+- Gentle Foaming Cleanser
+- Oil-Free Moisturizer
+- Salicylic Acid Treatment
+- Hydrating Toner
+- Weekly Clay Mask
+
+4. Daily Routine
+Morning:
+1. Cleanse with Gentle Foaming Cleanser
+2. Apply Hydrating Toner
+3. Use Oil-Free Moisturizer
+4. Apply Sunscreen
+
+Evening:
+1. Double cleanse
+2. Apply Salicylic Acid Treatment
+3. Use Oil-Free Moisturizer
+
+Weekly:
+- Use Clay Mask once per week`
+  };
+  
+  res.json(mockRecommendations);
+});
+
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error('Global error:', {
