@@ -26,7 +26,12 @@ app.get('/airtable/users', async (req, res) => {
       ...record.fields
     })));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Airtable Users Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch user responses',
+      details: error.message,
+      code: 'AIRTABLE_USERS_ERROR'
+    });
   }
 });
 
@@ -45,6 +50,13 @@ app.get('/airtable/recommendations', async (req, res) => {
 app.post('/openai/analyze', async (req, res) => {
   try {
     const { userResponses } = req.body;
+    
+    if (!userResponses) {
+      return res.status(400).json({
+        error: 'Missing user responses',
+        code: 'MISSING_USER_RESPONSES'
+      });
+    }
     
     // Fetch relevant recommendations from Airtable
     const recommendations = await base('Recommendations')

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -8,6 +7,7 @@ import { Loader2 } from "lucide-react";
 const Recommendations = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState({
     products: [],
     routine: ""
@@ -35,14 +35,21 @@ const Recommendations = () => {
           body: JSON.stringify({ userResponses: quizData }),
         });
 
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         if (data.success) {
           // Parse recommendations from OpenAI response
           const parsedRecommendations = parseRecommendations(data.recommendations);
           setRecommendations(parsedRecommendations);
+        } else {
+          setError(data.message || "An unknown error occurred.");
         }
       } catch (error) {
         console.error('Error fetching recommendations:', error);
+        setError("Failed to fetch recommendations. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -79,6 +86,14 @@ const Recommendations = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center">
+        <p className="text-red-500 text-center text-xl">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-12 md:py-20"
@@ -104,7 +119,7 @@ const Recommendations = () => {
           <h2 className="text-4xl md:text-5xl font-playfair text-center mb-12 text-[#4A4A4A] tracking-wide">
             Vos recommandations
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
             {recommendations.products.map((product, index) => (
               <Card 
@@ -130,7 +145,7 @@ const Recommendations = () => {
           <h2 className="text-4xl md:text-5xl font-playfair text-center mb-12 text-[#4A4A4A] tracking-wide">
             Votre routine recommandée
           </h2>
-          
+
           <Card className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 shadow-sm">
             <CardContent className="p-8">
               <div className="whitespace-pre-wrap text-lg text-[#4A4A4A] font-playfair">
