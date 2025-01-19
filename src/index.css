@@ -19,8 +19,35 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Playfair Display', serif;
+    @apply bg-background text-foreground antialiased min-h-screen w-full overflow-x-hidden;
+    font-family: 'Playfair Display', system-ui, -apple-system, BlinkMacSystemFont, serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Fix iOS input styles */
+input,
+textarea {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+/* Ensure buttons are consistently styled */
+button {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Fix for Safari flexbox gap */
+.flex {
+  gap: 1rem;
+  @supports not (gap: 1rem) {
+    > * + * {
+      margin-left: 1rem;
+    }
   }
 }
 
