@@ -185,12 +185,19 @@ app.post('/openai/analyze', async (req, res) => {
       
       const recommendations = await base('Recommendations')
         .select({
-          fields: ['SkinType', 'Conditions', 'Concerns', 'Zones', 'Treatment', 'Fragrance', 'Routine'],
+          fields: ['SkinType', 'Conditions', 'Concerns', 'Zones', 'Treatment', 'Fragrance', 'Routine', 'Products', 'Notes'],
           filterByFormula: `AND(
             FIND("${userResponses.skinType}", {SkinType}),
-            FIND("${userResponses.concerns}", {Concerns})
+            FIND("${userResponses.conditions}", {Conditions}),
+            FIND("${userResponses.concerns}", {Concerns}),
+            FIND("${userResponses.zones}", {Zones}),
+            FIND("${userResponses.treatment}", {Treatment}),
+            FIND("${userResponses.fragrance}", {Fragrance}),
+            FIND("${userResponses.routine}", {Routine})
           )`
         }).all();
+      
+      console.log('Fetched Airtable Data:', recommendations.map(record => record.fields));
       console.log('Airtable response:', {
         recordCount: recommendations.length,
         records: recommendations.map(r => ({ id: r.id, ...r.fields }))
