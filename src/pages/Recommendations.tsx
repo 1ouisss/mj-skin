@@ -13,96 +13,103 @@ const Recommendations = () => {
     routine: ""
   });
 
-  useEffect(() => {
-    const submitQuizData = async () => {
-      try {
-        console.group('Recommendations Component: submitQuizData'); // Added group for better logging organization
-        // Get quiz data from localStorage
-        const quizData = {
-          skinType: localStorage.getItem('skinType'),
-          conditions: localStorage.getItem('conditions'),
-          concerns: localStorage.getItem('concerns'),
-          zones: localStorage.getItem('zones'),
-          treatment: localStorage.getItem('treatment'),
-          fragrance: localStorage.getItem('fragrance'),
-          routine: localStorage.getItem('routine')
-        };
+  const MAX_RETRIES = 3;
+  const INITIAL_DELAY = 1000;
 
-        console.log('\n=== Submitting Quiz Data ===');
-        console.log('Quiz data from localStorage:', quizData);
+  const submitQuizDataWithRetry = async (attempt = 1) => {
+    try {
+      console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
+      // Get quiz data from localStorage
+      const quizData = {
+        skinType: localStorage.getItem('skinType'),
+        conditions: localStorage.getItem('conditions'),
+        concerns: localStorage.getItem('concerns'),
+        zones: localStorage.getItem('zones'),
+        treatment: localStorage.getItem('treatment'),
+        fragrance: localStorage.getItem('fragrance'),
+        routine: localStorage.getItem('routine')
+      };
 
-        // Validate quiz data
-        const missingFields = Object.entries(quizData)
-          .filter(([_, value]) => !value)
-          .map(([key]) => key);
+      console.log('\n=== Submitting Quiz Data ===');
+      console.log('Quiz data from localStorage:', quizData);
 
-        if (missingFields.length > 0) {
-          console.warn('Missing quiz data fields:', missingFields);
-        }
+      // Validate quiz data
+      const missingFields = Object.entries(quizData)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);
 
-        console.log('Sending POST request to /openai/analyze');
-        console.time('API Request Time'); // Added timing for API request
-        const response = await fetch('/openai/analyze', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userResponses: quizData }),
-        });
-        console.timeEnd('API Request Time'); // End timing
+      if (missingFields.length > 0) {
+        console.warn('Missing quiz data fields:', missingFields);
+      }
 
-        console.log('Response status:', response.status);
-        const responseText = await response.text();
-        console.log('\n=== Backend Response ===');
-        console.log('Status:', response.status);
-        console.log('Headers:', Object.fromEntries(response.headers));
-        console.log('Raw response:', responseText);
+      console.log('Sending POST request to /openai/analyze');
+      console.time('API Request Time');
+      const response = await fetch('/openai/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userResponses: quizData }),
+      });
+      console.timeEnd('API Request Time');
 
-        if (!response.ok) {
-          console.error('Response error:', {
+      console.log('Response status:', response.status);
+      const responseText = await response.text();
+      console.log('\n=== Backend Response ===');
+      console.log('Status:', response.status);
+      console.log('Headers:', Object.fromEntries(response.headers));
+      console.log('Raw response:', responseText);
+
+      if (!response.ok) {
+        if (attempt < MAX_RETRIES) {
+          const delay = INITIAL_DELAY * Math.pow(2, attempt - 1);
+          console.warn(`API request failed (status ${response.status}). Retrying in ${delay}ms...`);
+          setTimeout(() => submitQuizDataWithRetry(attempt + 1), delay);
+          return;
+        } else {
+          const errorData = {
             status: response.status,
             statusText: response.statusText,
             body: responseText
-          });
+          }
+          console.error('API request failed repeatedly:', errorData);
           throw new Error(`HTTP error! status: ${response.status}, message: ${responseText}`);
         }
-
-        let data;
-        try {
-          data = JSON.parse(responseText);
-          console.log('\n=== Parsed Response Data ===');
-          console.log('Success:', data.success);
-          console.log('Recommendations length:', data.recommendations?.length);
-          console.log('Full data:', data);
-        } catch (err) {
-          console.error('JSON parse error:', err);
-          throw new Error('Failed to parse response as JSON');
-        }
-
-        if (data.success) {
-          const parsedRecommendations = parseRecommendations(data.recommendations);
-          console.log('Parsed recommendations:', parsedRecommendations);
-          setRecommendations(parsedRecommendations);
-        } else {
-          console.error('Backend indicated failure:', data.message || data.error); //Added logging for backend errors
-          throw new Error(data.message || data.error || "An unknown error occurred");
-        }
-      } catch (error) {
-        console.error('Frontend Error:', {
-          type: error.constructor.name,
-          message: error.message,
-          stack: error.stack
-        });
-        setError("Failed to fetch recommendations. Please try again later.");
-      } finally {
-        console.log('\n=== Request Complete ===');
-        console.log('Final state:', { loading: false, error: error });
-        setLoading(false);
-        console.groupEnd(); // Close the logging group
       }
-    };
 
-    submitQuizData();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+        console.log('\n=== Parsed Response Data ===');
+        console.log('Success:', data.success);
+        console.log('Recommendations length:', data.recommendations?.length);
+        console.log('Full data:', data);
+      } catch (err) {
+        console.error('JSON parse error:', err);
+        throw new Error('Failed to parse response as JSON');
+      }
+
+      if (data.success) {
+        const parsedRecommendations = parseRecommendations(data.recommendations);
+        console.log('Parsed recommendations:', parsedRecommendations);
+        setRecommendations(parsedRecommendations);
+      } else {
+        console.error('Backend indicated failure:', data.message || data.error);
+        throw new Error(data.message || data.error || "An unknown error occurred");
+      }
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      setError(error instanceof Error ? error.message : "An unknown error occurred.");
+    } finally {
+      console.log('\n=== Request Complete ===');
+      console.log('Final state:', { loading: false, error: error });
+      setLoading(false);
+      console.groupEnd();
+    }
+  };
+
+  useEffect(() => {
+    submitQuizDataWithRetry();
   }, []);
 
   const parseRecommendations = (text) => {
@@ -146,11 +153,6 @@ const Recommendations = () => {
           <h2 className="text-2xl font-playfair text-red-600 mb-4">Une erreur s'est produite</h2>
           <div className="space-y-4">
             <p className="text-gray-800 text-lg">{error}</p>
-            {error instanceof Error && error.cause && (
-              <p className="text-sm text-gray-600">
-                Détails: {JSON.stringify(error.cause)}
-              </p>
-            )}
             <div className="bg-gray-100 p-4 rounded-md">
               <h3 className="text-sm font-medium text-gray-700 mb-2">Suggestions:</h3>
               <ul className="text-sm text-gray-600 list-disc list-inside">
