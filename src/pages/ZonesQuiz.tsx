@@ -5,7 +5,8 @@ import { Eye, Sparkles, Flower, Target, Star, Sunrise } from "lucide-react";
 const ZonesQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = () => {
+  const handleOptionClick = (zone: string) => {
+    localStorage.setItem('zones', zone);
     navigate("/treatment-quiz");
   };
 

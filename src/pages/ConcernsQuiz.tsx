@@ -16,7 +16,8 @@ import {
 const ConcernsQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = () => {
+  const handleOptionClick = (concern: string) => {
+    localStorage.setItem('concerns', concern);
     navigate("/zones-quiz");
   };
 

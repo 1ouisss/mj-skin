@@ -6,6 +6,7 @@ const FragranceQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (fragrance: string) => {
+    localStorage.setItem('fragrance', fragrance);
     navigate("/routine-quiz");
   };
 

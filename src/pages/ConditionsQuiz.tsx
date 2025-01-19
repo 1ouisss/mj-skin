@@ -5,7 +5,8 @@ import { Sparkles, Flower2, Check } from "lucide-react";
 const ConditionsQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = () => {
+  const handleOptionClick = (condition: string) => {
+    localStorage.setItem('conditions', condition);
     navigate("/concerns-quiz");
   };
 
