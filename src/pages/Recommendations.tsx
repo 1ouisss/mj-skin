@@ -35,6 +35,18 @@ const Recommendations = () => {
   const submitQuizDataWithRetry = async (attempt = 1) => {
     try {
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
+      
+      // Debug localStorage values
+      console.log('localStorage Debug Values:', {
+        skinType: localStorage.getItem('skinType'),
+        conditions: localStorage.getItem('conditions'),
+        concerns: localStorage.getItem('concerns'),
+        zones: localStorage.getItem('zones'),
+        treatment: localStorage.getItem('treatment'),
+        fragrance: localStorage.getItem('fragrance'),
+        routine: localStorage.getItem('routine'),
+      });
+      
       const quizData = {
         skinType: localStorage.getItem('skinType'),
         conditions: localStorage.getItem('conditions'),
