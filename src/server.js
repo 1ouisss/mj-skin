@@ -46,14 +46,27 @@ app.post('/openai/analyze', async (req, res) => {
   try {
     const { userResponses } = req.body;
     
-    // Prepare the prompt for OpenAI
-    const prompt = `Based on the following user responses to a skincare quiz, provide personalized skincare recommendations:
+    // Fetch relevant recommendations from Airtable
+    const recommendations = await base('Recommendations')
+      .select({
+        filterByFormula: `AND(
+          FIND("${userResponses.skinType}", {SkinType}),
+          FIND("${userResponses.concerns}", {Concerns})
+        )`
+      }).all();
+
+    // Prepare the prompt for OpenAI with Airtable data
+    const prompt = `Based on the following user responses and product recommendations, provide personalized skincare advice:
+      User Profile:
       ${JSON.stringify(userResponses, null, 2)}
+      
+      Available Products:
+      ${JSON.stringify(recommendations.map(r => r.fields), null, 2)}
       
       Please provide recommendations in the following format:
       1. Skin Type Analysis
       2. Main Concerns
-      3. Recommended Products
+      3. Recommended Products (use products from the available list)
       4. Daily Routine`;
 
     const completion = await openai.chat.completions.create({
