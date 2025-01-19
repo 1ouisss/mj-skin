@@ -6,7 +6,7 @@ const SkinTypeQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (skinType: string) => {
-    localStorage.setItem('skinType', skinType);
+    localStorage.setItem('skinType', JSON.stringify(skinType));
     navigate("/conditions-quiz");
   };
 

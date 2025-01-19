@@ -6,7 +6,7 @@ const TreatmentQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (texture: string) => {
-    localStorage.setItem('treatment', texture);
+    localStorage.setItem('treatment', JSON.stringify(texture));
     navigate("/fragrance-quiz");
   };
 

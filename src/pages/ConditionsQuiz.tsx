@@ -6,7 +6,7 @@ const ConditionsQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (condition: string) => {
-    localStorage.setItem('conditions', condition);
+    localStorage.setItem('conditions', JSON.stringify(condition));
     navigate("/concerns-quiz");
   };
 

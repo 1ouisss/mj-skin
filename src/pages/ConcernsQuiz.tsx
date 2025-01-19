@@ -17,7 +17,7 @@ const ConcernsQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (concern: string) => {
-    localStorage.setItem('concerns', concern);
+    localStorage.setItem('concerns', JSON.stringify(concern));
     navigate("/zones-quiz");
   };
 
