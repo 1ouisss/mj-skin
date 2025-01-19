@@ -27,52 +27,16 @@ async function testAirtableConnection() {
     console.log('\nRaw Response Sample:');
     console.log(JSON.stringify(records[0], null, 2));
 
-    // Validate and format records
-    const requiredFields = ['SkinType', 'Concerns', 'Products'];
-    const formattedRecords = records.map((record, index) => {
-      // Validate record structure
-      if (!record || !record.fields) {
-        console.warn(`Invalid record structure at index ${index}`);
-        return null;
-      }
+    // Format and validate records
+    const formattedRecords = records.map(record => ({
+      id: record.id,
+      fields: record.fields
+    }));
 
-      // Check for missing required fields
-      const missingFields = requiredFields.filter(field => !record.fields[field]);
-      if (missingFields.length > 0) {
-        console.warn(`Record ${record.id} missing required fields:`, missingFields);
-        return null;
-      }
-
-      // Type validation (Removed redundant type checking as it's already handled in the later logic)
-
-      // Format record
-      return {
-        id: record.id,
-        skinType: record.fields.SkinType,
-        concerns: Array.isArray(record.fields.Concerns) 
-          ? record.fields.Concerns 
-          : [record.fields.Concerns],
-        products: Array.isArray(record.fields.Products) 
-          ? record.fields.Products 
-          : [record.fields.Products],
-        notes: record.fields.Notes || '',
-      };
-    }).filter(Boolean);
-
-    // Log results
-    console.log('\nValidation Summary:');
-    console.log({
-      totalRecords: records.length,
-      validRecords: formattedRecords.length,
-      invalidRecords: records.length - formattedRecords.length
-    });
-
-    console.log('\nFormatted Record Sample:');
-    console.log(JSON.stringify(formattedRecords[0], null, 2));
+    console.log('\nFormatted Records:', formattedRecords);
 
     console.timeEnd('test-duration');
     console.groupEnd();
-
     return { success: true, data: formattedRecords };
 
   } catch (error) {

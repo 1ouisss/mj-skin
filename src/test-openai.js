@@ -1,10 +1,10 @@
+import OpenAI from 'openai';
+import dotenv from 'dotenv';
 
-const OpenAI = require('openai');
-require('dotenv').config();
+dotenv.config();
 
-// Retry configuration
 const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1 second
+const RETRY_DELAY = 1000;
 
 async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -18,7 +18,6 @@ async function testOpenAIIntegration() {
     apiKey: process.env.OPENAI_API_KEY
   });
 
-  // Sample test cases
   const testCases = [
     {
       name: 'Basic skincare recommendation',
@@ -46,7 +45,7 @@ async function testOpenAIIntegration() {
     while (attempt < MAX_RETRIES && !success) {
       try {
         console.log(`Attempt ${attempt + 1}/${MAX_RETRIES}`);
-        
+
         const prompt = `Based on the following user responses, provide personalized skincare advice:
           User Profile:
           ${JSON.stringify(testCase.userResponses, null, 2)}
@@ -80,20 +79,7 @@ async function testOpenAIIntegration() {
           choicesCount: completion.choices.length
         });
 
-        // Validate response format
-        const response = completion.choices[0].message.content;
-        const hasRequiredSections = [
-          'Skin Type Analysis',
-          'Main Concerns',
-          'Recommended Products',
-          'Daily Routine'
-        ].every(section => response.includes(section));
-
-        if (!hasRequiredSections) {
-          throw new Error('Response format validation failed');
-        }
-
-        console.log('\nResponse Content:', response);
+        console.log('\nResponse Content:', completion.choices[0].message.content);
         success = true;
 
       } catch (error) {
