@@ -108,14 +108,20 @@ const Recommendations = () => {
       console.log('Headers:', Object.fromEntries([...response.headers]));
 
       if (!response.ok) {
-        const errorData = await response.clone().json().catch(async () => ({
-          message: await response.text()
-        }));
+        const responseClone = response.clone();
+        let errorMessage;
+        
+        try {
+          const errorData = await responseClone.json();
+          errorMessage = errorData.message || 'Unknown error occurred';
+        } catch {
+          errorMessage = await response.text();
+        }
         
         console.error('API Error Response:', {
           status: response.status,
           statusText: response.statusText,
-          body: errorData
+          message: errorMessage
         });
 
         if (attempt < MAX_RETRIES) {
