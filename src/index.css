@@ -54,32 +54,26 @@ button {
 /* Styles spécifiques à la page Index */
 .index-page {
   font-family: 'Playfair Display', serif;
-}
 
-.index-title {
-  color: #333333;
-  letter-spacing: 0.2em;
-}
+  .index-title {
+    @apply text-[#333333] tracking-[0.2em];
+  }
 
-.index-subtitle {
-  color: #333333;
-  letter-spacing: 0.3em;
-}
+  .index-subtitle {
+    @apply text-[#333333] tracking-[0.3em];
+  }
 
-.index-description {
-  color: #4a4a4a;
-  letter-spacing: 0.15em;
-}
+  .index-description {
+    @apply text-[#4a4a4a] tracking-[0.15em];
+  }
 
-.index-button {
-  background: transparent;
-  border: 1px solid #666666;
-  letter-spacing: 0.2em;
-  transition: all 0.3s ease;
-}
+  .index-button {
+    @apply bg-transparent border border-[#666666] tracking-[0.2em] transition-all duration-300;
 
-.index-button:hover {
-  border-color: #333333;
+    &:hover {
+      @apply border-[#333333];
+    }
+  }
 }
 
 /* Styles spécifiques à la page SkinTypeQuiz */
