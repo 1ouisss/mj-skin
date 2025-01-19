@@ -239,37 +239,74 @@ app.get('/airtable/recommendations', async (req, res) => {
     console.log('Fetching recommendations from Airtable...');
     const records = await base('Recommendations').select().all();
     
-    console.log('Airtable Response:', {
+    if (!Array.isArray(records)) {
+      throw new Error('Invalid response format from Airtable');
+    }
+
+    // Validate and format each record
+    const formattedRecords = records.map((record, index) => {
+      if (!record || !record.fields) {
+        console.warn(`Malformed record at index ${index}:`, record);
+        return null;
+      }
+
+      // Required fields validation
+      const requiredFields = ['SkinType', 'Concerns', 'Products'];
+      const missingFields = requiredFields.filter(field => !record.fields[field]);
+      
+      if (missingFields.length > 0) {
+        console.warn(`Record ${record.id} missing required fields:`, missingFields);
+        return null;
+      }
+
+      return {
+        id: record.id,
+        skinType: record.fields.SkinType,
+        concerns: Array.isArray(record.fields.Concerns) 
+          ? record.fields.Concerns 
+          : [record.fields.Concerns],
+        products: Array.isArray(record.fields.Products) 
+          ? record.fields.Products 
+          : [record.fields.Products],
+        notes: record.fields.Notes || '',
+        ...record.fields
+      };
+    }).filter(Boolean); // Remove null records
+
+    console.log('Data validation summary:', {
       totalRecords: records.length,
-      firstRecord: records[0]?.fields,
-      lastRecord: records[records.length - 1]?.fields
+      validRecords: formattedRecords.length,
+      invalidRecords: records.length - formattedRecords.length
     });
 
-    const formattedRecords = records.map(record => ({
-      id: record.id,
-      ...record.fields
-    }));
+    if (formattedRecords.length === 0) {
+      throw new Error('No valid recommendations found');
+    }
 
-    console.log('Response being sent:', {
-      recordCount: formattedRecords.length,
-      fields: Object.keys(formattedRecords[0] || {})
-    });
-    
+    console.log('Sample formatted record:', JSON.stringify(formattedRecords[0], null, 2));
     console.timeEnd('request-duration');
     console.groupEnd();
-    res.json(formattedRecords);
+    
+    res.json({
+      success: true,
+      count: formattedRecords.length,
+      data: formattedRecords
+    });
   } catch (error) {
     console.error('Airtable Error:', {
       name: error.name,
       message: error.message,
       status: error.status,
-      stack: error.stack
+      stack: error.stack,
+      timestamp: new Date().toISOString()
     });
     
-    res.status(500).json({
+    res.status(error.status || 500).json({
+      success: false,
       error: 'Failed to fetch recommendations',
-      code: 'AIRTABLE_ERROR',
-      message: error.message
+      code: error.name || 'AIRTABLE_ERROR',
+      message: error.message,
+      timestamp: new Date().toISOString()
     });
   }
 });
