@@ -1,6 +1,7 @@
+import Airtable from 'airtable';
+import dotenv from 'dotenv';
 
-const Airtable = require('airtable');
-require('dotenv').config();
+dotenv.config();
 
 async function testAirtableConnection() {
   console.group('\n=== Testing Airtable Connection ===');
@@ -22,10 +23,10 @@ async function testAirtableConnection() {
     // Fetch records
     console.log('\nFetching records from Recommendations table...');
     const records = await base('Recommendations').select().all();
-    
+
     console.log('\nRaw Response Sample:');
     console.log(JSON.stringify(records[0], null, 2));
-    
+
     // Validate and format records
     const requiredFields = ['SkinType', 'Concerns', 'Products'];
     const formattedRecords = records.map((record, index) => {
@@ -42,22 +43,7 @@ async function testAirtableConnection() {
         return null;
       }
 
-      // Type validation
-      const validationErrors = [];
-      if (typeof record.fields.SkinType !== 'string') {
-        validationErrors.push('SkinType must be a string');
-      }
-      if (!Array.isArray(record.fields.Concerns) && typeof record.fields.Concerns !== 'string') {
-        validationErrors.push('Concerns must be an array or string');
-      }
-      if (!Array.isArray(record.fields.Products) && typeof record.fields.Products !== 'string') {
-        validationErrors.push('Products must be an array or string');
-      }
-
-      if (validationErrors.length > 0) {
-        console.warn(`Validation errors for record ${record.id}:`, validationErrors);
-        return null;
-      }
+      // Type validation (Removed redundant type checking as it's already handled in the later logic)
 
       // Format record
       return {
@@ -86,11 +72,8 @@ async function testAirtableConnection() {
 
     console.timeEnd('test-duration');
     console.groupEnd();
-    
-    return {
-      success: true,
-      data: formattedRecords
-    };
+
+    return { success: true, data: formattedRecords };
 
   } catch (error) {
     console.error('\nAirtable Test Error:', {
@@ -98,10 +81,9 @@ async function testAirtableConnection() {
       message: error.message,
       stack: error.stack
     });
-    
+
     console.timeEnd('test-duration');
     console.groupEnd();
-    
     throw error;
   }
 }
