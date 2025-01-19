@@ -9,16 +9,28 @@ app.use(express.json());
 
 // CORS middleware
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://your-app-name.replit.dev', 'http://localhost:5173'];
+  const allowedOrigins = [
+    'https://*.replit.dev',
+    'https://*.repl.co',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ];
   const origin = req.headers.origin;
   
-  if (allowedOrigins.includes(origin)) {
+  const isAllowed = allowedOrigins.some(allowed => {
+    if (allowed.includes('*')) {
+      const pattern = new RegExp(allowed.replace('*', '.*'));
+      return pattern.test(origin);
+    }
+    return allowed === origin;
+  });
+
+  if (isAllowed) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
     
-    // Handle preflight requests
     if (req.method === 'OPTIONS') {
       return res.status(204).end();
     }
