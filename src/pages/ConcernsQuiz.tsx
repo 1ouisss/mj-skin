@@ -77,7 +77,7 @@ const ConcernsQuiz = () => {
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
-                onClick={handleOptionClick}
+                onClick={() => handleOptionClick(option.text)}
                 className="concerns-button"
               >
                 <option.icon className="w-6 h-6 stroke-current" />
