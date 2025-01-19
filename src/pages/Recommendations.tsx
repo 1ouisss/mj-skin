@@ -36,16 +36,19 @@ const Recommendations = () => {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorText = await response.text();
+          throw new Error(errorText || `HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const data = await response.json().catch(err => {
+          throw new Error('Failed to parse response as JSON');
+        });
+
         if (data.success) {
-          // Parse recommendations from OpenAI response
           const parsedRecommendations = parseRecommendations(data.recommendations);
           setRecommendations(parsedRecommendations);
         } else {
-          setError(data.message || "An unknown error occurred.");
+          throw new Error(data.message || "An unknown error occurred");
         }
       } catch (error) {
         console.error('Error fetching recommendations:', error);
