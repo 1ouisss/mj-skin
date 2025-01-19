@@ -1,33 +1,112 @@
 
-const fetch = require('node-fetch');
+const Airtable = require('airtable');
+require('dotenv').config();
 
 async function testAirtableConnection() {
-  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
+  console.group('\n=== Testing Airtable Connection ===');
+  console.time('test-duration');
 
-  console.log('Testing Airtable connection...');
-  
   try {
-    const response = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Recommendations`,
-      {
-        headers: {
-          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    // Validate environment variables
+    const apiKey = process.env.AIRTABLE_API_KEY;
+    const baseId = process.env.AIRTABLE_BASE_ID;
 
-    const data = await response.json();
-    console.log('Response status:', response.status);
-    console.log('Number of records:', data.records?.length);
-    console.log('First record sample:', JSON.stringify(data.records[0], null, 2));
+    if (!apiKey || !baseId) {
+      throw new Error('Missing required environment variables: AIRTABLE_API_KEY or AIRTABLE_BASE_ID');
+    }
+
+    // Initialize Airtable
+    console.log('Initializing Airtable connection...');
+    const base = new Airtable({ apiKey }).base(baseId);
+
+    // Fetch records
+    console.log('\nFetching records from Recommendations table...');
+    const records = await base('Recommendations').select().all();
     
-    return data;
+    console.log('\nRaw Response Sample:');
+    console.log(JSON.stringify(records[0], null, 2));
+    
+    // Validate and format records
+    const requiredFields = ['SkinType', 'Concerns', 'Products'];
+    const formattedRecords = records.map((record, index) => {
+      // Validate record structure
+      if (!record || !record.fields) {
+        console.warn(`Invalid record structure at index ${index}`);
+        return null;
+      }
+
+      // Check for missing required fields
+      const missingFields = requiredFields.filter(field => !record.fields[field]);
+      if (missingFields.length > 0) {
+        console.warn(`Record ${record.id} missing required fields:`, missingFields);
+        return null;
+      }
+
+      // Type validation
+      const validationErrors = [];
+      if (typeof record.fields.SkinType !== 'string') {
+        validationErrors.push('SkinType must be a string');
+      }
+      if (!Array.isArray(record.fields.Concerns) && typeof record.fields.Concerns !== 'string') {
+        validationErrors.push('Concerns must be an array or string');
+      }
+      if (!Array.isArray(record.fields.Products) && typeof record.fields.Products !== 'string') {
+        validationErrors.push('Products must be an array or string');
+      }
+
+      if (validationErrors.length > 0) {
+        console.warn(`Validation errors for record ${record.id}:`, validationErrors);
+        return null;
+      }
+
+      // Format record
+      return {
+        id: record.id,
+        skinType: record.fields.SkinType,
+        concerns: Array.isArray(record.fields.Concerns) 
+          ? record.fields.Concerns 
+          : [record.fields.Concerns],
+        products: Array.isArray(record.fields.Products) 
+          ? record.fields.Products 
+          : [record.fields.Products],
+        notes: record.fields.Notes || '',
+      };
+    }).filter(Boolean);
+
+    // Log results
+    console.log('\nValidation Summary:');
+    console.log({
+      totalRecords: records.length,
+      validRecords: formattedRecords.length,
+      invalidRecords: records.length - formattedRecords.length
+    });
+
+    console.log('\nFormatted Record Sample:');
+    console.log(JSON.stringify(formattedRecords[0], null, 2));
+
+    console.timeEnd('test-duration');
+    console.groupEnd();
+    
+    return {
+      success: true,
+      data: formattedRecords
+    };
+
   } catch (error) {
-    console.error('Error testing Airtable connection:', error);
+    console.error('\nAirtable Test Error:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    
+    console.timeEnd('test-duration');
+    console.groupEnd();
+    
     throw error;
   }
 }
 
-testAirtableConnection();
+// Run the test
+testAirtableConnection()
+  .then(result => console.log('\nTest completed successfully'))
+  .catch(error => console.error('\nTest failed:', error.message));
