@@ -11,16 +11,18 @@ const ConditionsQuiz = () => {
 
   return (
     <div 
-      className="flex items-center justify-center px-4 min-h-screen w-full"
+      className="flex items-center justify-center px-4 min-h-screen w-full relative"
       style={{
         background: `url('/lovable-uploads/ada41ff7-d054-4869-8e8a-8138b7c1aa81.png')`,
-        backgroundSize: 'cover',
+        backgroundSize: '150%', // Zoomed out for better quality
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         height: '100vh',
         width: '100vw'
       }}
     >
-      <div className="w-full max-w-2xl mx-auto">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" /> {/* Added subtle overlay for better text readability */}
+      <div className="w-full max-w-2xl mx-auto relative z-10">
         <div className="space-y-8">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
