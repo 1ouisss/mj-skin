@@ -17,11 +17,26 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// Routes
-app.get('/api/responses', async (req, res) => {
+// Airtable Routes
+app.get('/airtable/users', async (req, res) => {
   try {
     const records = await base('User Responses').select().all();
-    res.json(records.map(record => record.fields));
+    res.json(records.map(record => ({
+      id: record.id,
+      ...record.fields
+    })));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/airtable/recommendations', async (req, res) => {
+  try {
+    const records = await base('Recommendations').select().all();
+    res.json(records.map(record => ({
+      id: record.id,
+      ...record.fields
+    })));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
