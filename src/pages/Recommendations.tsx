@@ -16,6 +16,7 @@ const Recommendations = () => {
   useEffect(() => {
     const submitQuizData = async () => {
       try {
+        console.group('Recommendations Component: submitQuizData'); // Added group for better logging organization
         // Get quiz data from localStorage
         const quizData = {
           skinType: localStorage.getItem('skinType'),
@@ -29,17 +30,18 @@ const Recommendations = () => {
 
         console.log('\n=== Submitting Quiz Data ===');
         console.log('Quiz data from localStorage:', quizData);
-        
+
         // Validate quiz data
         const missingFields = Object.entries(quizData)
           .filter(([_, value]) => !value)
           .map(([key]) => key);
-          
+
         if (missingFields.length > 0) {
           console.warn('Missing quiz data fields:', missingFields);
         }
 
         console.log('Sending POST request to /openai/analyze');
+        console.time('API Request Time'); // Added timing for API request
         const response = await fetch('/openai/analyze', {
           method: 'POST',
           headers: {
@@ -47,6 +49,7 @@ const Recommendations = () => {
           },
           body: JSON.stringify({ userResponses: quizData }),
         });
+        console.timeEnd('API Request Time'); // End timing
 
         console.log('Response status:', response.status);
         const responseText = await response.text();
@@ -81,20 +84,21 @@ const Recommendations = () => {
           console.log('Parsed recommendations:', parsedRecommendations);
           setRecommendations(parsedRecommendations);
         } else {
+          console.error('Backend indicated failure:', data.message || data.error); //Added logging for backend errors
           throw new Error(data.message || data.error || "An unknown error occurred");
         }
       } catch (error) {
-        console.error('\n=== Error in Recommendations ===');
-        console.error('Error type:', error.constructor.name);
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
-        console.error('Full error object:', error);
-        
+        console.error('Frontend Error:', {
+          type: error.constructor.name,
+          message: error.message,
+          stack: error.stack
+        });
         setError("Failed to fetch recommendations. Please try again later.");
       } finally {
         console.log('\n=== Request Complete ===');
         console.log('Final state:', { loading: false, error: error });
         setLoading(false);
+        console.groupEnd(); // Close the logging group
       }
     };
 

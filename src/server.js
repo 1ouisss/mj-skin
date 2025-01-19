@@ -90,7 +90,8 @@ app.get('/airtable/recommendations', async (req, res) => {
 });
 
 app.post('/openai/analyze', async (req, res) => {
-  console.log('\n=== POST /openai/analyze ===');
+  console.group('\n=== Backend: POST /openai/analyze ===');
+  console.time('analyze-request');
   console.log('Request body:', req.body);
   
   try {
@@ -160,12 +161,21 @@ app.post('/openai/analyze', async (req, res) => {
         usage: completion.usage
       });
 
-      res.json({ 
+      const response = { 
         recommendations: completion.choices[0].message.content,
         success: true 
-      });
+      };
+      console.log('Successfully generated recommendations');
+      console.timeEnd('analyze-request');
+      console.groupEnd();
+      res.json(response);
     } catch (openaiError) {
-      console.error('OpenAI error:', openaiError);
+      console.error('OpenAI API Error:', {
+        name: openaiError.name,
+        message: openaiError.message,
+        status: openaiError.status,
+        response: openaiError.response?.data
+      });
       return res.status(500).json({
         error: 'Failed to generate recommendations',
         code: 'OPENAI_ERROR',
