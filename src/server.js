@@ -42,13 +42,27 @@ app.get('/airtable/recommendations', async (req, res) => {
   try {
     console.log('Fetching Airtable recommendations...');
     const records = await base('Recommendations').select().all();
-    console.log('Airtable response received:', records.length, 'records');
+    console.log('\nRaw Airtable response:');
+    console.log(JSON.stringify(records, null, 2));
+    console.log(`\nTotal records found: ${records.length}`);
     
     const formattedRecords = records.map(record => ({
       id: record.id,
       ...record.fields
     }));
-    console.log('Formatted records:', formattedRecords);
+    console.log('\nFormatted records for frontend:');
+    console.log(JSON.stringify(formattedRecords, null, 2));
+    
+    // Validate data structure
+    const validationResults = formattedRecords.every(record => {
+      const hasRequiredFields = record.id && record.SkinType && record.Concerns;
+      if (!hasRequiredFields) {
+        console.warn('Missing required fields in record:', record);
+      }
+      return hasRequiredFields;
+    });
+    
+    console.log('\nData validation:', validationResults ? 'Passed' : 'Failed');
     
     res.json(formattedRecords);
   } catch (error) {
