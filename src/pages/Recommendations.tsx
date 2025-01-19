@@ -108,11 +108,14 @@ const Recommendations = () => {
       console.log('Headers:', Object.fromEntries([...response.headers]));
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorData = await response.clone().json().catch(async () => ({
+          message: await response.text()
+        }));
+        
         console.error('API Error Response:', {
           status: response.status,
           statusText: response.statusText,
-          body: errorText
+          body: errorData
         });
 
         if (attempt < MAX_RETRIES) {
@@ -122,7 +125,7 @@ const Recommendations = () => {
           return submitQuizDataWithRetry(attempt + 1);
         }
 
-        throw new Error(getErrorMessage(response.status, errorText));
+        throw new Error(getErrorMessage(response.status, errorData.message));
       }
 
       const data = await response.json();
