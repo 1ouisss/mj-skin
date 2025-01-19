@@ -34,15 +34,15 @@ const ConcernsQuiz = () => {
 
   return (
     <div 
-      className="min-h-screen w-full flex items-center justify-center relative"
+      className="min-h-screen w-full relative"
       style={{
         background: `url('/lovable-uploads/c4404277-0805-453c-8dde-ca2ab249f514.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >      
-      <div className="w-full max-w-6xl mx-auto px-4 py-8 flex items-center min-h-screen">
-        <div className="w-full grid lg:grid-cols-2 gap-8">
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-8">
           <div className="space-y-8">
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
