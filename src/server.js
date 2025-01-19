@@ -36,24 +36,37 @@ app.get('/airtable/users', async (req, res) => {
 });
 
 app.get('/airtable/recommendations', async (req, res) => {
+  console.log('\n=== GET /airtable/recommendations ===');
+  console.log('Query params:', req.query);
+  
   try {
+    console.log('Fetching Airtable recommendations...');
     const records = await base('Recommendations').select().all();
-    res.json(records.map(record => ({
+    console.log('Airtable response received:', records.length, 'records');
+    
+    const formattedRecords = records.map(record => ({
       id: record.id,
       ...record.fields
-    })));
+    }));
+    console.log('Formatted records:', formattedRecords);
+    
+    res.json(formattedRecords);
   } catch (error) {
+    console.error('Airtable recommendations error:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
 app.post('/openai/analyze', async (req, res) => {
+  console.log('\n=== POST /openai/analyze ===');
+  console.log('Request body:', req.body);
+  
   try {
     const { userResponses } = req.body;
-    console.log('Received user responses:', userResponses);
+    console.log('Processing user responses:', userResponses);
     
     if (!userResponses) {
-      console.error('Missing user responses');
+      console.error('Error: Missing user responses');
       return res.status(400).json({
         error: 'Missing user responses',
         code: 'MISSING_USER_RESPONSES'
@@ -63,6 +76,11 @@ app.post('/openai/analyze', async (req, res) => {
     // Fetch relevant recommendations from Airtable
     console.log('Fetching Airtable recommendations for:', userResponses.skinType, userResponses.concerns);
     try {
+      console.log('Querying Airtable with filter:', {
+        skinType: userResponses.skinType,
+        concerns: userResponses.concerns
+      });
+      
       const recommendations = await base('Recommendations')
         .select({
           filterByFormula: `AND(
@@ -70,7 +88,10 @@ app.post('/openai/analyze', async (req, res) => {
             FIND("${userResponses.concerns}", {Concerns})
           )`
         }).all();
-      console.log('Airtable recommendations found:', recommendations.length);
+      console.log('Airtable response:', {
+        recordCount: recommendations.length,
+        records: recommendations.map(r => ({ id: r.id, ...r.fields }))
+      });
     } catch (airtableError) {
       console.error('Airtable error:', airtableError);
       return res.status(500).json({
@@ -94,7 +115,7 @@ app.post('/openai/analyze', async (req, res) => {
       3. Recommended Products (use products from the available list)
       4. Daily Routine`;
 
-    console.log('Sending request to OpenAI');
+    console.log('Sending request to OpenAI with prompt:', prompt);
     try {
       const completion = await openai.chat.completions.create({
         messages: [{ role: "user", content: prompt }],
@@ -102,7 +123,10 @@ app.post('/openai/analyze', async (req, res) => {
         temperature: 0.7,
         max_tokens: 1000,
       });
-      console.log('Received OpenAI response');
+      console.log('OpenAI response:', {
+        choices: completion.choices,
+        usage: completion.usage
+      });
 
       res.json({ 
         recommendations: completion.choices[0].message.content,
