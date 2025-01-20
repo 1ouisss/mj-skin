@@ -131,7 +131,7 @@ const Recommendations = () => {
           return submitQuizDataWithRetry(attempt + 1);
         }
 
-        throw new Error(getErrorMessage(response.status, errorData.message));
+        throw new Error(getErrorMessage(response.status, errorMessage));
       }
 
       const data = await response.json();
