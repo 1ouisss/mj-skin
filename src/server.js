@@ -482,8 +482,10 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 app.post('/api/recommendations', async (req, res) => {
-    console.log("\n=== POST /api/recommendations ===");
+    console.group("\n=== POST /api/recommendations ===");
+    console.time('request-duration');
     console.log("Received Payload:", JSON.stringify(req.body, null, 2));
+    console.log("Request Headers:", req.headers);
     
     try {
         const requiredFields = {
@@ -495,6 +497,18 @@ app.post('/api/recommendations', async (req, res) => {
             fragrance: "Fragrance",
             routine: "Routine"
         };
+
+        // Validate each field and log missing ones
+        const missingFieldsStatus = Object.entries(requiredFields)
+            .reduce((acc, [key]) => ({
+                ...acc,
+                [key]: !req.body[key]
+            }), {});
+
+        if (Object.values(missingFieldsStatus).some(missing => missing)) {
+            console.error("Missing fields detected:", missingFieldsStatus);
+            console.timeEnd('request-duration');
+            console.groupEnd();
         
         const missingFields = Object.entries(requiredFields)
             .filter(([key]) => !req.body[key])
