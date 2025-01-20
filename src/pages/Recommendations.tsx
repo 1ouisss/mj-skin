@@ -198,6 +198,19 @@ const Recommendations = () => {
   };
 
   useEffect(() => {
+    const allFieldsPresent = ['skinType', 'conditions', 'concerns', 'zones', 'treatment', 'fragrance', 'routine'].every(
+      (key) => !!localStorage.getItem(key)
+    );
+
+    if (!allFieldsPresent) {
+      setError({
+        type: 'ValidationError',
+        message: 'Please complete all quizzes before proceeding.'
+      });
+      setLoading(false);
+      return;
+    }
+
     submitQuizDataWithRetry();
   }, []);
 
