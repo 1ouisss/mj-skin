@@ -144,6 +144,7 @@ const Recommendations = () => {
       }
 
       const data = await response.json();
+      console.log('API Response:', data);
       console.log('Data received from backend:', {
         raw: data,
         timestamp: new Date().toISOString(),
