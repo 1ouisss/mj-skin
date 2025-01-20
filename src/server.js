@@ -482,10 +482,12 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 app.post('/api/recommendations', async (req, res) => {
-    console.group("\n=== POST /api/recommendations ===");
-    console.time('request-duration');
-    console.log("Received Payload:", JSON.stringify(req.body, null, 2));
-    console.log("Request Headers:", req.headers);
+    const requestId = Date.now().toString(36);
+    console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
+    console.time(`request-${requestId}`);
+    console.log("\n=== Request Details ===");
+    console.log("Payload:", JSON.stringify(req.body, null, 2));
+    console.log("Headers:", req.headers);
     
     try {
         const requiredFields = {
@@ -527,8 +529,33 @@ app.post('/api/recommendations', async (req, res) => {
 
         const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
 
-        // Add your logic here
-        res.status(501).json({ message: "Route not yet implemented" });
+        console.log("\n=== Querying Airtable ===");
+        const records = await base('Recommendations')
+            .select({
+                filterByFormula: `AND(
+                    FIND("${skinType}", {SkinType}),
+                    FIND("${conditions}", {Conditions}),
+                    FIND("${concerns}", {Concerns})
+                )`
+            })
+            .all();
+        
+        console.log("\n=== Airtable Response ===");
+        console.log("Raw Records:", JSON.stringify(records, null, 2));
+
+        const recommendations = records.map(record => ({
+            id: record.id,
+            skinType: record.fields.SkinType,
+            conditions: record.fields.Conditions,
+            concerns: record.fields.Concerns,
+            products: record.fields.Products || [],
+            notes: record.fields.Notes || ''
+        }));
+
+        console.log("\n=== Formatted Response ===");
+        console.log("Formatted Recommendations:", JSON.stringify(recommendations, null, 2));
+        
+        res.json({ success: true, recommendations });
         
     } catch (error) {
         console.error("Error in /api/recommendations:", error);
