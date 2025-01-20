@@ -37,7 +37,8 @@ const Recommendations = () => {
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
       console.time('request-duration');
       
-      const requestData = {
+      console.log('\n=== Debug: localStorage Raw Values ===');
+      const rawValues = {
         skinType: localStorage.getItem('skinType'),
         conditions: localStorage.getItem('conditions'),
         concerns: localStorage.getItem('concerns'),
@@ -46,13 +47,28 @@ const Recommendations = () => {
         fragrance: localStorage.getItem('fragrance'),
         routine: localStorage.getItem('routine'),
       };
+      console.log('Raw values:', rawValues);
 
-      console.log('Sending to Backend:', {
+      // Parse JSON strings if needed
+      const requestData = Object.fromEntries(
+        Object.entries(rawValues).map(([key, value]) => [
+          key,
+          value ? JSON.parse(value) : null
+        ])
+      );
+
+      console.log('\n=== Debug: Processed Request Data ===');
+      console.log('Processed values:', requestData);
+
+      const payload = {
         ...requestData,
         timestamp: new Date().toISOString(),
         attempt,
         maxRetries: MAX_RETRIES
-      });
+      };
+
+      console.log('\n=== Debug: Final API Payload ===');
+      console.log('Payload sent to API:', JSON.stringify(payload, null, 2));
 
       // Detailed validation logging
       const emptyFields = Object.entries(requestData)
