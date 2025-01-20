@@ -486,12 +486,32 @@ app.post('/api/recommendations', async (req, res) => {
     console.log("Received Payload:", JSON.stringify(req.body, null, 2));
     
     try {
-        const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
+        const requiredFields = {
+            skinType: "Skin Type",
+            conditions: "Conditions",
+            concerns: "Concerns",
+            zones: "Zones",
+            treatment: "Treatment",
+            fragrance: "Fragrance",
+            routine: "Routine"
+        };
         
-        if (!skinType || !conditions || !concerns || !zones || !treatment || !fragrance || !routine) {
-            console.error("Missing required fields");
-            return res.status(400).json({ error: "Missing required fields" });
+        const missingFields = Object.entries(requiredFields)
+            .filter(([key]) => !req.body[key])
+            .map(([_, label]) => label);
+
+        if (missingFields.length > 0) {
+            console.error("Missing required fields:", missingFields);
+            return res.status(400).json({
+                error: "Missing required fields",
+                details: {
+                    missingFields,
+                    message: `Please provide: ${missingFields.join(', ')}`
+                }
+            });
         }
+
+        const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
 
         // Add your logic here
         res.status(501).json({ message: "Route not yet implemented" });
