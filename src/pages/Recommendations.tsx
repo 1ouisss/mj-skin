@@ -77,6 +77,15 @@ const Recommendations = () => {
       };
 
       console.log('\n=== Submitting Quiz Data ===');
+      console.log('Raw localStorage values:', {
+        skinType: localStorage.getItem('skinType'),
+        conditions: localStorage.getItem('conditions'),
+        concerns: localStorage.getItem('concerns'),
+        zones: localStorage.getItem('zones'),
+        treatment: localStorage.getItem('treatment'),
+        fragrance: localStorage.getItem('fragrance'),
+        routine: localStorage.getItem('routine'),
+      });
       console.log('Quiz data from localStorage:', quizData);
 
       const missingFields = Object.entries(quizData)
