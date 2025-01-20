@@ -481,3 +481,23 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
+app.post('/api/recommendations', async (req, res) => {
+    console.log("\n=== POST /api/recommendations ===");
+    console.log("Received Payload:", JSON.stringify(req.body, null, 2));
+    
+    try {
+        const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
+        
+        if (!skinType || !conditions || !concerns || !zones || !treatment || !fragrance || !routine) {
+            console.error("Missing required fields");
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Add your logic here
+        res.status(501).json({ message: "Route not yet implemented" });
+        
+    } catch (error) {
+        console.error("Error in /api/recommendations:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
