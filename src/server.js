@@ -498,30 +498,30 @@ app.post('/api/recommendations', async (req, res) => {
             routine: "Routine"
         };
 
-        // Validate each field and log missing ones
-        const missingFieldsStatus = Object.entries(requiredFields)
-            .reduce((acc, [key]) => ({
-                ...acc,
-                [key]: !req.body[key]
-            }), {});
+        const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
 
-        if (Object.values(missingFieldsStatus).some(missing => missing)) {
-            console.error("Missing fields detected:", missingFieldsStatus);
+        if (!skinType || !conditions || !concerns || !zones || !treatment || !fragrance || !routine) {
+            const missingFields = {
+                skinType: !skinType,
+                conditions: !conditions,
+                concerns: !concerns,
+                zones: !zones,
+                treatment: !treatment,
+                fragrance: !fragrance,
+                routine: !routine,
+            };
+
+            console.error("Missing required fields:", missingFields);
             console.timeEnd('request-duration');
             console.groupEnd();
-        
-        const missingFields = Object.entries(requiredFields)
-            .filter(([key]) => !req.body[key])
-            .map(([_, label]) => label);
-
-        if (missingFields.length > 0) {
-            console.error("Missing required fields:", missingFields);
+            
             return res.status(400).json({
                 error: "Missing required fields",
-                details: {
-                    missingFields,
-                    message: `Please provide: ${missingFields.join(', ')}`
-                }
+                missingFields,
+                message: `Please provide all required fields: ${Object.entries(missingFields)
+                    .filter(([_, isMissing]) => isMissing)
+                    .map(([field]) => field)
+                    .join(', ')}`
             });
         }
 
