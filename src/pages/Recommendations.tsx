@@ -102,12 +102,12 @@ const Recommendations = () => {
       console.log('Request payload:', JSON.stringify(quizData, null, 2));
       console.time('API Request Duration');
       
-      const response = await fetch('/openai/analyze', {
+      const response = await fetch('/api/recommendations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userResponses: quizData }),
+        body: JSON.stringify(quizData),
       });
 
       console.timeEnd('API Request Duration');
