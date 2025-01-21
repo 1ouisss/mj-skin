@@ -551,19 +551,31 @@ app.post('/api/recommendations', async (req, res) => {
         }
 
         console.log("\n=== Querying Airtable ===");
-        const records = await base('Recommendations')
-            .select({
-                filterByFormula: `OR(
-                    FIND("${skinType}", {SkinType}),
-                    FIND("${conditions}", {Conditions}),
-                    FIND("${concerns}", {Concerns}),
-                    FIND("${zones}", {Zones}),
-                    FIND("${treatment}", {Treatment}),
-                    FIND("${fragrance}", {Fragrance}),
-                    FIND("${routine}", {Routine})
-                )`
-            })
-            .all();
+        console.log('Querying Airtable with params:', {
+            skinType, conditions, concerns, zones, treatment, fragrance, routine
+        });
+        
+        try {
+            const records = await base('Recommendations')
+                .select({
+                    filterByFormula: `OR(
+                        FIND("${skinType}", {SkinType}),
+                        FIND("${conditions}", {Conditions}),
+                        FIND("${concerns}", {Concerns}),
+                        FIND("${zones}", {Zones}),
+                        FIND("${treatment}", {Treatment}),
+                        FIND("${fragrance}", {Fragrance}),
+                        FIND("${routine}", {Routine})
+                    )`
+                })
+                .all();
+                
+            if (!records || records.length === 0) {
+                return res.status(404).json({
+                    error: "No matching recommendations found",
+                    code: "NO_RECOMMENDATIONS"
+                });
+            }
         console.log("Airtable Records Retrieved:", records.map(record => record.fields));
 
         const recommendations = records.map(record => ({
@@ -585,4 +597,5 @@ app.post('/api/recommendations', async (req, res) => {
         console.timeEnd(`request-${requestId}`);
         console.groupEnd();
     }
+  }
 });
