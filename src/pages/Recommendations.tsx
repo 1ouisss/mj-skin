@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -36,7 +35,7 @@ const Recommendations = () => {
     try {
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
       console.time('request-duration');
-      
+
       console.log('\n=== Debug: localStorage Raw Values ===');
       const rawValues = {
         skinType: localStorage.getItem('skinType'),
@@ -81,7 +80,7 @@ const Recommendations = () => {
         emptyFields,
         isValid: emptyFields.length === 0
       });
-      
+
       const quizData = {
         skinType: localStorage.getItem('skinType'),
         conditions: localStorage.getItem('conditions'),
@@ -114,10 +113,10 @@ const Recommendations = () => {
       }
 
       console.group('API Request Details');
-      console.log('Endpoint:', '/openai/analyze');
+      console.log('Endpoint:', '/api/recommendations');
       console.log('Request payload:', JSON.stringify(quizData, null, 2));
       console.time('API Request Duration');
-      
+
       const response = await fetch('/api/recommendations', {
         method: 'POST',
         headers: {
@@ -135,14 +134,14 @@ const Recommendations = () => {
       if (!response.ok) {
         const responseClone = response.clone();
         let errorMessage;
-        
+
         try {
           const errorData = await responseClone.json();
           errorMessage = errorData.message || 'Unknown error occurred';
         } catch {
           errorMessage = await response.text();
         }
-        
+
         console.error('API Error Response:', {
           status: response.status,
           statusText: response.statusText,
