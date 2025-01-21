@@ -490,20 +490,26 @@ app.post('/api/recommendations', async (req, res) => {
         const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
         console.log("Payload:", JSON.stringify(req.body, null, 2));
 
-        // Validate required fields
-        const requiredFields = ['skinType', 'conditions', 'concerns', 'zones', 'treatment', 'fragrance', 'routine'];
-        const missingFields = requiredFields.reduce((acc, field) => {
-            if (!req.body[field]) acc[field] = true;
-            return acc;
-        }, {});
+        // Validate each required field with specific messages
+        const fieldMessages = {
+            skinType: "Skin type is required. Please complete the skin type quiz.",
+            conditions: "Skin conditions information is required. Please complete the conditions quiz.",
+            concerns: "Skin concerns are required. Please complete the concerns quiz.",
+            zones: "Treatment zones are required. Please complete the zones quiz.",
+            treatment: "Treatment preference is required. Please complete the treatment quiz.",
+            fragrance: "Fragrance preference is required. Please complete the fragrance quiz.",
+            routine: "Routine preference is required. Please complete the routine quiz."
+        };
 
-        if (Object.keys(missingFields).length > 0) {
-            console.error("Missing required fields:", missingFields);
-            return res.status(400).json({
-                error: "Missing required fields",
-                missingFields,
-                message: `Please provide all required fields: ${Object.keys(missingFields).join(', ')}`
-            });
+        for (const [field, message] of Object.entries(fieldMessages)) {
+            if (!req.body[field]) {
+                console.error(`Missing required field: ${field}`);
+                return res.status(400).json({
+                    error: message,
+                    field,
+                    code: 'MISSING_FIELD'
+                });
+            }
         }
 
         console.log("\n=== Querying Airtable ===");
