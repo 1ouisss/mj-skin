@@ -104,6 +104,11 @@ async function validateOpenAIResponse(openai, prompt) {
 async function runIntegrationTests() {
   console.group('\n=== Running Full Integration Tests ===');
   console.time('full-test-suite');
+  
+  console.log('\n=== Environment Check ===');
+  console.log('AIRTABLE_API_KEY:', process.env.AIRTABLE_API_KEY ? 'Present' : 'Missing');
+  console.log('AIRTABLE_BASE_ID:', process.env.AIRTABLE_BASE_ID ? 'Present' : 'Missing');
+  console.log('OPENAI_API_KEY:', process.env.OPENAI_API_KEY ? 'Present' : 'Missing');
 
   const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -120,7 +125,17 @@ async function runIntegrationTests() {
     
     try {
       // 1. Validate Airtable Query
+      console.log('\n=== Airtable Query Details ===');
+      console.log('Test case:', testCase.name);
+      console.log('Query parameters:', testCase.input);
+      
       const airtableRecords = await validateAirtableQueries(base, testCase);
+      console.log('\nAirtable Response:', {
+        success: !!airtableRecords,
+        recordCount: airtableRecords ? airtableRecords.length : 0,
+        fields: airtableRecords?.[0]?.fields ? Object.keys(airtableRecords[0].fields) : []
+      });
+      
       if (!airtableRecords) {
         throw new Error('Airtable validation failed');
       }
@@ -164,7 +179,20 @@ Soir:
 Résultats attendus:
 [bénéfices détaillés]`;
 
+      console.log('\n=== OpenAI Request Details ===');
+      console.log('Prompt length:', prompt.length);
+      console.log('Products included:', airtableRecords.length);
+      
       const openAIResponse = await validateOpenAIResponse(openai, prompt);
+      console.log('\nOpenAI Response:', {
+        success: !!openAIResponse,
+        length: openAIResponse?.length || 0,
+        hasRequiredSections: openAIResponse ? 
+          ['Produits:', 'Routine:', 'Matin:', 'Soir:'].every(section => 
+            openAIResponse.includes(section)
+          ) : false
+      });
+      
       if (!openAIResponse) {
         throw new Error('OpenAI validation failed');
       }
