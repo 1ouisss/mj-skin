@@ -496,6 +496,150 @@ app.post('/api/recommendations', async (req, res) => {
     console.log('\n=== Request Payload Details ===');
     console.log('Raw payload:', req.body);
 
+    // Validate and prioritize core fields
+    const priorityFields = {
+        skinType: req.body.skinType?.trim(),
+        conditions: req.body.conditions?.trim(),
+        concerns: req.body.concerns?.trim()
+    };
+
+    const secondaryFields = {
+        zones: req.body.zones?.trim(),
+        treatment: req.body.treatment?.trim(),
+        fragrance: req.body.fragrance?.trim(),
+        routine: req.body.routine?.trim()
+    };
+
+    // Validate priority fields
+    const missingPriorityFields = Object.entries(priorityFields)
+        .filter(([_, value]) => !value)
+        .map(([field]) => field);
+
+    if (missingPriorityFields.length > 0) {
+        return res.status(400).json({
+            error: "Missing critical fields",
+            missingFields: missingPriorityFields,
+            code: "MISSING_PRIORITY_FIELDS"
+        });
+    }
+
+    try {
+        // Query Airtable with priority-based filtering
+        const records = await base('Recommendations')
+            .select({
+                filterByFormula: `AND(
+                    OR(LOWER(TRIM({SkinType})) = "${normalizeFieldValue(priorityFields.skinType)}",
+                       FIND(LOWER("${priorityFields.skinType}"), LOWER({SkinType})) > 0),
+                    OR(LOWER(TRIM({Conditions})) = "${normalizeFieldValue(priorityFields.conditions)}",
+                       FIND(LOWER("${priorityFields.conditions}"), LOWER({Conditions})) > 0),
+                    OR(LOWER(TRIM({Concerns})) = "${normalizeFieldValue(priorityFields.concerns)}",
+                       FIND(LOWER("${priorityFields.concerns}"), LOWER({Concerns})) > 0)
+                )`
+            })
+            .all();
+
+        if (!records || records.length === 0) {
+            return res.status(404).json({
+                error: "No matching recommendations found",
+                code: "NO_RECOMMENDATIONS"
+            });
+        }
+
+        // Generate OpenAI prompt with structured format
+        const prompt = `Analyser le profil utilisateur suivant et générer des recommandations personnalisées:
+
+Profil Principal:
+- Type de peau: ${priorityFields.skinType}
+- Conditions: ${priorityFields.conditions}
+- Préoccupations: ${priorityFields.concerns}
+
+Informations Secondaires:
+- Zones ciblées: ${secondaryFields.zones}
+- Préférence de texture: ${secondaryFields.treatment}
+- Préférence de parfum: ${secondaryFields.fragrance}
+- Temps de routine: ${secondaryFields.routine}
+
+Produits disponibles:
+${records.map(r => r.fields.Products).flat().join(', ')}
+
+Générer une réponse dans ce format:
+
+Produits:
+- Nettoyage: [produit]
+- Eau florale: [produit]
+- Sérum: [produit]
+- Hydratant: [produit]
+
+Routine:
+Matin:
+1. [étape détaillée]
+2. [étape détaillée]
+3. [étape détaillée]
+
+Soir:
+1. [étape détaillée]
+2. [étape détaillée]
+3. [étape détaillée]
+
+Résultats attendus:
+[bénéfices détaillés]`;
+
+        console.log('\n=== OpenAI Prompt ===');
+        console.log(prompt);
+
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "gpt-3.5-turbo",
+            temperature: 0.7,
+            max_tokens: 1000,
+        });
+
+        console.log('\n=== OpenAI Response ===');
+        console.log(completion.choices[0].message.content);
+
+        // Validate OpenAI response format
+        const response = completion.choices[0].message.content;
+        const validationResults = {
+            hasProducts: response.includes('Produits:'),
+            hasRoutine: response.includes('Routine:'),
+            hasMorning: response.includes('Matin:'),
+            hasEvening: response.includes('Soir:'),
+            hasResults: response.includes('Résultats attendus:')
+        };
+
+        if (!Object.values(validationResults).every(v => v)) {
+            console.error('Invalid OpenAI response format:', validationResults);
+            throw new Error('Invalid response format from OpenAI');
+        }
+
+        res.json({
+            success: true,
+            recommendations: response,
+            metadata: {
+                requestId,
+                matchedProducts: records.length,
+                processingTime: Date.now() - parseInt(requestId, 36)
+            }
+        });
+
+    } catch (error) {
+        console.error('\n=== Error Details ===', {
+            name: error.name,
+            message: error.message,
+            code: error.code,
+            stack: error.stack
+        });
+
+        res.status(500).json({
+            error: 'Failed to generate recommendations',
+            code: error.code || 'PROCESSING_ERROR',
+            message: error.message
+        });
+    } finally {
+        console.timeEnd(`request-${requestId}`);
+        console.groupEnd();
+    }
+
     // Sanitize incoming payload
     const sanitizedPayload = {
         skinType: req.body.skinType?.trim(),
