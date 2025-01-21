@@ -158,6 +158,33 @@ app.get('/airtable/recommendations', async (req, res) => {
   }
 });
 
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000;
+
+async function retryOperation(operation, retries = MAX_RETRIES) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      console.log(`Retry attempt ${i + 1}/${retries} after error:`, error.message);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * Math.pow(2, i)));
+    }
+  }
+}
+
+function validateOpenAIResponse(response) {
+  const requiredSections = ['Produits:', 'Routine:', 'Matin:', 'Soir:', 'Résultats attendus:'];
+  const valid = requiredSections.every(section => response.includes(section));
+
+  if (!valid) {
+    throw new Error('Invalid OpenAI response format');
+  }
+
+  return response;
+}
+
 app.post('/openai/analyze', async (req, res) => {
   console.group('\n=== Backend: POST /openai/analyze ===');
   console.time('analyze-request');
@@ -259,11 +286,15 @@ app.post('/openai/analyze', async (req, res) => {
 
     console.log('Sending request to OpenAI with prompt:', prompt);
     try {
-      const completion = await openai.chat.completions.create({
-        messages: [{ role: "user", content: prompt }],
-        model: "gpt-3.5-turbo",
-        temperature: 0.7,
-        max_tokens: 1000,
+      const completion = await retryOperation(async () => {
+        console.log('Requesting OpenAI completion...');
+        const result = await openai.chat.completions.create({
+          messages: [{ role: "user", content: prompt }],
+          model: "gpt-3.5-turbo",
+          temperature: 0.7,
+          max_tokens: 1000,
+        });
+        return result;
       });
       console.log('OpenAI response:', {
         choices: completion.choices,
@@ -328,7 +359,10 @@ app.get('/airtable/recommendations', async (req, res) => {
     };
     console.log('Airtable query parameters:', airtableQuery);
 
-    const records = await base('Recommendations').select(airtableQuery).all();
+    const records = await retryOperation(async () => {
+      console.log('Fetching Airtable records...');
+      return await base('Recommendations').select(airtableQuery).all();
+    });
     console.timeEnd(`airtable-fetch-${requestId}`);
     console.log('Airtable response received:', {
       recordCount: records.length,
@@ -525,7 +559,9 @@ app.post('/api/recommendations', async (req, res) => {
 
     try {
         // Query Airtable with priority-based filtering
-        const records = await base('Recommendations')
+        const records = await retryOperation(async () => {
+          console.log('Fetching Airtable records...');
+          return await base('Recommendations')
             .select({
                 filterByFormula: `AND(
                     OR(LOWER(TRIM({SkinType})) = "${normalizeFieldValue(priorityFields.skinType)}",
@@ -537,6 +573,7 @@ app.post('/api/recommendations', async (req, res) => {
                 )`
             })
             .all();
+        });
 
         if (!records || records.length === 0) {
             return res.status(404).json({
@@ -587,30 +624,23 @@ Résultats attendus:
         console.log('\n=== OpenAI Prompt ===');
         console.log(prompt);
 
-        const completion = await openai.chat.completions.create({
+        const completion = await retryOperation(async () => {
+          console.log('Requesting OpenAI completion...');
+          const result = await openai.chat.completions.create({
             messages: [{ role: "user", content: prompt }],
             model: "gpt-3.5-turbo",
             temperature: 0.7,
             max_tokens: 1000,
+          });
+          return result;
         });
 
         console.log('\n=== OpenAI Response ===');
         console.log(completion.choices[0].message.content);
 
         // Validate OpenAI response format
-        const response = completion.choices[0].message.content;
-        const validationResults = {
-            hasProducts: response.includes('Produits:'),
-            hasRoutine: response.includes('Routine:'),
-            hasMorning: response.includes('Matin:'),
-            hasEvening: response.includes('Soir:'),
-            hasResults: response.includes('Résultats attendus:')
-        };
+        const response = validateOpenAIResponse(completion.choices[0].message.content);
 
-        if (!Object.values(validationResults).every(v => v)) {
-            console.error('Invalid OpenAI response format:', validationResults);
-            throw new Error('Invalid response format from OpenAI');
-        }
 
         res.json({
             success: true,
@@ -735,7 +765,9 @@ Résultats attendus:
             // Fetch records with enhanced error handling
             let records;
             try {
-                records = await base('Recommendations')
+                records = await retryOperation(async () => {
+                  console.log('Fetching Airtable records...');
+                  return await base('Recommendations')
                     .select({
                         filterByFormula: `AND(
                             OR(
@@ -769,6 +801,7 @@ Résultats attendus:
                         )`
                     })
                     .all();
+                });
             } catch (airtableError) {
                 console.error('Airtable error:', airtableError);
                 return res.status(500).json({
@@ -822,11 +855,14 @@ Résultats attendus:
                 Résultat attendu : `;
 
 
-            const openaiResponse = await openai.chat.completions.create({
+            const openaiResponse = await retryOperation(async () => {
+              console.log('Requesting OpenAI completion...');
+              return await openai.chat.completions.create({
                 messages: [{ role: "user", content: openaiPrompt }],
                 model: "gpt-3.5-turbo",
                 temperature: 0.7,
                 max_tokens: 1000,
+              });
             });
 
             console.log("OpenAI Response:", openaiResponse.choices[0].message.content)
