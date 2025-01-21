@@ -31,8 +31,16 @@ const Recommendations = () => {
     }
   };
 
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+
   const submitQuizDataWithRetry = async (attempt = 1) => {
+    if (isRequestInProgress) {
+      console.log("Request already in progress, skipping retry");
+      return;
+    }
+
     try {
+      setIsRequestInProgress(true);
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
       console.time('request-duration');
 
@@ -197,6 +205,7 @@ const Recommendations = () => {
       });
     } finally {
       setLoading(false);
+      setIsRequestInProgress(false);
       console.groupEnd();
     }
   };
