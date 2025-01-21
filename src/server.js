@@ -39,6 +39,70 @@ app.use((req, res, next) => {
 });
 
 // Test route with static data
+
+app.get('/api/responses', async (req, res) => {
+  console.group('\n=== GET /api/responses ===');
+  console.time('responses-fetch');
+  
+  try {
+    console.log('Fetching User Responses from Airtable...');
+    const records = await base('User Responses')
+      .select({
+        maxRecords: 100,
+        view: 'Grid view'
+      })
+      .all();
+    
+    console.log(`Found ${records.length} total records`);
+    
+    // Log each record with formatting
+    records.forEach((record, index) => {
+      console.log(`\nRecord ${index + 1}:`, {
+        id: record.id,
+        createdTime: record.createdTime,
+        fields: record.fields
+      });
+    });
+
+    // Format records for response
+    const formattedRecords = records.map(record => ({
+      id: record.id,
+      createdTime: record.createdTime,
+      ...record.fields
+    }));
+
+    console.log('\nResponse Summary:', {
+      totalRecords: records.length,
+      firstRecordId: records[0]?.id,
+      lastRecordId: records[records.length - 1]?.id
+    });
+
+    console.timeEnd('responses-fetch');
+    console.groupEnd();
+    
+    res.json({
+      success: true,
+      count: formattedRecords.length,
+      records: formattedRecords
+    });
+
+  } catch (error) {
+    console.error('Error fetching responses:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    console.timeEnd('responses-fetch');
+    console.groupEnd();
+
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      code: 'RESPONSES_FETCH_ERROR'
+    });
+  }
+});
+
 app.get('/test/recommendations', (req, res) => {
   const mockRecommendations = {
     success: true,
