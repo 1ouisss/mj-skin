@@ -515,13 +515,18 @@ app.post('/api/recommendations', async (req, res) => {
         console.log("\n=== Querying Airtable ===");
         const records = await base('Recommendations')
             .select({
-                filterByFormula: `AND(
+                filterByFormula: `OR(
                     FIND("${skinType}", {SkinType}),
                     FIND("${conditions}", {Conditions}),
-                    FIND("${concerns}", {Concerns})
+                    FIND("${concerns}", {Concerns}),
+                    FIND("${zones}", {Zones}),
+                    FIND("${treatment}", {Treatment}),
+                    FIND("${fragrance}", {Fragrance}),
+                    FIND("${routine}", {Routine})
                 )`
             })
             .all();
+        console.log("Airtable Records Retrieved:", records.map(record => record.fields));
 
         const recommendations = records.map(record => ({
             id: record.id,
