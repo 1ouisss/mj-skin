@@ -42,6 +42,57 @@ app.use((req, res, next) => {
 app.get('/test/recommendations', (req, res) => {
   const mockRecommendations = {
     success: true,
+
+// Test route to fetch User Responses
+app.get('/test/user-responses', async (req, res) => {
+  console.group('\n=== GET /test/user-responses ===');
+  console.time('user-responses-fetch');
+  
+  try {
+    console.log('Fetching User Responses records...');
+    const records = await base('User Responses')
+      .select({
+        maxRecords: 100,
+        view: 'Grid view'
+      })
+      .all();
+    
+    console.log(`Found ${records.length} records`);
+    
+    const formattedRecords = records.map(record => ({
+      id: record.id,
+      createdTime: record.createdTime,
+      ...record.fields
+    }));
+
+    console.log('\nSample record:', formattedRecords[0]);
+    console.timeEnd('user-responses-fetch');
+    console.groupEnd();
+    
+    res.json({
+      success: true,
+      count: formattedRecords.length,
+      records: formattedRecords
+    });
+
+  } catch (error) {
+    console.error('Error fetching User Responses:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    console.timeEnd('user-responses-fetch');
+    console.groupEnd();
+
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      code: 'USER_RESPONSES_ERROR'
+    });
+  }
+});
+
+
     recommendations: `1. Skin Type Analysis
 Your skin appears to be combination type with both oily and dry areas.
 
