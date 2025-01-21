@@ -114,7 +114,12 @@ const Recommendations = () => {
 
       console.group('API Request Details');
       console.log('Endpoint:', '/api/recommendations');
-      console.log('Request payload:', JSON.stringify(quizData, null, 2));
+      console.log("Payload Sent to Backend:", {
+        raw: quizData,
+        formatted: JSON.stringify(quizData, null, 2),
+        timestamp: new Date().toISOString(),
+        endpoint: '/api/recommendations'
+      });
       console.time('API Request Duration');
 
       const response = await fetch('/api/recommendations', {
