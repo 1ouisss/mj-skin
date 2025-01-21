@@ -485,6 +485,37 @@ app.post('/api/recommendations', async (req, res) => {
     const requestId = Date.now().toString(36);
     console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
     console.time(`request-${requestId}`);
+
+    // Validate Airtable schema
+    const requiredFields = {
+        'SkinType': 'skin type',
+        'Conditions': 'conditions',
+        'Concerns': 'concerns',
+        'Zones': 'target areas',
+        'Treatment': 'texture preference',
+        'Fragrance': 'scent preference',
+        'Routine': 'routine time',
+        'Products': 'products'
+    };
+
+    try {
+        const table = base('Recommendations');
+        const sample = await table.select({ maxRecords: 1 }).firstPage();
+        const missingFields = [];
+        
+        if (sample && sample.length > 0) {
+            const fields = sample[0].fields;
+            for (const [field, label] of Object.entries(requiredFields)) {
+                if (!(field in fields)) {
+                    missingFields.push({ field, label });
+                }
+            }
+            
+            if (missingFields.length > 0) {
+                console.error('Missing Airtable fields:', missingFields);
+                throw new Error(`Missing required Airtable fields: ${missingFields.map(f => f.field).join(', ')}`);
+            }
+        }
     
     try {
         const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
