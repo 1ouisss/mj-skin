@@ -246,13 +246,20 @@ app.post('/openai/analyze', async (req, res) => {
         .select({
           fields: ['SkinType', 'Conditions', 'Concerns', 'Zones', 'Treatment', 'Fragrance', 'Routine', 'Products', 'Notes'],
           filterByFormula: `AND(
-            FIND("${userResponses.skinType}", {SkinType}),
-            FIND("${userResponses.conditions}", {Conditions}),
-            FIND("${userResponses.concerns}", {Concerns}),
-            FIND("${userResponses.zones}", {Zones}),
-            FIND("${userResponses.treatment}", {Treatment}),
-            FIND("${userResponses.fragrance}", {Fragrance}),
-            FIND("${userResponses.routine}", {Routine})
+            OR(LOWER(TRIM({SkinType})) = LOWER("${userResponses.skinType}"),
+               FIND(LOWER("${userResponses.skinType}"), LOWER({SkinType})) > 0),
+            OR(LOWER(TRIM({Conditions})) = LOWER("${userResponses.conditions}"),
+               FIND(LOWER("${userResponses.conditions}"), LOWER({Conditions})) > 0),
+            OR(LOWER(TRIM({Concerns})) = LOWER("${userResponses.concerns}"),
+               FIND(LOWER("${userResponses.concerns}"), LOWER({Concerns})) > 0),
+            OR(LOWER(TRIM({Zones})) = LOWER("${userResponses.zones}"),
+               FIND(LOWER("${userResponses.zones}"), LOWER({Zones})) > 0),
+            OR(LOWER(TRIM({Treatment})) = LOWER("${userResponses.treatment}"),
+               FIND(LOWER("${userResponses.treatment}"), LOWER({Treatment})) > 0),
+            OR(LOWER(TRIM({Fragrance})) = LOWER("${userResponses.fragrance}"),
+               FIND(LOWER("${userResponses.fragrance}"), LOWER({Fragrance})) > 0),
+            OR(LOWER(TRIM({Routine})) = LOWER("${userResponses.routine}"),
+               FIND(LOWER("${userResponses.routine}"), LOWER({Routine})) > 0)
           )`
         }).all();
 
