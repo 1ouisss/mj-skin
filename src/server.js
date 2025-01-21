@@ -485,6 +485,13 @@ app.post('/api/recommendations', async (req, res) => {
     const requestId = Date.now().toString(36);
     console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
     console.time(`request-${requestId}`);
+    
+    console.log('\n=== Request Payload Details ===');
+    console.log('Raw payload:', req.body);
+    console.log('Content type:', req.get('Content-Type'));
+    console.log('Payload size:', JSON.stringify(req.body).length, 'bytes');
+    console.log('Request timestamp:', new Date().toISOString());
+    console.log('Fields present:', Object.keys(req.body));
 
     // Validate Airtable schema
     const requiredFields = {
