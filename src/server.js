@@ -75,7 +75,7 @@ function validateAirtableRecord(record) {
 app.get('/api/responses', async (req, res) => {
   console.group('\n=== GET /api/responses ===');
   console.time('responses-fetch');
-  
+
   try {
     console.log('Fetching User Responses from Airtable...');
     const records = await base('User Responses')
@@ -84,7 +84,7 @@ app.get('/api/responses', async (req, res) => {
         view: 'Grid view'
       })
       .all();
-    
+
     console.log(`Found ${records.length} total records`);
 
     // Validate records
@@ -101,7 +101,7 @@ app.get('/api/responses', async (req, res) => {
         missingFields: r.missingFields
       }))
     });
-    
+
     // Log each record with formatting
     records.forEach((record, index) => {
       console.log(`\nRecord ${index + 1}:`, {
@@ -120,7 +120,7 @@ app.get('/api/responses', async (req, res) => {
 
     console.timeEnd('responses-fetch');
     console.groupEnd();
-    
+
     res.json({
       success: true,
       count: validRecords.length,
@@ -157,56 +157,6 @@ app.get('/test/recommendations', (req, res) => {
   const mockRecommendations = {
     success: true,
 
-// Test route to fetch User Responses
-app.get('/test/user-responses', async (req, res) => {
-  console.group('\n=== GET /test/user-responses ===');
-  console.time('user-responses-fetch');
-  
-  try {
-    console.log('Fetching User Responses records...');
-    const records = await base('User Responses')
-      .select({
-        maxRecords: 100,
-        view: 'Grid view'
-      })
-      .all();
-    
-    console.log(`Found ${records.length} records`);
-    
-    const formattedRecords = records.map(record => ({
-      id: record.id,
-      createdTime: record.createdTime,
-      ...record.fields
-    }));
-
-    console.log('\nSample record:', formattedRecords[0]);
-    console.timeEnd('user-responses-fetch');
-    console.groupEnd();
-    
-    res.json({
-      success: true,
-      count: formattedRecords.length,
-      records: formattedRecords
-    });
-
-  } catch (error) {
-    console.error('Error fetching User Responses:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    });
-    console.timeEnd('user-responses-fetch');
-    console.groupEnd();
-
-    res.status(500).json({
-      success: false,
-      error: error.message,
-      code: 'USER_RESPONSES_ERROR'
-    });
-  }
-});
-
-
     recommendations: `1. Skin Type Analysis
 Your skin appears to be combination type with both oily and dry areas.
 
@@ -240,6 +190,56 @@ Weekly:
 
   res.json(mockRecommendations);
 });
+
+// Test route to fetch User Responses
+app.get('/test/user-responses', async (req, res) => {
+  console.group('\n=== GET /test/user-responses ===');
+  console.time('user-responses-fetch');
+
+  try {
+    console.log('Fetching User Responses records...');
+    const records = await base('User Responses')
+      .select({
+        maxRecords: 100,
+        view: 'Grid view'
+      })
+      .all();
+
+    console.log(`Found ${records.length} records`);
+
+    const formattedRecords = records.map(record => ({
+      id: record.id,
+      createdTime: record.createdTime,
+      ...record.fields
+    }));
+
+    console.log('\nSample record:', formattedRecords[0]);
+    console.timeEnd('user-responses-fetch');
+    console.groupEnd();
+
+    res.json({
+      success: true,
+      count: formattedRecords.length,
+      records: formattedRecords
+    });
+
+  } catch (error) {
+    console.error('Error fetching User Responses:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    console.timeEnd('user-responses-fetch');
+    console.groupEnd();
+
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      code: 'USER_RESPONSES_ERROR'
+    });
+  }
+});
+
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
@@ -279,7 +279,7 @@ app.get('/airtable/users', async (req, res) => {
     })));
   } catch (error) {
     console.error('Airtable Users Error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch user responses',
       details: error.message,
       code: 'AIRTABLE_USERS_ERROR'
@@ -473,9 +473,9 @@ app.post('/openai/analyze', async (req, res) => {
         usage: completion.usage
       });
 
-      const response = { 
+      const response = {
         recommendations: completion.choices[0].message.content,
-        success: true 
+        success: true
       };
       console.log('Successfully generated recommendations');
       console.timeEnd('analyze-request');
@@ -585,11 +585,11 @@ app.get('/airtable/recommendations', async (req, res) => {
       return {
         id: record.id,
         skinType: record.fields.SkinType,
-        concerns: Array.isArray(record.fields.Concerns) 
-          ? record.fields.Concerns 
+        concerns: Array.isArray(record.fields.Concerns)
+          ? record.fields.Concerns
           : [record.fields.Concerns],
-        products: Array.isArray(record.fields.Products) 
-          ? record.fields.Products 
+        products: Array.isArray(record.fields.Products)
+          ? record.fields.Products
           : [record.fields.Products],
         notes: record.fields.Notes || '',
         ...record.fields
@@ -688,54 +688,54 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 
 const normalizeFieldValue = (value) => {
-    if (typeof value === 'string'){
-        return value.toLowerCase().trim();
-    }
-    return value;
+  if (typeof value === 'string') {
+    return value.toLowerCase().trim();
+  }
+  return value;
 }
 
 app.post('/api/recommendations', async (req, res) => {
-    const requestId = Date.now().toString(36);
-    console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
-    console.time(`request-${requestId}`);
+  const requestId = Date.now().toString(36);
+  console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
+  console.time(`request-${requestId}`);
 
-    console.log('\n=== Request Payload Details ===');
-    console.log('Raw payload:', req.body);
+  console.log('\n=== Request Payload Details ===');
+  console.log('Raw payload:', req.body);
 
-    // Validate and prioritize core fields
-    const priorityFields = {
-        skinType: req.body.skinType?.trim(),
-        conditions: req.body.conditions?.trim(),
-        concerns: req.body.concerns?.trim()
-    };
+  // Validate and prioritize core fields
+  const priorityFields = {
+    skinType: req.body.skinType?.trim(),
+    conditions: req.body.conditions?.trim(),
+    concerns: req.body.concerns?.trim()
+  };
 
-    const secondaryFields = {
-        zones: req.body.zones?.trim(),
-        treatment: req.body.treatment?.trim(),
-        fragrance: req.body.fragrance?.trim(),
-        routine: req.body.routine?.trim()
-    };
+  const secondaryFields = {
+    zones: req.body.zones?.trim(),
+    treatment: req.body.treatment?.trim(),
+    fragrance: req.body.fragrance?.trim(),
+    routine: req.body.routine?.trim()
+  };
 
-    // Validate priority fields
-    const missingPriorityFields = Object.entries(priorityFields)
-        .filter(([_, value]) => !value)
-        .map(([field]) => field);
+  // Validate priority fields
+  const missingPriorityFields = Object.entries(priorityFields)
+    .filter(([_, value]) => !value)
+    .map(([field]) => field);
 
-    if (missingPriorityFields.length > 0) {
-        return res.status(400).json({
-            error: "Missing critical fields",
-            missingFields: missingPriorityFields,
-            code: "MISSING_PRIORITY_FIELDS"
-        });
-    }
+  if (missingPriorityFields.length > 0) {
+    return res.status(400).json({
+      error: "Missing critical fields",
+      missingFields: missingPriorityFields,
+      code: "MISSING_PRIORITY_FIELDS"
+    });
+  }
 
-    try {
-        // Query Airtable with priority-based filtering
-        const records = await retryOperation(async () => {
-          console.log('Fetching Airtable records...');
-          return await base('Recommendations')
-            .select({
-                filterByFormula: `AND(
+  try {
+    // Query Airtable with priority-based filtering
+    const records = await retryOperation(async () => {
+      console.log('Fetching Airtable records...');
+      return await base('Recommendations')
+        .select({
+          filterByFormula: `AND(
                     OR(LOWER(TRIM({SkinType})) = "${normalizeFieldValue(priorityFields.skinType)}",
                        FIND(LOWER("${priorityFields.skinType}"), LOWER({SkinType})) > 0),
                     OR(LOWER(TRIM({Conditions})) = "${normalizeFieldValue(priorityFields.conditions)}",
@@ -743,19 +743,54 @@ app.post('/api/recommendations', async (req, res) => {
                     OR(LOWER(TRIM({Concerns})) = "${normalizeFieldValue(priorityFields.concerns)}",
                        FIND(LOWER("${priorityFields.concerns}"), LOWER({Concerns})) > 0)
                 )`
-            })
-            .all();
-        });
+        })
+        .all();
+    });
 
-        if (!records || records.length === 0) {
-            return res.status(404).json({
-                error: "No matching recommendations found",
-                code: "NO_RECOMMENDATIONS"
-            });
+    if (!records || records.length === 0) {
+      // Log user progress details
+      console.group('\n=== User Progress Details ===');
+      console.log('User Quiz Data:', {
+        skinType: sanitizedPayload.skinType || 'Not completed',
+        conditions: sanitizedPayload.conditions || 'Not completed',
+        concerns: sanitizedPayload.concerns || 'Not completed',
+        zones: sanitizedPayload.zones || 'Not completed',
+        treatment: sanitizedPayload.treatment || 'Not completed',
+        fragrance: sanitizedPayload.fragrance || 'Not completed',
+        routine: sanitizedPayload.routine || 'Not completed'
+      });
+
+      const completedQuizzes = Object.entries({
+        skinType: sanitizedPayload.skinType,
+        conditions: sanitizedPayload.conditions,
+        concerns: sanitizedPayload.concerns,
+        zones: sanitizedPayload.zones,
+        treatment: sanitizedPayload.treatment,
+        fragrance: sanitizedPayload.fragrance,
+        routine: sanitizedPayload.routine
+      }).reduce((acc, [quiz, value]) => {
+        acc[quiz] = !!value;
+        return acc;
+      }, {});
+
+      console.log('\nCompleted Quizzes Status:', completedQuizzes);
+      console.log('Total Completed:', Object.values(completedQuizzes).filter(Boolean).length);
+      console.log('Total Required:', Object.keys(completedQuizzes).length);
+      console.groupEnd();
+
+      return res.status(404).json({
+        error: "Recommendations not found. Please complete all quizzes.",
+        code: "NO_RECOMMENDATIONS",
+        progress: {
+          completedQuizzes,
+          totalCompleted: Object.values(completedQuizzes).filter(Boolean).length,
+          totalRequired: Object.keys(completedQuizzes).length
         }
+      });
+    }
 
-        // Generate OpenAI prompt with structured format
-        const prompt = `Analyser le profil utilisateur suivant et générer des recommandations personnalisées:
+    // Generate OpenAI prompt with structured format
+    const prompt = `Analyser le profil utilisateur suivant et générer des recommandations personnalisées:
 
 Profil Principal:
 - Type de peau: ${priorityFields.skinType}
@@ -793,155 +828,155 @@ Soir:
 Résultats attendus:
 [bénéfices détaillés]`;
 
-        console.log('\n=== OpenAI Prompt ===');
-        console.log(prompt);
+    console.log('\n=== OpenAI Prompt ===');
+    console.log(prompt);
 
-        const completion = await retryOperation(async () => {
-          console.log('Requesting OpenAI completion...');
-          const result = await openai.chat.completions.create({
-            messages: [{ role: "user", content: prompt }],
-            model: "gpt-3.5-turbo",
-            temperature: 0.7,
-            max_tokens: 1000,
-          });
-          return result;
-        });
+    const completion = await retryOperation(async () => {
+      console.log('Requesting OpenAI completion...');
+      const result = await openai.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+        max_tokens: 1000,
+      });
+      return result;
+    });
 
-        console.log('\n=== OpenAI Response ===');
-        console.log(completion.choices[0].message.content);
+    console.log('\n=== OpenAI Response ===');
+    console.log(completion.choices[0].message.content);
 
-        // Validate OpenAI response format
-        const response = validateOpenAIResponse(completion.choices[0].message.content);
+    // Validate OpenAI response format
+    const response = validateOpenAIResponse(completion.choices[0].message.content);
 
 
-        res.json({
-            success: true,
-            recommendations: response,
-            metadata: {
-                requestId,
-                matchedProducts: records.length,
-                processingTime: Date.now() - parseInt(requestId, 36)
-            }
-        });
+    res.json({
+      success: true,
+      recommendations: response,
+      metadata: {
+        requestId,
+        matchedProducts: records.length,
+        processingTime: Date.now() - parseInt(requestId, 36)
+      }
+    });
 
-    } catch (error) {
-        console.error('\n=== Error Details ===', {
-            name: error.name,
-            message: error.message,
-            code: error.code,
-            stack: error.stack
-        });
+  } catch (error) {
+    console.error('\n=== Error Details ===', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
 
-        res.status(500).json({
-            error: 'Failed to generate recommendations',
-            code: error.code || 'PROCESSING_ERROR',
-            message: error.message
-        });
-    } finally {
-        console.timeEnd(`request-${requestId}`);
-        console.groupEnd();
+    res.status(500).json({
+      error: 'Failed to generate recommendations',
+      code: error.code || 'PROCESSING_ERROR',
+      message: error.message
+    });
+  } finally {
+    console.timeEnd(`request-${requestId}`);
+    console.groupEnd();
+  }
+
+  // Sanitize incoming payload
+  const sanitizedPayload = {
+    skinType: req.body.skinType?.trim(),
+    conditions: req.body.conditions?.trim(),
+    concerns: req.body.concerns?.trim(),
+    zones: req.body.zones?.trim(),
+    treatment: req.body.treatment?.trim(),
+    fragrance: req.body.fragrance?.trim(),
+    routine: req.body.routine?.trim()
+  };
+
+  console.log('\n=== Sanitized Payload ===');
+  console.log('Sanitized values:', sanitizedPayload);
+
+  // Validate Airtable schema and field mapping
+  const requiredFields = {
+    'SkinType': 'skin type',
+    'Conditions': 'conditions',
+    'Concerns': 'concerns',
+    'Zones': 'target areas',
+    'Treatment': 'texture preference',
+    'Fragrance': 'scent preference',
+    'Routine': 'routine time',
+    'Products': 'products',
+    'Notes': 'additional notes'
+  };
+
+  // Log Airtable field structure
+  console.log('\n=== Airtable Schema Validation ===');
+  console.log('Required fields:', Object.keys(requiredFields));
+
+  try {
+    const table = base('Recommendations');
+    const sample = await table.select({ maxRecords: 1 }).firstPage();
+    const missingFields = [];
+
+    if (sample && sample.length > 0) {
+      const fields = sample[0].fields;
+      for (const [field, label] of Object.entries(requiredFields)) {
+        if (!(field in fields)) {
+          missingFields.push({ field, label });
+        }
+      }
+
+      if (missingFields.length > 0) {
+        console.error('Missing Airtable fields:', missingFields);
+        throw new Error(`Missing required Airtable fields: ${missingFields.map(f => f.field).join(', ')}`);
+      }
     }
 
-    // Sanitize incoming payload
-    const sanitizedPayload = {
-        skinType: req.body.skinType?.trim(),
-        conditions: req.body.conditions?.trim(),
-        concerns: req.body.concerns?.trim(),
-        zones: req.body.zones?.trim(),
-        treatment: req.body.treatment?.trim(),
-        fragrance: req.body.fragrance?.trim(),
-        routine: req.body.routine?.trim()
-    };
-
-    console.log('\n=== Sanitized Payload ===');
-    console.log('Sanitized values:', sanitizedPayload);
-
-    // Validate Airtable schema and field mapping
-    const requiredFields = {
-        'SkinType': 'skin type',
-        'Conditions': 'conditions',
-        'Concerns': 'concerns',
-        'Zones': 'target areas',
-        'Treatment': 'texture preference',
-        'Fragrance': 'scent preference',
-        'Routine': 'routine time',
-        'Products': 'products',
-        'Notes': 'additional notes'
-    };
-
-    // Log Airtable field structure
-    console.log('\n=== Airtable Schema Validation ===');
-    console.log('Required fields:', Object.keys(requiredFields));
-
     try {
-        const table = base('Recommendations');
-        const sample = await table.select({ maxRecords: 1 }).firstPage();
-        const missingFields = [];
+      console.log('\n=== Processing User Data ===');
+      const userData = {
+        skinType: sanitizedPayload.skinType,
+        conditions: sanitizedPayload.conditions,
+        concerns: sanitizedPayload.concerns,
+        zones: sanitizedPayload.zones,
+        treatment: sanitizedPayload.treatment,
+        fragrance: sanitizedPayload.fragrance,
+        routine: sanitizedPayload.routine
+      };
 
-        if (sample && sample.length > 0) {
-            const fields = sample[0].fields;
-            for (const [field, label] of Object.entries(requiredFields)) {
-                if (!(field in fields)) {
-                    missingFields.push({ field, label });
-                }
-            }
+      // Validate each required field with specific messages
+      const fieldMessages = {
+        skinType: "Skin type is required. Please complete the skin type quiz.",
+        conditions: "Skin conditions information is required. Please complete the conditions quiz.",
+        concerns: "Skin concerns are required. Please complete the concerns quiz.",
+        zones: "Treatment zones are required. Please complete the zones quiz.",
+        treatment: "Treatment preference is required. Please complete the treatment quiz.",
+        fragrance: "Fragrance preference is required. Please complete the fragrance quiz.",
+        routine: "Routine preference is required. Please complete the routine quiz."
+      };
 
-            if (missingFields.length > 0) {
-                console.error('Missing Airtable fields:', missingFields);
-                throw new Error(`Missing required Airtable fields: ${missingFields.map(f => f.field).join(', ')}`);
-            }
+      for (const [field, message] of Object.entries(fieldMessages)) {
+        if (!userData[field]) {
+          console.error(`Missing required field: ${field}`);
+          return res.status(400).json({
+            error: message,
+            field,
+            code: 'MISSING_FIELD'
+          });
         }
+      }
 
-    try {
-        console.log('\n=== Processing User Data ===');
-        const userData = {
-            skinType: sanitizedPayload.skinType,
-            conditions: sanitizedPayload.conditions,
-            concerns: sanitizedPayload.concerns,
-            zones: sanitizedPayload.zones,
-            treatment: sanitizedPayload.treatment,
-            fragrance: sanitizedPayload.fragrance,
-            routine: sanitizedPayload.routine
-        };
+      console.log("\n=== Querying Airtable ===");
+      console.log('Querying Airtable with params:', userData);
 
-        // Validate each required field with specific messages
-        const fieldMessages = {
-            skinType: "Skin type is required. Please complete the skin type quiz.",
-            conditions: "Skin conditions information is required. Please complete the conditions quiz.",
-            concerns: "Skin concerns are required. Please complete the concerns quiz.",
-            zones: "Treatment zones are required. Please complete the zones quiz.",
-            treatment: "Treatment preference is required. Please complete the treatment quiz.",
-            fragrance: "Fragrance preference is required. Please complete the fragrance quiz.",
-            routine: "Routine preference is required. Please complete the routine quiz."
-        };
+      try {
+        // Query Airtable with detailed logging
+        console.log('\n=== Executing Airtable Query ===');
+        console.log('Query parameters:', sanitizedPayload);
 
-        for (const [field, message] of Object.entries(fieldMessages)) {
-            if (!userData[field]) {
-                console.error(`Missing required field: ${field}`);
-                return res.status(400).json({
-                    error: message,
-                    field,
-                    code: 'MISSING_FIELD'
-                });
-            }
-        }
-
-        console.log("\n=== Querying Airtable ===");
-        console.log('Querying Airtable with params:', userData);
-
+        // Fetch records with enhanced error handling
+        let records;
         try {
-            // Query Airtable with detailed logging
-            console.log('\n=== Executing Airtable Query ===');
-            console.log('Query parameters:', sanitizedPayload);
-
-            // Fetch records with enhanced error handling
-            let records;
-            try {
-                records = await retryOperation(async () => {
-                  console.log('Fetching Airtable records...');
-                  return await base('Recommendations')
-                    .select({
-                        filterByFormula: `AND(
+          records = await retryOperation(async () => {
+            console.log('Fetching Airtable records...');
+            return await base('Recommendations')
+              .select({
+                filterByFormula: `AND(
                             OR(
                                 LOWER(TRIM({SkinType})) = "${normalizeFieldValue(sanitizedPayload.skinType)}",
                                 FIND("${normalizeFieldValue(sanitizedPayload.skinType)}", LOWER(TRIM({SkinType}))) > 0
@@ -971,37 +1006,37 @@ Résultats attendus:
                                 FIND("${normalizeFieldValue(sanitizedPayload.routine)}", LOWER(TRIM({Routine}))) > 0
                             )
                         )`
-                    })
-                    .all();
-                });
-            } catch (airtableError) {
-                console.error('Airtable error:', airtableError);
-                return res.status(500).json({
-                    error: 'Failed to fetch recommendations',
-                    code: 'AIRTABLE_ERROR',
-                    details: airtableError.message
-                });
-            }
+              })
+              .all();
+          });
+        } catch (airtableError) {
+          console.error('Airtable error:', airtableError);
+          return res.status(500).json({
+            error: 'Failed to fetch recommendations',
+            code: 'AIRTABLE_ERROR',
+            details: airtableError.message
+          });
+        }
 
 
-            // Log query results
-            console.log('\n=== Airtable Query Results ===');
-            console.log('Total records found:', records.length);
-            console.log('First record sample:', records[0]?.fields);
+        // Log query results
+        console.log('\n=== Airtable Query Results ===');
+        console.log('Total records found:', records.length);
+        console.log('First record sample:', records[0]?.fields);
 
-            console.log('\n=== Airtable Query Results ===');
-            console.log('Query matched records:', records.length);
+        console.log('\n=== Airtable Query Results ===');
+        console.log('Query matched records:', records.length);
 
-            if (!records || records.length === 0) {
-                return res.status(404).json({
-                    error: "No matching recommendations found",
-                    code: "NO_RECOMMENDATIONS"
-                });
-            }
-            console.log("Airtable Records Retrieved:", records.map(record => record.fields));
+        if (!records || records.length === 0) {
+          return res.status(404).json({
+            error: "No matching recommendations found",
+            code: "NO_RECOMMENDATIONS"
+          });
+        }
+        console.log("Airtable Records Retrieved:", records.map(record => record.fields));
 
 
-            const openaiPrompt = `User Responses:
+        const openaiPrompt = `User Responses:
                 SkinType: ${userData.skinType}
                 Condition: ${userData.conditions}
                 Concerns: ${userData.concerns}
@@ -1011,77 +1046,78 @@ Résultats attendus:
                 TargetAreas: ${userData.zones}
                 Generate a response in this format:
                 Produits:
-                Nettoyage : 
-                Eau florale : 
-                Sérum : 
-                Hydratant : 
+                Nettoyage :
+                Eau florale :
+                Sérum :
+                Hydratant :
 
                 Routine:
                 Matin :
-                Nettoyage avec 
+                Nettoyage avec
                 Application d’
 
                 Soir :
-                Nettoyage avec 
+                Nettoyage avec
 
                 Résultat attendu : `;
 
 
-            const openaiResponse = await retryOperation(async () => {
-              console.log('Requesting OpenAI completion...');
-              return await openai.chat.completions.create({
-                messages: [{ role: "user", content: openaiPrompt }],
-                model: "gpt-3.5-turbo",
-                temperature: 0.7,
-                max_tokens: 1000,
-              });
-            });
+        const openaiResponse = await retryOperation(async () => {
+          console.log('Requesting OpenAI completion...');
+          return await openai.chat.completions.create({
+            messages: [{ role: "user", content: openaiPrompt }],
+            model: "gpt-3.5-turbo",
+            temperature: 0.7,
+            max_tokens: 1000,
+          });
+        });
 
-            console.log("OpenAI Response:", openaiResponse.choices[0].message.content)
+        console.log("OpenAI Response:", openaiResponse.choices[0].message.content)
 
-            const recommendations = records.map(record => ({
-                id: record.id,
-                skinType: record.fields.SkinType,
-                conditions: record.fields.Conditions,
-                concerns: record.fields.Concerns,
-                products: record.fields.Products || [],
-                notes: record.fields.Notes || '',
-                openaiResponse: openaiResponse.choices[0].message.content
-            }));
+        const recommendations = records.map(record => ({
+          id: record.id,
+          skinType: record.fields.SkinType,
+          conditions: record.fields.Conditions,
+          concerns: record.fields.Concerns,
+          products: record.fields.Products || [],
+          notes: record.fields.Notes || '',
+          openaiResponse: openaiResponse.choices[0].message.content
+        }));
 
-            console.log("Recommendations found:", recommendations.length);
-            res.json({ success: true, recommendations });
+        console.log("Recommendations found:", recommendations.length);
+        res.json({ success: true, recommendations });
 
-        } catch (error) {
-            console.error("Error in /api/recommendations:", error);
-            res.status(500).json({ error: error.message });
-        } finally {
-            console.timeEnd(`request-${requestId}`);
-            console.groupEnd();
-        }
+      } catch (error) {
+        console.error("Error in /api/recommendations:", error);
+        res.status(500).json({ error: error.message });
+      } finally {
+        console.timeEnd(`request-${requestId}`);
+        console.groupEnd();
+      }
     }
+  }
 });
 
 function validateAirtableRecord(record) {
-    const validationResults = {
-        isValid: true,
-        missingFields: [],
-        invalidValues: []
-    };
+  const validationResults = {
+    isValid: true,
+    missingFields: [],
+    invalidValues: []
+  };
 
-    // Check required fields
-    for (const [field, label] of Object.entries(requiredFields)) {
-        if (!record.fields[field]) {
-            validationResults.isValid = false;
-            validationResults.missingFields.push(field);
-        }
+  // Check required fields
+  for (const [field, label] of Object.entries(requiredFields)) {
+    if (!record.fields[field]) {
+      validationResults.isValid = false;
+      validationResults.missingFields.push(field);
     }
+  }
 
-    // Validate field values
-    if (record.fields.Products && !Array.isArray(record.fields.Products)) {
-        validationResults.isValid = false;
-        validationResults.invalidValues.push('Products should be an array');
-    }
+  // Validate field values
+  if (record.fields.Products && !Array.isArray(record.fields.Products)) {
+    validationResults.isValid = false;
+    validationResults.invalidValues.push('Products should be an array');
+  }
 
-    return validationResults;
+  return validationResults;
 }
