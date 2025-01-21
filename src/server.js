@@ -503,7 +503,7 @@ app.post('/api/recommendations', async (req, res) => {
     console.log('\n=== Sanitized Payload ===');
     console.log('Sanitized values:', sanitizedPayload);
 
-    // Validate Airtable schema
+    // Validate Airtable schema and field mapping
     const requiredFields = {
         'SkinType': 'skin type',
         'Conditions': 'conditions',
@@ -512,8 +512,13 @@ app.post('/api/recommendations', async (req, res) => {
         'Treatment': 'texture preference',
         'Fragrance': 'scent preference',
         'Routine': 'routine time',
-        'Products': 'products'
+        'Products': 'products',
+        'Notes': 'additional notes'
     };
+
+    // Log Airtable field structure
+    console.log('\n=== Airtable Schema Validation ===');
+    console.log('Required fields:', Object.keys(requiredFields));
 
     try {
         const table = base('Recommendations');
@@ -566,19 +571,35 @@ app.post('/api/recommendations', async (req, res) => {
         });
         
         try {
+            // Query Airtable with detailed logging
+            console.log('\n=== Executing Airtable Query ===');
+            console.log('Query parameters:', sanitizedPayload);
+            
             const records = await base('Recommendations')
                 .select({
                     filterByFormula: `AND(
-                        TRIM({SkinType}) = "${sanitizedPayload.skinType}",
-                        TRIM({Conditions}) = "${sanitizedPayload.conditions}",
-                        TRIM({Concerns}) = "${sanitizedPayload.concerns}",
-                        TRIM({Zones}) = "${sanitizedPayload.zones}",
-                        TRIM({Treatment}) = "${sanitizedPayload.treatment}",
-                        TRIM({Fragrance}) = "${sanitizedPayload.fragrance}",
-                        TRIM({Routine}) = "${sanitizedPayload.routine}"
+                        OR(LOWER(TRIM({SkinType})) = LOWER("${sanitizedPayload.skinType}"),
+                           FIND(LOWER("${sanitizedPayload.skinType}"), LOWER({SkinType})) > 0),
+                        OR(LOWER(TRIM({Conditions})) = LOWER("${sanitizedPayload.conditions}"),
+                           FIND(LOWER("${sanitizedPayload.conditions}"), LOWER({Conditions})) > 0),
+                        OR(LOWER(TRIM({Concerns})) = LOWER("${sanitizedPayload.concerns}"),
+                           FIND(LOWER("${sanitizedPayload.concerns}"), LOWER({Concerns})) > 0),
+                        OR(LOWER(TRIM({Zones})) = LOWER("${sanitizedPayload.zones}"),
+                           FIND(LOWER("${sanitizedPayload.zones}"), LOWER({Zones})) > 0),
+                        OR(LOWER(TRIM({Treatment})) = LOWER("${sanitizedPayload.treatment}"),
+                           FIND(LOWER("${sanitizedPayload.treatment}"), LOWER({Treatment})) > 0),
+                        OR(LOWER(TRIM({Fragrance})) = LOWER("${sanitizedPayload.fragrance}"),
+                           FIND(LOWER("${sanitizedPayload.fragrance}"), LOWER({Fragrance})) > 0),
+                        OR(LOWER(TRIM({Routine})) = LOWER("${sanitizedPayload.routine}"),
+                           FIND(LOWER("${sanitizedPayload.routine}"), LOWER({Routine})) > 0)
                     )`
                 })
                 .all();
+
+            // Log query results
+            console.log('\n=== Airtable Query Results ===');
+            console.log('Total records found:', records.length);
+            console.log('First record sample:', records[0]?.fields);
                 
             console.log('\n=== Airtable Query Results ===');
             console.log('Query matched records:', records.length);
@@ -612,3 +633,26 @@ app.post('/api/recommendations', async (req, res) => {
     }
   }
 });
+function validateAirtableRecord(record) {
+    const validationResults = {
+        isValid: true,
+        missingFields: [],
+        invalidValues: []
+    };
+
+    // Check required fields
+    for (const [field, label] of Object.entries(requiredFields)) {
+        if (!record.fields[field]) {
+            validationResults.isValid = false;
+            validationResults.missingFields.push(field);
+        }
+    }
+
+    // Validate field values
+    if (record.fields.Products && !Array.isArray(record.fields.Products)) {
+        validationResults.isValid = false;
+        validationResults.invalidValues.push('Products should be an array');
+    }
+
+    return validationResults;
+}
