@@ -82,13 +82,13 @@ const Recommendations = () => {
       });
 
       const quizData = {
-        skinType: localStorage.getItem('skinType'),
-        conditions: localStorage.getItem('conditions'),
-        concerns: localStorage.getItem('concerns'),
-        zones: localStorage.getItem('zones'),
-        treatment: localStorage.getItem('treatment'),
-        fragrance: localStorage.getItem('fragrance'),
-        routine: localStorage.getItem('routine')
+        skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
+        conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
+        concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
+        zones: JSON.parse(localStorage.getItem('zones') || '""'),
+        treatment: JSON.parse(localStorage.getItem('treatment') || '""'),
+        fragrance: JSON.parse(localStorage.getItem('fragrance') || '""'),
+        routine: JSON.parse(localStorage.getItem('routine') || '""')
       };
 
       console.log('\n=== Submitting Quiz Data ===');
