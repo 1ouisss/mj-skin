@@ -488,10 +488,20 @@ app.post('/api/recommendations', async (req, res) => {
     
     console.log('\n=== Request Payload Details ===');
     console.log('Raw payload:', req.body);
-    console.log('Content type:', req.get('Content-Type'));
-    console.log('Payload size:', JSON.stringify(req.body).length, 'bytes');
-    console.log('Request timestamp:', new Date().toISOString());
-    console.log('Fields present:', Object.keys(req.body));
+    
+    // Sanitize incoming payload
+    const sanitizedPayload = {
+        skinType: req.body.skinType?.trim(),
+        conditions: req.body.conditions?.trim(),
+        concerns: req.body.concerns?.trim(),
+        zones: req.body.zones?.trim(),
+        treatment: req.body.treatment?.trim(),
+        fragrance: req.body.fragrance?.trim(),
+        routine: req.body.routine?.trim()
+    };
+
+    console.log('\n=== Sanitized Payload ===');
+    console.log('Sanitized values:', sanitizedPayload);
 
     // Validate Airtable schema
     const requiredFields = {
@@ -559,16 +569,19 @@ app.post('/api/recommendations', async (req, res) => {
             const records = await base('Recommendations')
                 .select({
                     filterByFormula: `AND(
-                        FIND("${skinType}", {SkinType}) > 0,
-                        FIND("${conditions}", {Conditions}) > 0,
-                        FIND("${concerns}", {Concerns}) > 0,
-                        FIND("${zones}", {Zones}) > 0,
-                        FIND("${treatment}", {Treatment}) > 0,
-                        FIND("${fragrance}", {Fragrance}) > 0,
-                        FIND("${routine}", {Routine}) > 0
+                        TRIM({SkinType}) = "${sanitizedPayload.skinType}",
+                        TRIM({Conditions}) = "${sanitizedPayload.conditions}",
+                        TRIM({Concerns}) = "${sanitizedPayload.concerns}",
+                        TRIM({Zones}) = "${sanitizedPayload.zones}",
+                        TRIM({Treatment}) = "${sanitizedPayload.treatment}",
+                        TRIM({Fragrance}) = "${sanitizedPayload.fragrance}",
+                        TRIM({Routine}) = "${sanitizedPayload.routine}"
                     )`
                 })
                 .all();
+                
+            console.log('\n=== Airtable Query Results ===');
+            console.log('Query matched records:', records.length);
                 
             if (!records || records.length === 0) {
                 return res.status(404).json({
