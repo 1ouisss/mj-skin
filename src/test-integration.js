@@ -6,71 +6,141 @@ import { validateAirtableRecord, normalizeFieldValue } from './utils/airtable-va
 
 dotenv.config();
 
-async function testIntegration() {
-  console.group('\n=== Testing Full Integration Flow ===');
-  console.time('integration-test');
+const TEST_CASES = [
+  {
+    name: 'Basic Skincare Profile',
+    input: {
+      skinType: 'combination',
+      conditions: 'acne',
+      concerns: 'dark spots',
+      zones: 'face',
+      treatment: 'cream',
+      fragrance: 'unscented',
+      routine: '5-10min'
+    }
+  },
+  {
+    name: 'Complex Skincare Profile',
+    input: {
+      skinType: 'sensitive',
+      conditions: 'rosacea',
+      concerns: 'aging',
+      zones: 'face,neck',
+      treatment: 'serum',
+      fragrance: 'natural',
+      routine: '10-15min'
+    }
+  }
+];
 
-  // Test data
-  const testUserData = {
-    skinType: 'combination',
-    conditions: 'acne',
-    concerns: 'aging',
-    zones: 'face',
-    treatment: 'cream',
-    fragrance: 'unscented',
-    routine: '5-10min'
-  };
-
+async function validateAirtableQueries(base, testCase) {
+  console.group(`\n=== Testing Airtable Query: ${testCase.name} ===`);
+  
   try {
-    // 1. Test Airtable Connection and Data Validation
-    console.log('\n1. Testing Airtable Query...');
-    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-    
     const records = await base('Recommendations')
       .select({
         filterByFormula: `AND(
-          OR(LOWER(TRIM({SkinType})) = "${normalizeFieldValue(testUserData.skinType)}",
-             FIND(LOWER("${testUserData.skinType}"), LOWER({SkinType})) > 0),
-          OR(LOWER(TRIM({Conditions})) = "${normalizeFieldValue(testUserData.conditions)}",
-             FIND(LOWER("${testUserData.conditions}"), LOWER({Conditions})) > 0)
+          OR(LOWER(TRIM({SkinType})) = "${normalizeFieldValue(testCase.input.skinType)}",
+             FIND(LOWER("${testCase.input.skinType}"), LOWER({SkinType})) > 0),
+          OR(LOWER(TRIM({Conditions})) = "${normalizeFieldValue(testCase.input.conditions)}",
+             FIND(LOWER("${testCase.input.conditions}"), LOWER({Conditions})) > 0)
         )`
       })
       .all();
 
-    console.log('Airtable Response:', {
-      recordCount: records.length,
-      sampleFields: records[0]?.fields ? Object.keys(records[0].fields) : [],
-      firstRecord: records[0]?.fields
+    console.log('Query Results:', {
+      count: records.length,
+      fields: records[0] ? Object.keys(records[0].fields) : [],
+      sample: records[0]?.fields
     });
 
-    // Validate Airtable records
-    const validatedRecords = records.map(record => validateAirtableRecord(record));
-    const invalidRecords = validatedRecords.filter(v => !v.isValid);
-    
+    const validations = records.map(validateAirtableRecord);
+    const invalidRecords = validations.filter(v => !v.isValid);
+
     if (invalidRecords.length > 0) {
       console.error('Invalid records found:', invalidRecords);
-      throw new Error('Invalid Airtable records detected');
+      return false;
     }
 
-    // 2. Test OpenAI Integration
-    console.log('\n2. Testing OpenAI Integration...');
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    return records;
+  } catch (error) {
+    console.error('Airtable query error:', error);
+    return false;
+  } finally {
+    console.groupEnd();
+  }
+}
 
-    const prompt = `Analyser le profil utilisateur suivant et générer des recommandations personnalisées:
+async function validateOpenAIResponse(openai, prompt) {
+  console.group('\n=== Testing OpenAI Response ===');
+  
+  try {
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-3.5-turbo",
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
+
+    const response = completion.choices[0].message.content;
+    const validation = {
+      hasProducts: response.includes('Produits:'),
+      hasRoutine: response.includes('Routine:'),
+      hasMorning: response.includes('Matin:'),
+      hasEvening: response.includes('Soir:'),
+      hasResults: response.includes('Résultats attendus:')
+    };
+
+    console.log('Response Format Validation:', validation);
+    return Object.values(validation).every(v => v) ? response : false;
+  } catch (error) {
+    console.error('OpenAI validation error:', error);
+    return false;
+  } finally {
+    console.groupEnd();
+  }
+}
+
+async function runIntegrationTests() {
+  console.group('\n=== Running Full Integration Tests ===');
+  console.time('full-test-suite');
+
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+  const results = {
+    total: TEST_CASES.length,
+    passed: 0,
+    failed: 0,
+    errors: []
+  };
+
+  for (const testCase of TEST_CASES) {
+    console.group(`\nTest Case: ${testCase.name}`);
+    
+    try {
+      // 1. Validate Airtable Query
+      const airtableRecords = await validateAirtableQueries(base, testCase);
+      if (!airtableRecords) {
+        throw new Error('Airtable validation failed');
+      }
+
+      // 2. Generate and Test OpenAI Prompt
+      const prompt = `Analyser le profil utilisateur suivant et générer des recommandations personnalisées:
 
 Profil Principal:
-- Type de peau: ${testUserData.skinType}
-- Conditions: ${testUserData.conditions}
-- Préoccupations: ${testUserData.concerns}
+- Type de peau: ${testCase.input.skinType}
+- Conditions: ${testCase.input.conditions}
+- Préoccupations: ${testCase.input.concerns}
 
 Informations Secondaires:
-- Zones ciblées: ${testUserData.zones}
-- Préférence de texture: ${testUserData.treatment}
-- Préférence de parfum: ${testUserData.fragrance}
-- Temps de routine: ${testUserData.routine}
+- Zones ciblées: ${testCase.input.zones}
+- Préférence de texture: ${testCase.input.treatment}
+- Préférence de parfum: ${testCase.input.fragrance}
+- Temps de routine: ${testCase.input.routine}
 
 Produits disponibles:
-${records.map(r => r.fields.Products).flat().join(', ')}
+${airtableRecords.map(r => r.fields.Products).flat().join(', ')}
 
 Générer une réponse dans ce format:
 
@@ -94,57 +164,43 @@ Soir:
 Résultats attendus:
 [bénéfices détaillés]`;
 
-    console.log('\nPrompt Structure:', {
-      length: prompt.length,
-      sections: {
-        profile: prompt.includes('Profil Principal'),
-        products: prompt.includes('Produits disponibles'),
-        format: prompt.includes('Générer une réponse dans ce format')
+      const openAIResponse = await validateOpenAIResponse(openai, prompt);
+      if (!openAIResponse) {
+        throw new Error('OpenAI validation failed');
       }
-    });
 
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
-      temperature: 0.7,
-      max_tokens: 1000,
-    });
+      results.passed++;
+      console.log('Test passed successfully');
 
-    // 3. Validate OpenAI Response Format
-    const response = completion.choices[0].message.content;
-    const formatValidation = {
-      hasProducts: response.includes('Produits:'),
-      hasRoutine: response.includes('Routine:'),
-      hasMorning: response.includes('Matin:'),
-      hasEvening: response.includes('Soir:'),
-      hasResults: response.includes('Résultats attendus:')
-    };
-
-    console.log('\nResponse Format Validation:', formatValidation);
-    
-    if (!Object.values(formatValidation).every(v => v)) {
-      throw new Error('Invalid response format from OpenAI');
+    } catch (error) {
+      results.failed++;
+      results.errors.push({
+        testCase: testCase.name,
+        error: error.message
+      });
+      console.error('Test failed:', error.message);
+    } finally {
+      console.groupEnd();
     }
-
-    console.log('\nTest completed successfully');
-    console.timeEnd('integration-test');
-    console.groupEnd();
-
-  } catch (error) {
-    console.error('\nTest failed:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    });
-    console.timeEnd('integration-test');
-    console.groupEnd();
-    process.exit(1);
   }
+
+  console.log('\nTest Results:', results);
+  console.timeEnd('full-test-suite');
+  console.groupEnd();
+
+  return results;
 }
 
-// Run the test
-testIntegration()
+// Run the tests
+runIntegrationTests()
+  .then(results => {
+    if (results.failed > 0) {
+      console.error('Some tests failed:', results.errors);
+      process.exit(1);
+    }
+    console.log('All tests passed successfully');
+  })
   .catch(error => {
-    console.error('Integration test failed:', error);
+    console.error('Test suite failed:', error);
     process.exit(1);
   });
