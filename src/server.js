@@ -485,49 +485,26 @@ app.post('/api/recommendations', async (req, res) => {
     const requestId = Date.now().toString(36);
     console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
     console.time(`request-${requestId}`);
-    console.log("\n=== Request Details ===");
-    console.log("Payload:", JSON.stringify(req.body, null, 2));
-    console.log("Headers:", req.headers);
     
     try {
-        const requiredFields = {
-            skinType: "Skin Type",
-            conditions: "Conditions",
-            concerns: "Concerns",
-            zones: "Zones",
-            treatment: "Treatment",
-            fragrance: "Fragrance",
-            routine: "Routine"
-        };
-
         const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
+        console.log("Payload:", JSON.stringify(req.body, null, 2));
 
-        if (!skinType || !conditions || !concerns || !zones || !treatment || !fragrance || !routine) {
-            const missingFields = {
-                skinType: !skinType,
-                conditions: !conditions,
-                concerns: !concerns,
-                zones: !zones,
-                treatment: !treatment,
-                fragrance: !fragrance,
-                routine: !routine,
-            };
+        // Validate required fields
+        const requiredFields = ['skinType', 'conditions', 'concerns', 'zones', 'treatment', 'fragrance', 'routine'];
+        const missingFields = requiredFields.reduce((acc, field) => {
+            if (!req.body[field]) acc[field] = true;
+            return acc;
+        }, {});
 
+        if (Object.keys(missingFields).length > 0) {
             console.error("Missing required fields:", missingFields);
-            console.timeEnd('request-duration');
-            console.groupEnd();
-            
             return res.status(400).json({
                 error: "Missing required fields",
                 missingFields,
-                message: `Please provide all required fields: ${Object.entries(missingFields)
-                    .filter(([_, isMissing]) => isMissing)
-                    .map(([field]) => field)
-                    .join(', ')}`
+                message: `Please provide all required fields: ${Object.keys(missingFields).join(', ')}`
             });
         }
-
-        const { skinType, conditions, concerns, zones, treatment, fragrance, routine } = req.body;
 
         console.log("\n=== Querying Airtable ===");
         const records = await base('Recommendations')
@@ -539,9 +516,6 @@ app.post('/api/recommendations', async (req, res) => {
                 )`
             })
             .all();
-        
-        console.log("\n=== Airtable Response ===");
-        console.log("Raw Records:", JSON.stringify(records, null, 2));
 
         const recommendations = records.map(record => ({
             id: record.id,
@@ -552,13 +526,14 @@ app.post('/api/recommendations', async (req, res) => {
             notes: record.fields.Notes || ''
         }));
 
-        console.log("\n=== Formatted Response ===");
-        console.log("Formatted Recommendations:", JSON.stringify(recommendations, null, 2));
-        
+        console.log("Recommendations found:", recommendations.length);
         res.json({ success: true, recommendations });
         
     } catch (error) {
         console.error("Error in /api/recommendations:", error);
         res.status(500).json({ error: error.message });
+    } finally {
+        console.timeEnd(`request-${requestId}`);
+        console.groupEnd();
     }
 });
