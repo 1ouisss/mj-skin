@@ -480,6 +480,14 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+const normalizeFieldValue = (value) => {
+    if (typeof value === 'string'){
+        return value.toLowerCase().trim();
+    }
+    return value;
+}
+
 app.post('/api/recommendations', async (req, res) => {
     const requestId = Date.now().toString(36);
     console.group(`\n=== POST /api/recommendations (${requestId}) ===`);
@@ -580,26 +588,52 @@ app.post('/api/recommendations', async (req, res) => {
             console.log('\n=== Executing Airtable Query ===');
             console.log('Query parameters:', sanitizedPayload);
 
-            const records = await base('Recommendations')
-                .select({
-                    filterByFormula: `AND(
-                        OR(LOWER(TRIM({SkinType})) = LOWER("${sanitizedPayload.skinType}"),
-                           FIND(LOWER("${sanitizedPayload.skinType}"), LOWER({SkinType})) > 0),
-                        OR(LOWER(TRIM({Conditions})) = LOWER("${sanitizedPayload.conditions}"),
-                           FIND(LOWER("${sanitizedPayload.conditions}"), LOWER({Conditions})) > 0),
-                        OR(LOWER(TRIM({Concerns})) = LOWER("${sanitizedPayload.concerns}"),
-                           FIND(LOWER("${sanitizedPayload.concerns}"), LOWER({Concerns})) > 0),
-                        OR(LOWER(TRIM({Zones})) = LOWER("${sanitizedPayload.zones}"),
-                           FIND(LOWER("${sanitizedPayload.zones}"), LOWER({Zones})) > 0),
-                        OR(LOWER(TRIM({Treatment})) = LOWER("${sanitizedPayload.treatment}"),
-                           FIND(LOWER("${sanitizedPayload.treatment}"), LOWER({Treatment})) > 0),
-                        OR(LOWER(TRIM({Fragrance})) = LOWER("${sanitizedPayload.fragrance}"),
-                           FIND(LOWER("${sanitizedPayload.fragrance}"), LOWER({Fragrance})) > 0),
-                        OR(LOWER(TRIM({Routine})) = LOWER("${sanitizedPayload.routine}"),
-                           FIND(LOWER("${sanitizedPayload.routine}"), LOWER({Routine})) > 0)
-                    )`
-                })
-                .all();
+            // Fetch records with enhanced error handling
+            let records;
+            try {
+                records = await base('Recommendations')
+                    .select({
+                        filterByFormula: `AND(
+                            OR(
+                                LOWER(TRIM({SkinType})) = "${normalizeFieldValue(sanitizedPayload.skinType)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.skinType)}", LOWER(TRIM({SkinType}))) > 0
+                            ),
+                            OR(
+                                LOWER(TRIM({Conditions})) = "${normalizeFieldValue(sanitizedPayload.conditions)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.conditions)}", LOWER(TRIM({Conditions}))) > 0
+                            ),
+                            OR(
+                                LOWER(TRIM({Concerns})) = "${normalizeFieldValue(sanitizedPayload.concerns)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.concerns)}", LOWER(TRIM({Concerns}))) > 0
+                            ),
+                            OR(
+                                LOWER(TRIM({Zones})) = "${normalizeFieldValue(sanitizedPayload.zones)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.zones)}", LOWER(TRIM({Zones}))) > 0
+                            ),
+                            OR(
+                                LOWER(TRIM({Treatment})) = "${normalizeFieldValue(sanitizedPayload.treatment)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.treatment)}", LOWER(TRIM({Treatment}))) > 0
+                            ),
+                            OR(
+                                LOWER(TRIM({Fragrance})) = "${normalizeFieldValue(sanitizedPayload.fragrance)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.fragrance)}", LOWER(TRIM({Fragrance}))) > 0
+                            ),
+                            OR(
+                                LOWER(TRIM({Routine})) = "${normalizeFieldValue(sanitizedPayload.routine)}",
+                                FIND("${normalizeFieldValue(sanitizedPayload.routine)}", LOWER(TRIM({Routine}))) > 0
+                            )
+                        )`
+                    })
+                    .all();
+            } catch (airtableError) {
+                console.error('Airtable error:', airtableError);
+                return res.status(500).json({
+                    error: 'Failed to fetch recommendations',
+                    code: 'AIRTABLE_ERROR',
+                    details: airtableError.message
+                });
+            }
+
 
             // Log query results
             console.log('\n=== Airtable Query Results ===');
@@ -637,10 +671,10 @@ app.post('/api/recommendations', async (req, res) => {
                 Matin :
                 Nettoyage avec 
                 Application d’
-                
+
                 Soir :
                 Nettoyage avec 
-                
+
                 Résultat attendu : `;
 
 
@@ -675,6 +709,7 @@ app.post('/api/recommendations', async (req, res) => {
         }
     }
 });
+
 function validateAirtableRecord(record) {
     const validationResults = {
         isValid: true,
