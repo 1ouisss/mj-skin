@@ -558,14 +558,14 @@ app.post('/api/recommendations', async (req, res) => {
         try {
             const records = await base('Recommendations')
                 .select({
-                    filterByFormula: `OR(
-                        FIND("${skinType}", {SkinType}),
-                        FIND("${conditions}", {Conditions}),
-                        FIND("${concerns}", {Concerns}),
-                        FIND("${zones}", {Zones}),
-                        FIND("${treatment}", {Treatment}),
-                        FIND("${fragrance}", {Fragrance}),
-                        FIND("${routine}", {Routine})
+                    filterByFormula: `AND(
+                        FIND("${skinType}", {SkinType}) > 0,
+                        FIND("${conditions}", {Conditions}) > 0,
+                        FIND("${concerns}", {Concerns}) > 0,
+                        FIND("${zones}", {Zones}) > 0,
+                        FIND("${treatment}", {Treatment}) > 0,
+                        FIND("${fragrance}", {Fragrance}) > 0,
+                        FIND("${routine}", {Routine}) > 0
                     )`
                 })
                 .all();
