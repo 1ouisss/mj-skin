@@ -40,6 +40,38 @@ app.use((req, res, next) => {
 
 // Test route with static data
 
+// Validation function for Airtable records
+function validateAirtableRecord(record) {
+  const requiredFields = ['SkinType', 'Conditions', 'Concerns'];
+  const validation = {
+    isValid: true,
+    missingFields: [],
+    record: null
+  };
+
+  if (!record || !record.fields) {
+    validation.isValid = false;
+    validation.missingFields = ['fields'];
+    return validation;
+  }
+
+  for (const field of requiredFields) {
+    if (!record.fields[field]) {
+      validation.isValid = false;
+      validation.missingFields.push(field);
+    }
+  }
+
+  if (validation.isValid) {
+    validation.record = {
+      id: record.id,
+      ...record.fields
+    };
+  }
+
+  return validation;
+}
+
 app.get('/api/responses', async (req, res) => {
   console.group('\n=== GET /api/responses ===');
   console.time('responses-fetch');
@@ -54,6 +86,21 @@ app.get('/api/responses', async (req, res) => {
       .all();
     
     console.log(`Found ${records.length} total records`);
+
+    // Validate records
+    const validationResults = records.map(record => validateAirtableRecord(record));
+    const validRecords = validationResults.filter(v => v.isValid).map(v => v.record);
+    const invalidRecords = validationResults.filter(v => !v.isValid);
+
+    console.log('\nValidation Results:', {
+      totalRecords: records.length,
+      validRecords: validRecords.length,
+      invalidRecords: invalidRecords.length,
+      invalidFieldDetails: invalidRecords.map(r => ({
+        recordId: r.record?.id,
+        missingFields: r.missingFields
+      }))
+    });
     
     // Log each record with formatting
     records.forEach((record, index) => {
@@ -64,17 +111,11 @@ app.get('/api/responses', async (req, res) => {
       });
     });
 
-    // Format records for response
-    const formattedRecords = records.map(record => ({
-      id: record.id,
-      createdTime: record.createdTime,
-      ...record.fields
-    }));
-
     console.log('\nResponse Summary:', {
       totalRecords: records.length,
-      firstRecordId: records[0]?.id,
-      lastRecordId: records[records.length - 1]?.id
+      validRecords: validRecords.length,
+      firstValidId: validRecords[0]?.id,
+      lastValidId: validRecords[validRecords.length - 1]?.id
     });
 
     console.timeEnd('responses-fetch');
@@ -82,8 +123,17 @@ app.get('/api/responses', async (req, res) => {
     
     res.json({
       success: true,
-      count: formattedRecords.length,
-      records: formattedRecords
+      count: validRecords.length,
+      records: validRecords,
+      validation: {
+        totalProcessed: records.length,
+        validCount: validRecords.length,
+        invalidCount: invalidRecords.length,
+        invalidRecords: invalidRecords.map(r => ({
+          id: r.record?.id,
+          missingFields: r.missingFields
+        }))
+      }
     });
 
   } catch (error) {
