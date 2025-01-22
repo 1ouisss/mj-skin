@@ -11,37 +11,35 @@ export default function Recommendations() {
   console.log('[Recommendations] Component mounted');
   const location = useLocation();
   const navigate = useNavigate();
-  const [hasMounted, setHasMounted] = React.useState(false);
+  const [hasRedirected, setHasRedirected] = React.useState(false);
   
   console.log('[Recommendations] Location state:', location.state);
   const answers = location.state?.answers as QuizAnswers | undefined;
   console.log('[Recommendations] Initial answers from location:', answers);
 
   React.useEffect(() => {
-    console.log('[Recommendations] useEffect running, hasMounted:', hasMounted);
-    if (!hasMounted) {
-      setHasMounted(true);
-      console.log('[Recommendations] Checking for answers:', answers);
-      if (!answers) {
-        console.log('[Recommendations] No answers in location state, checking localStorage');
-        const savedAnswers = localStorage.getItem('validatedAnswers');
-        console.log('[Recommendations] Saved answers from localStorage:', savedAnswers);
-        if (savedAnswers) {
-          try {
-            const parsedAnswers = JSON.parse(savedAnswers);
-            navigate('', { state: { answers: parsedAnswers }, replace: true });
-          } catch (error) {
-            console.error('Error parsing saved answers:', error);
-            toast.error('Une erreur est survenue. Veuillez refaire le quiz.');
-            navigate('/skintype', { replace: true });
-          }
-        } else {
-          toast.error('Données manquantes. Veuillez refaire le quiz.');
+    console.log('[Recommendations] useEffect running, hasRedirected:', hasRedirected);
+    if (!hasRedirected && !answers) {
+      setHasRedirected(true);
+      console.log('[Recommendations] No answers in location state, checking localStorage');
+      const savedAnswers = localStorage.getItem('validatedAnswers');
+      console.log('[Recommendations] Saved answers from localStorage:', savedAnswers);
+      
+      if (savedAnswers) {
+        try {
+          const parsedAnswers = JSON.parse(savedAnswers);
+          navigate('', { state: { answers: parsedAnswers }, replace: true });
+        } catch (error) {
+          console.error('Error parsing saved answers:', error);
+          toast.error('Une erreur est survenue. Veuillez refaire le quiz.');
           navigate('/skintype', { replace: true });
         }
+      } else {
+        toast.error('Données manquantes. Veuillez refaire le quiz.');
+        navigate('/skintype', { replace: true });
       }
     }
-  }, [hasMounted, answers, navigate]);
+  }, [hasRedirected, answers, navigate]);
 
   const getRecommendations = React.useCallback((quizAnswers: QuizAnswers): RecommendationResult | null => {
     try {
