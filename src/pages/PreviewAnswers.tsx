@@ -17,56 +17,60 @@ const PreviewAnswers = () => {
   });
 
   React.useEffect(() => {
-    // Load all answers when component mounts
-    const loadedAnswers = {
-      skinType: localStorage.getItem('skinType') ? JSON.parse(localStorage.getItem('skinType') || '""') : '',
-      conditions: localStorage.getItem('conditions') ? JSON.parse(localStorage.getItem('conditions') || '""') : '',
-      concerns: localStorage.getItem('concerns') ? JSON.parse(localStorage.getItem('concerns') || '""') : '',
-      texturePreference: localStorage.getItem('texture') ? JSON.parse(localStorage.getItem('texture') || '""') : '',
-      scentPreference: localStorage.getItem('fragrance') ? JSON.parse(localStorage.getItem('fragrance') || '""') : '',
-      newsletter: localStorage.getItem('newsletter') || ''
-    };
+    try {
+      const loadedAnswers = {
+        skinType: localStorage.getItem('skinType') ? JSON.parse(localStorage.getItem('skinType') || '') : '',
+        conditions: localStorage.getItem('conditions') ? JSON.parse(localStorage.getItem('conditions') || '') : '',
+        concerns: localStorage.getItem('concerns') ? JSON.parse(localStorage.getItem('concerns') || '') : '',
+        texturePreference: localStorage.getItem('texture') ? JSON.parse(localStorage.getItem('texture') || '') : '',
+        scentPreference: localStorage.getItem('fragrance') ? JSON.parse(localStorage.getItem('fragrance') || '') : '',
+        newsletter: localStorage.getItem('newsletter') || ''
+      };
 
-    setAnswers(loadedAnswers);
+      console.log('Loaded answers:', loadedAnswers);
+      setAnswers(loadedAnswers);
 
-    // Redirect if essential answers are missing
-    if (!loadedAnswers.skinType || !loadedAnswers.conditions || !loadedAnswers.concerns) {
-      toast.error('Veuillez compléter toutes les questions requises.');
+      if (!loadedAnswers.skinType || !loadedAnswers.conditions || !loadedAnswers.concerns) {
+        navigate('/skin-type-quiz');
+      }
+    } catch (error) {
+      console.error('Error loading answers:', error);
+      toast.error('Une erreur est survenue lors du chargement de vos réponses.');
       navigate('/skin-type-quiz');
     }
   }, [navigate]);
 
   const questionsMap = {
-    skinType: "Votre type de peau",
-    conditions: "Vos conditions particulières",
-    concerns: "Vos préoccupations principales",
-    texturePreference: "Vos préférences de texture",
-    scentPreference: "Vos préférences de parfum"
+    "Votre type de peau": answers.skinType,
+    "Vos conditions particulières": answers.conditions,
+    "Vos préoccupations principales": answers.concerns,
+    "Vos préférences de texture": answers.texturePreference || '---',
+    "Vos préférences de parfum": answers.scentPreference || '---'
   };
 
   const handleSeeRecommendations = async () => {
     try {
-      if (!answers.skinType || !answers.conditions || !answers.concerns) {
-        toast.error('Veuillez compléter toutes les questions requises.');
-        return;
-      }
+      const payload = {
+        skinType: answers.skinType,
+        conditions: answers.conditions,
+        concerns: answers.concerns,
+        texturePreference: answers.texturePreference || '',
+        scentPreference: answers.scentPreference || ''
+      };
+
+      console.log('Processing payload:', payload);
 
       const response = await fetch('/api/recommendations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          skinType: answers.skinType,
-          conditions: answers.conditions,
-          concerns: answers.concerns,
-          texturePreference: answers.texturePreference || '',
-          scentPreference: answers.scentPreference || ''
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get recommendations');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to get recommendations');
       }
 
       const data = await response.json();
@@ -112,10 +116,10 @@ const PreviewAnswers = () => {
             </h2>
 
             <div className="space-y-4 mb-8">
-              {Object.entries(questionsMap).map(([key, question]) => (
-                <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
+              {Object.entries(questionsMap).map(([question, answer]) => (
+                <div key={question} className="flex justify-between items-center p-3 border-b border-gray-200">
                   <span className="font-medium text-[#4A4A4A]">{question}</span>
-                  <span className="text-[#666]">{answers[key] || '---'}</span>
+                  <span className="text-[#666]">{answer}</span>
                 </div>
               ))}
             </div>
