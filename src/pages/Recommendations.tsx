@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -9,51 +9,42 @@ import skincareDb from '../data/skincare-db.json';
 export default function Recommendations() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { answers } = location.state as { answers?: QuizAnswers } || {};
-  const [hasRedirected, setHasRedirected] = React.useState(false);
+  const [initialLoad, setInitialLoad] = React.useState(true);
+  const answers = location.state?.answers as QuizAnswers;
 
   React.useEffect(() => {
-    if (!answers && !hasRedirected) {
-      setHasRedirected(true);
+    if (initialLoad && !answers) {
       const savedAnswers = localStorage.getItem('validatedAnswers');
       if (savedAnswers) {
+        const parsedAnswers = JSON.parse(savedAnswers);
         navigate('/recommendations', { 
-          state: { answers: JSON.parse(savedAnswers) },
-          replace: true
+          state: { answers: parsedAnswers },
+          replace: true 
         });
       } else {
         toast.error('Données manquantes. Veuillez refaire le quiz.');
         navigate('/skintype', { replace: true });
       }
     }
-  }, [answers, navigate, hasRedirected]);
+    setInitialLoad(false);
+  }, []);
 
-  if (!answers) {
-    return <LoadingScreen />;
-  }
-
-  const recommendations = useMemo<RecommendationResult | null>(() => {
+  const recommendations = React.useMemo<RecommendationResult | null>(() => {
     if (!answers) return null;
 
     try {
-      const { skinType, conditions, concerns, texturePreference, scentPreference } = answers;
-      
-      if (!skinType || !conditions || !concerns) {
-        throw new Error('Données requises manquantes');
-      }
-      
+      const { skinType, conditions, concerns } = answers;
+      if (!skinType || !conditions || !concerns) return null;
+
       let result = skincareDb?.SkinType?.[skinType];
-      
       if (conditions && result?.Condition?.[conditions]) {
         result = result.Condition[conditions];
       }
-      
       if (concerns && result?.Concern?.[concerns]) {
         result = result.Concern[concerns];
       }
 
       if (!result?.Products || !result?.Routine) {
-        console.warn('Invalid recommendation structure:', { result });
         return {
           Products: [],
           Routine: {
@@ -64,24 +55,14 @@ export default function Recommendations() {
         };
       }
 
-      const finalResult = {
-        ...result,
-        Products: result.Products.filter(product => {
-          const matchesTexture = !texturePreference || product.toLowerCase().includes(texturePreference.toLowerCase());
-          const matchesScent = !scentPreference || product.toLowerCase().includes(scentPreference.toLowerCase());
-          return matchesTexture && matchesScent;
-        })
-      };
-
-      return finalResult;
+      return result;
     } catch (error) {
       console.error('Error processing recommendations:', error);
-      toast.error('Une erreur est survenue lors du traitement des recommandations');
       return null;
     }
   }, [answers]);
 
-  if (!recommendations) {
+  if (!answers || !recommendations) {
     return <LoadingScreen />;
   }
 
@@ -99,7 +80,7 @@ export default function Recommendations() {
         >
           Vos recommandations personnalisées
         </motion.h1>
-        
+
         <section className="mb-12">
           <h2 className="text-2xl mb-4">Produits recommandés</h2>
           {recommendations.Products.length > 0 ? (
@@ -120,7 +101,7 @@ export default function Recommendations() {
             <p className="text-[#666] italic">Aucun produit trouvé pour vos critères.</p>
           )}
         </section>
-        
+
         <section>
           <h2 className="text-2xl mb-4">Votre routine</h2>
           {recommendations.Routine && Object.entries(recommendations.Routine).map(([time, steps], index) => (
