@@ -25,16 +25,33 @@ const PreviewAnswers = () => {
   );
 
   const handleSeeRecommendations = () => {
-    navigate('/recommendations', { 
-      state: { 
-        selectedAnswers: {
-          skinType: answers.SkinType,
-          conditions: answers.Condition,
-          concerns: answers.Concern,
-          texturePreference: answers.TexturePreference || '',
-          scentPreference: answers.ScentPreference || ''
-        }
-      }
+    const payload = {
+      skinType: answers.SkinType,
+      conditions: answers.Condition,
+      concerns: answers.Concern,
+      texturePreference: answers.TexturePreference || '',
+      scentPreference: answers.ScentPreference || ''
+    };
+
+    fetch('/api/recommendations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to get recommendations');
+      return response.json();
+    })
+    .then(data => {
+      navigate('/recommendations', { 
+        state: { recommendations: data.recommendations }
+      });
+    })
+    .catch(error => {
+      console.error('Error getting recommendations:', error);
+      navigate('/skin-type-quiz');
     });
   };
 
