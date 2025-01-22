@@ -18,6 +18,7 @@ app.use((req, res, next) => {
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
+app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
 
 // Load recommendations data
 const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
