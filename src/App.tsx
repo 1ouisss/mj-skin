@@ -1,9 +1,9 @@
+
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { TooltipProvider } from './components/ui/tooltip';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { Suspense, lazy } from 'react';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -39,19 +39,31 @@ const App = () => (
       <BrowserRouter>
         <ErrorBoundary>
           <Routes>
-            {Object.entries(pages).map(([name, Component]) => (
-              <Route
-                key={name}
-                path={name === 'Index' ? '/' : `/${name.toLowerCase().replace('quiz', '')}`}
-                element={
-                  <Suspense fallback={<LoadingScreen />}>
-                    <ErrorBoundary>
-                      <Component />
-                    </ErrorBoundary>
-                  </Suspense>
-                }
-              />
-            ))}
+            <Route 
+              path="/" 
+              element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <ErrorBoundary>
+                    <pages.Index />
+                  </ErrorBoundary>
+                </Suspense>
+              } 
+            />
+            {Object.entries(pages).map(([name, Component]) => 
+              name !== 'Index' && (
+                <Route
+                  key={name}
+                  path={`/${name.toLowerCase().replace('quiz', '')}`}
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <ErrorBoundary>
+                        <Component />
+                      </ErrorBoundary>
+                    </Suspense>
+                  }
+                />
+              )
+            )}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ErrorBoundary>
