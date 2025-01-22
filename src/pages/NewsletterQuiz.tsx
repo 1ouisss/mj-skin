@@ -9,6 +9,7 @@ const NewsletterQuiz = () => {
     console.log("Newsletter choice:", choice);
     const answers = {
       Newsletter: choice,
+      Choice: choice === "yes" ? "Je souhaite recevoir la newsletter" : "Je ne souhaite pas recevoir la newsletter"
     };
     navigate("/preview", { 
       state: { 

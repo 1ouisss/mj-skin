@@ -10,12 +10,14 @@ const PreviewAnswers = () => {
   const answers = location.state?.selectedAnswers;
 
   React.useEffect(() => {
-    if (!location.state || !answers) {
+    if (!location.state?.selectedAnswers) {
       navigate('/');
     }
-  }, [navigate, location.state, answers]);
+  }, [location.state, navigate]);
 
-  if (!answers) return null;
+  if (!answers) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div 

@@ -57,7 +57,11 @@ const App = () => (
     <Recommendations />
   </ErrorBoundary>
 } />
-          <Route path="/preview" element={<PreviewAnswers />} />
+          <Route path="/preview" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <PreviewAnswers />
+            </Suspense>
+          } />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
