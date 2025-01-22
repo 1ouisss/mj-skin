@@ -9,7 +9,6 @@ import { Suspense, lazy } from 'react';
 import LoadingScreen from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-const queryClient = new QueryClient();
 const Index = lazy(() => import('./pages/Index'));
 const SkinTypeQuiz = lazy(() => import('./pages/SkinTypeQuiz'));
 const ConditionsQuiz = lazy(() => import('./pages/ConditionsQuiz'));
