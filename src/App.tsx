@@ -46,7 +46,11 @@ const App = () => (
               <SkinTypeQuiz />
             </Suspense>
           } />
-          <Route path="/conditions-quiz" element={<ConditionsQuiz />} />
+          <Route path="/conditions-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ConditionsQuiz />
+            </Suspense>
+          } />
           <Route path="/concerns-quiz" element={<ConcernsQuiz />} />
           <Route path="/zones-quiz" element={<ZonesQuiz />} />
           <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
@@ -54,10 +58,12 @@ const App = () => (
           <Route path="/routine-quiz" element={<RoutineQuiz />} />
           <Route path="/newsletter-quiz" element={<NewsletterQuiz />} />
           <Route path="/recommendations" element={
-  <ErrorBoundary>
-    <Recommendations />
-  </ErrorBoundary>
-} />
+            <Suspense fallback={<LoadingScreen />}>
+              <ErrorBoundary>
+                <Recommendations />
+              </ErrorBoundary>
+            </Suspense>
+          } />
           <Route path="/preview" element={
             <Suspense fallback={<LoadingScreen />}>
               <PreviewAnswers />
