@@ -2,10 +2,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '@/context/QuizContext';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { getRecommendations } from '@/utils/recommendations';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowLeft } from 'lucide-react';
+import { getRecommendations } from '@/utils/recommendations';
 
 export default function Recommendations() {
   const { state } = useQuiz();
@@ -13,7 +14,6 @@ export default function Recommendations() {
 
   React.useEffect(() => {
     if (!state.skinType) {
-      toast.error('Veuillez compléter toutes les questions requises');
       navigate('/skintypequiz');
       return;
     }
@@ -51,41 +51,48 @@ export default function Recommendations() {
           Vos Recommandations Personnalisées
         </h1>
 
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            {recommendations.Products.map((product, index) => (
-              <li key={index} className="text-gray-700">{product}</li>
-            ))}
-          </ul>
-        </section>
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
+            <ul className="list-disc pl-6 space-y-2">
+              {recommendations.Products.map((product, index) => (
+                <li key={index} className="text-gray-700">{product}</li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
 
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
-          
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium mb-2">Matin ☀️</h3>
-              <ul className="list-disc pl-6">
-                {recommendations.Routine.Matin.map((step, index) => (
-                  <li key={index} className="text-gray-700">{step}</li>
-                ))}
-              </ul>
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
+            <div className="space-y-4">
+              {recommendations.Routine && (
+                <>
+                  <div>
+                    <h3 className="font-medium mb-2">Matin ☀️</h3>
+                    <ul className="list-disc pl-6">
+                      {recommendations.Routine.Matin.map((step, index) => (
+                        <li key={index} className="text-gray-700">{step}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-2">Soir 🌙</h3>
+                    <ul className="list-disc pl-6">
+                      {recommendations.Routine.Soir.map((step, index) => (
+                        <li key={index} className="text-gray-700">{step}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
-
-            <div>
-              <h3 className="font-medium mb-2">Soir 🌙</h3>
-              <ul className="list-disc pl-6">
-                {recommendations.Routine.Soir.map((step, index) => (
-                  <li key={index} className="text-gray-700">{step}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+          </CardContent>
+        </Card>
 
         <div className="flex justify-center">
-          <Button onClick={() => navigate('/')} className="mt-4">
+          <Button onClick={() => navigate('/')} className="flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
             Retour à l'accueil
           </Button>
         </div>
