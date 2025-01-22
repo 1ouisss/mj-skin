@@ -1,29 +1,63 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ErrorBoundary } from '../components/ErrorBoundary';
-import { toast } from 'sonner';
+import skincareDb from '../data/skincare-db.json';
+import { LoadingScreen } from '../components/LoadingScreen';
 
 const Recommendations = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { recommendations, answers } = location.state || {};
+  const { answers } = location.state || {};
+
+  const recommendations = useMemo(() => {
+    if (!answers) return null;
+
+    let result = skincareDb?.SkinType?.[answers.skinType];
+    
+    if (answers.conditions && result?.Condition?.[answers.conditions]) {
+      result = result.Condition[answers.conditions];
+    }
+
+    if (answers.concerns && result?.Concern?.[answers.concerns]) {
+      result = result.Concern[answers.concerns];
+    }
+
+    return result;
+  }, [answers]);
 
   React.useEffect(() => {
-    if (!recommendations || !answers) {
+    if (!answers) {
       navigate('/skin-type-quiz');
     }
-  }, [recommendations, answers, navigate]);
+  }, [answers, navigate]);
+
+  if (!answers) {
+    return <LoadingScreen />;
+  }
 
   if (!recommendations) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl mb-4">Loading recommendations...</h2>
-          <p>If you're seeing this for too long, please start the quiz again.</p>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-sm"
+      >
+        <div className="text-center max-w-md mx-auto p-8">
+          <h2 className="text-2xl font-playfair mb-4 text-[#4A4A4A]">
+            Aucune recommandation trouvée
+          </h2>
+          <p className="text-[#666] mb-6">
+            Nous n'avons pas trouvé de recommandations correspondant à vos critères.
+          </p>
+          <button
+            onClick={() => navigate('/skin-type-quiz')}
+            className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
+          >
+            Recommencer le quiz
+          </button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -34,7 +68,7 @@ const Recommendations = () => {
       className="min-h-screen bg-white p-8"
     >
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-light mb-8">Vos recommandations personnalisées</h1>
+        <h1 className="text-3xl font-playfair mb-8">Vos recommandations personnalisées</h1>
 
         <section className="mb-12">
           <h2 className="text-2xl mb-4">Produits recommandés</h2>

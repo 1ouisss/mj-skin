@@ -28,17 +28,32 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="min-h-screen flex items-center justify-center bg-gray-50"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="min-h-screen flex items-center justify-center bg-white"
         >
-          <div className="text-center p-8">
+          <div className="text-center max-w-md mx-auto p-8">
+            <motion.img
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              src="/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png"
+              alt="MJ Skin Logo"
+              className="w-32 h-32 object-contain mx-auto mb-8"
+              loading="lazy"
+            />
             <h2 className="text-2xl font-playfair text-[#4A4A4A] mb-4">
               Une erreur est survenue
             </h2>
-            <p className="text-[#4A4A4A]">
+            <p className="text-[#666] mb-6">
               {this.state.error?.message || "Veuillez réessayer plus tard."}
             </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
+            >
+              Rafraîchir la page
+            </button>
           </div>
         </motion.div>
       );
