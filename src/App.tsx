@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { Suspense, lazy } from 'react';
-import LoadingScreen from './components/LoadingScreen';
+import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 const Index = lazy(() => import('./pages/Index'));

@@ -1,22 +1,26 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-export const LoadingScreen = () => {
+export function LoadingScreen() {
   return (
-    <motion.div
+    <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm"
+      className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-sm"
     >
-      <img
-        src="/lovable-uploads/cd3d9a96-5a28-4036-a47d-3841b59390d7.png"
-        alt="Logo"
-        className="w-24 h-24 mb-4"
-        loading="lazy"
-      />
-      <div className="w-12 h-12 border-4 border-[#4A4A4A] border-t-transparent rounded-full animate-spin" />
-      <p className="mt-4 text-[#4A4A4A] font-playfair">Chargement...</p>
+      <div className="text-center max-w-md mx-auto p-8">
+        <motion.img
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          src="/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png"
+          alt="MJ Skin Logo"
+          className="w-32 h-32 object-contain mx-auto mb-8"
+          loading="lazy"
+        />
+        <div className="text-2xl font-playfair text-[#4A4A4A]">
+          Chargement...
+        </div>
+      </div>
     </motion.div>
   );
-};
+}
