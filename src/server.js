@@ -1,4 +1,3 @@
-
 const express = require("express");
 const path = require('path');
 const cors = require('cors');
@@ -24,21 +23,8 @@ app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
 const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
 const data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
 
-// API Routes
-app.get("/api/test", (req, res) => {
-  res.json({ status: "Server is running correctly!" });
-});
-
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok" });
-});
-
 // Recommendations Route
-app.post("/api/recommendations", async (req, res) => {
-  const requestId = Math.random().toString(36).substring(7);
-  console.group(`=== /api/recommendations Request (ID: ${requestId}) ===`);
-  console.time(`request-${requestId}-duration`);
-
+app.post("/recommendations", async (req, res) => {
   try {
     if (!req.body) {
       return res.status(400).json({
@@ -50,16 +36,11 @@ app.post("/api/recommendations", async (req, res) => {
     const { skinType, conditions, concerns } = req.body;
     let result = null;
 
-    // Try finding recommendations by skin type
     if (skinType && data.SkinType?.[skinType]) {
       result = data.SkinType[skinType];
-    }
-    // If not found, try conditions
-    else if (conditions && data.Condition?.[conditions]) {
+    } else if (conditions && data.Condition?.[conditions]) {
       result = data.Condition[conditions];
-    }
-    // Finally try concerns
-    else if (concerns && data.Concerns?.[concerns]) {
+    } else if (concerns && data.Concerns?.[concerns]) {
       result = data.Concerns[concerns];
     }
 
@@ -81,13 +62,10 @@ app.post("/api/recommendations", async (req, res) => {
       error: "Internal Server Error",
       message: error.message
     });
-  } finally {
-    console.timeEnd(`request-${requestId}-duration`);
-    console.groupEnd();
   }
 });
 
-// SPA routing - must be after API routes
+// SPA routing - must be after recommendation route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
@@ -95,8 +73,4 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
-  console.log('API endpoints:');
-  console.log('- GET /api/test');
-  console.log('- GET /api/health');
-  console.log('- POST /api/recommendations');
 });
