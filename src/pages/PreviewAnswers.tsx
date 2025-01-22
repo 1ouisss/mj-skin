@@ -4,22 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-
-interface QuizAnswers {
-  skinType: string;
-  conditions: string;
-  concerns: string;
-  texturePreference: string;
-  scentPreference: string;
-  newsletter: string;
-}
+import { Button } from '../components/ui/button';
+import { ArrowLeft, Check } from 'lucide-react';
+import type { QuizAnswers } from '../types/skincare';
 
 const PreviewAnswers = () => {
   const navigate = useNavigate();
   const [answers, setAnswers] = React.useState<QuizAnswers>({
-    skinType: '',
-    conditions: '',
-    concerns: '',
+    skinType: '' as any,
+    conditions: '' as any,
+    concerns: '' as any,
     texturePreference: '',
     scentPreference: '',
     newsletter: ''
@@ -44,7 +38,7 @@ const PreviewAnswers = () => {
         return;
       }
 
-      setAnswers(loadedAnswers);
+      setAnswers(loadedAnswers as QuizAnswers);
     } catch (error) {
       console.error('Error loading answers:', error);
       toast.error('Une erreur est survenue lors du chargement de vos réponses');
@@ -53,14 +47,14 @@ const PreviewAnswers = () => {
   }, [navigate]);
 
   const questionsMap = {
-    "Votre type de peau": answers.skinType,
-    "Vos conditions particulières": answers.conditions,
-    "Vos préoccupations principales": answers.concerns,
-    "Vos préférences de texture": answers.texturePreference || '---',
-    "Vos préférences de parfum": answers.scentPreference || '---'
+    "Type de peau": answers.skinType,
+    "Conditions particulières": answers.conditions,
+    "Préoccupations principales": answers.concerns,
+    "Préférences de texture": answers.texturePreference || '---',
+    "Préférences de parfum": answers.scentPreference || '---'
   };
 
-  const validateAnswers = () => {
+  const validateAnswers = (): boolean => {
     if (!answers.skinType || !answers.conditions || !answers.concerns) {
       toast.error('Veuillez compléter toutes les questions requises');
       return false;
@@ -113,34 +107,43 @@ const PreviewAnswers = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <Card className="bg-white/80 backdrop-blur-sm">
+        <Card className="bg-white/90 backdrop-blur-sm">
           <CardContent className="p-8">
             <h2 className="text-4xl font-playfair text-center mb-8 text-[#4A4A4A]">
               Confirmez vos réponses
             </h2>
 
             <div className="space-y-4 mb-8">
-              {Object.entries(questionsMap).map(([question, answer]) => (
-                <div key={question} className="flex justify-between items-center p-3 border-b border-gray-200">
+              {Object.entries(questionsMap).map(([question, answer], index) => (
+                <motion.div
+                  key={question}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex justify-between items-center p-4 rounded-lg bg-white/80 border border-gray-100"
+                >
                   <span className="font-medium text-[#4A4A4A]">{question}</span>
-                  <span className="text-[#666]">{answer}</span>
-                </div>
+                  <span className="text-[#666] font-light">{answer}</span>
+                </motion.div>
               ))}
             </div>
 
-            <div className="flex justify-center gap-4">
-              <button
+            <div className="flex justify-between items-center gap-4">
+              <Button
+                variant="outline"
                 onClick={handleBack}
-                className="px-6 py-2 border border-[#4A4A4A] text-[#4A4A4A] rounded-md hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-2"
               >
+                <ArrowLeft className="w-4 h-4" />
                 Modifier
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleSeeRecommendations}
-                className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
+                className="flex items-center gap-2 bg-[#4A4A4A] hover:bg-[#3A3A3A]"
               >
+                <Check className="w-4 h-4" />
                 Voir les recommandations
-              </button>
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -1,4 +1,15 @@
 
+import { SkinType, Condition, Concern, TexturePreference, ScentPreference } from './skincare';
+
+export interface QuizAnswers {
+  skinType: SkinType;
+  conditions: Condition;
+  concerns: Concern;
+  texturePreference: TexturePreference | '';
+  scentPreference: ScentPreference | '';
+  newsletter?: string;
+}
+
 export interface Product {
   name: string;
   description?: string;
