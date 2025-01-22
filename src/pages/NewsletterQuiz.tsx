@@ -7,11 +7,12 @@ const NewsletterQuiz = () => {
 
   const handleOptionClick = (choice: string) => {
     console.log("Newsletter choice:", choice);
+    const answers = {
+      Newsletter: choice,
+    };
     navigate("/preview", { 
       state: { 
-        selectedAnswers: {
-          Newsletter: choice
-        }
+        selectedAnswers: answers
       }
     });
   };

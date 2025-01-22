@@ -10,10 +10,10 @@ const PreviewAnswers = () => {
   const answers = location.state?.selectedAnswers;
 
   React.useEffect(() => {
-    if (!answers) {
+    if (!location.state || !answers) {
       navigate('/');
     }
-  }, [answers, navigate]);
+  }, [navigate, location.state, answers]);
 
   if (!answers) return null;
 
@@ -45,7 +45,7 @@ const PreviewAnswers = () => {
               {Object.entries(answers).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
                   <span className="font-medium text-[#4A4A4A]">{key}</span>
-                  <span className="text-[#666]">{value as string}</span>
+                  <span className="text-[#666]">{String(value)}</span>
                 </div>
               ))}
             </div>
