@@ -9,6 +9,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { QuizProvider } from './context/QuizContext';
 import { ProgressBar } from './components/ProgressBar';
 import { BackButton } from './components/BackButton';
+import { quizSteps } from './config/quizConfig';
 
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -93,19 +94,16 @@ const App = () => {
                 } 
               />
               {quizSteps.map((step) => (
-  <Route
-    key={step.id}
-    path={`/${step.id}`}
-    element={
-      <SuspenseWrapper>
-        <QuizStep 
-          step={step}
-          onNext={() => navigate(`/${getNextStepId(step.id)}`)}
-        />
-      </SuspenseWrapper>
-    }
-  />
-))}
+                <Route
+                  key={step.id}
+                  path={`/${step.id}`}
+                  element={
+                    <SuspenseWrapper>
+                      {React.createElement(pages[step.id.charAt(0).toUpperCase() + step.id.slice(1)])}
+                    </SuspenseWrapper>
+                  }
+                />
+              ))}
 <Route
   path="/preview"
   element={

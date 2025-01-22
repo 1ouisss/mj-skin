@@ -50,3 +50,13 @@ export const quizSteps: QuizStep[] = [
   }
   // Add other steps here...
 ];
+export const quizSteps = [
+  { id: 'skintypequiz', title: 'Type de Peau' },
+  { id: 'conditionsquiz', title: 'Conditions' },
+  { id: 'concernsquiz', title: 'Préoccupations' },
+  { id: 'zonesquiz', title: 'Zones' },
+  { id: 'treatmentquiz', title: 'Traitement' },
+  { id: 'fragrancequiz', title: 'Parfum' },
+  { id: 'routinequiz', title: 'Routine' },
+  { id: 'newsletterquiz', title: 'Newsletter' }
+];
