@@ -1,27 +1,27 @@
 
 import React, { useEffect, useState } from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
-import { LoadingScreen } from '../components/LoadingScreen';
+import { useQuiz } from '../context/QuizContext';
+import { useNavigate } from 'react-router-dom';
+import { RecommendationResult } from '../types/skincare';
 import { toast } from 'sonner';
-import { QuizAnswers, RecommendationResult } from '../types/skincare';
+import { Card, CardContent } from '../components/ui/card';
+import { motion } from 'framer-motion';
 
 export default function Recommendations() {
-  const location = useLocation();
-  const [loading, setLoading] = useState(true);
+  const { answers, validateAnswers } = useQuiz();
+  const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  
-  const answers = location.state?.answers as QuizAnswers | undefined;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.group('Recommendations Component');
-    console.log('Received state:', location.state);
-    console.log('Parsed answers:', answers);
+    console.group('Recommendations - Initialization');
+    console.log('Initial answers:', answers);
 
-    if (!answers) {
-      console.error('No answers received in Recommendations');
-      setError('No quiz answers found');
-      setLoading(false);
+    if (!validateAnswers()) {
+      console.error('Invalid answers state');
+      toast.error('Veuillez compléter toutes les questions');
+      navigate('/skintype', { replace: true });
+      console.groupEnd();
       return;
     }
 
@@ -34,16 +34,16 @@ export default function Recommendations() {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error('Failed to fetch recommendations');
         }
 
         const data = await response.json();
         console.log('API response:', data);
-        setRecommendations(data);
-      } catch (err) {
-        console.error('Fetch error:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch recommendations');
+        setRecommendations(data.recommendations);
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
         toast.error('Une erreur est survenue');
+        navigate('/preview', { replace: true });
       } finally {
         setLoading(false);
       }
@@ -51,42 +51,82 @@ export default function Recommendations() {
 
     fetchRecommendations();
     console.groupEnd();
-  }, [answers]);
-
-  if (!answers) {
-    toast.error('Veuillez compléter le quiz');
-    return <Navigate to="/skintype" replace />;
-  }
+  }, [answers, navigate, validateAnswers]);
 
   if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <h2 className="text-2xl text-red-500 mb-4">Une erreur est survenue</h2>
-        <p className="text-gray-600">{error}</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Chargement de vos recommandations...</p>
       </div>
     );
   }
 
   if (!recommendations) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <h2 className="text-2xl mb-4">Aucune recommandation trouvée</h2>
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Aucune recommandation trouvée</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white p-8">
-      <h1 className="text-3xl font-playfair mb-6">Vos Recommandations</h1>
-      <div className="space-y-6">
-        <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded">
-          {JSON.stringify(recommendations, null, 2)}
-        </pre>
-      </div>
+    <div className="min-h-screen p-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto space-y-8"
+      >
+        <h1 className="text-4xl font-playfair text-center mb-8">
+          Vos Recommandations Personnalisées
+        </h1>
+
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <h2 className="text-2xl mb-4">Produits Recommandés</h2>
+            <div className="space-y-4">
+              {recommendations.Products.map((product, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-4 bg-gray-50 rounded-lg"
+                >
+                  {product}
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-2xl mb-4">Votre Routine</h2>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl mb-2">Matin</h3>
+                <ul className="list-disc pl-6">
+                  {recommendations.Routine.Matin.map((step, index) => (
+                    <li key={index} className="mb-2">{step}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xl mb-2">Soir</h3>
+                <ul className="list-disc pl-6">
+                  {recommendations.Routine.Soir.map((step, index) => (
+                    <li key={index} className="mb-2">{step}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-xl mb-2">Résultats Attendus</h3>
+                <p>{recommendations.Routine.Résultat}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
