@@ -35,6 +35,9 @@ app.post("/api/recommendations", async (req, res) => {
   console.group(`=== /api/recommendations Request (ID: ${requestId}) ===`);
   console.time(`request-${requestId}-duration`);
   
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY = 1000;
+  
   const startTime = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - startTime;
