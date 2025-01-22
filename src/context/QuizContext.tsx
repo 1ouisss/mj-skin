@@ -1,6 +1,17 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const DEBUG = true;
+
+function logDebug(message: string, data?: any) {
+  if (DEBUG) {
+    console.group('QuizContext Debug');
+    console.log(message);
+    if (data) console.log(data);
+    console.groupEnd();
+  }
+}
 
 interface QuizContextType {
   answers: any;

@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    console.group('Index Page - Navigation');
+    console.log('Component mounted');
+    return () => {
+      console.log('Component unmounting');
+      console.groupEnd();
+    };
+  }, []);
 
   return (
     <div 

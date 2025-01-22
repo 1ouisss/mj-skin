@@ -1,13 +1,15 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+
+import React, { Component, ErrorInfo } from 'react';
 import { motion } from 'framer-motion';
 
 interface Props {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -16,11 +18,14 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
+    console.group('ErrorBoundary - Error Detected');
+    console.error('Error:', error);
+    console.groupEnd();
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.group('[ErrorBoundary]');
+    console.group('ErrorBoundary - Detailed Error Info');
     console.error('Error details:', {
       name: error.name,
       message: error.message,
@@ -54,6 +59,12 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-[#666] mb-6">
               {this.state.error?.message || "Veuillez réessayer plus tard."}
             </p>
+            <details className="mb-4 text-left text-sm">
+              <summary className="cursor-pointer">Technical Details</summary>
+              <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
+                {this.state.error?.stack}
+              </pre>
+            </details>
             <button
               onClick={() => window.location.reload()}
               className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"

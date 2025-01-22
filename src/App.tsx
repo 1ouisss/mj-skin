@@ -1,7 +1,18 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
+import { useLocation } from 'react-router-dom';
+
+const DebugRouter = () => {
+  const location = useLocation();
+  useEffect(() => {
+    console.group('Router Debug');
+    console.log('Current Route Path:', location.pathname);
+    console.groupEnd();
+  }, [location]);
+  return null;
+};
 import { TooltipProvider } from './components/ui/tooltip';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
@@ -99,6 +110,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary>
           <QuizProvider>
+            <DebugRouter />
             <ErrorBoundary>
               <TooltipProvider>
                 <Toaster />

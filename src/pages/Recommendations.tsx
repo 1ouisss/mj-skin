@@ -13,7 +13,18 @@ export default function Recommendations() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.group('Recommendations - Initialization');
+    console.group('Recommendations - Component Lifecycle');
+    console.log('Component mounted');
+    console.log('Initial props/state:', { answers });
+
+    return () => {
+      console.log('Component unmounting');
+      console.groupEnd();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.group('Recommendations - Data Flow');
     console.log('Initial answers:', answers);
 
     console.group('Recommendations - Validation');
