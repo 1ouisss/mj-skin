@@ -24,16 +24,29 @@ app.post("/api/recommendations", async (req, res) => {
   console.time(`request-${requestId}-duration`);
 
   try {
-    const { skinType, conditions: condition, concerns: concern, texturePreference, scentPreference } = req.body;
+    const { skinType, conditions, concerns, texturePreference, scentPreference } = req.body;
     
-    console.log('Received payload:', { skinType, condition, concern, texturePreference, scentPreference });
+    console.log('Received payload:', { skinType, conditions, concerns, texturePreference, scentPreference });
 
-    if (!skinType || !condition || !concern) {
+    // Validate required fields
+    if (!skinType || !conditions || !concerns) {
+      console.warn('Missing required fields:', { skinType, conditions, concerns });
       return res.status(400).json({
         error: "Bad Request",
-        message: "Missing required fields"
+        message: "Veuillez compléter toutes les questions requises."
       });
     }
+
+    // Normalize the data
+    const normalizedPayload = {
+      skinType: String(skinType).trim(),
+      condition: String(conditions).trim(),
+      concern: String(concerns).trim(),
+      texturePreference: texturePreference ? String(texturePreference).trim() : '',
+      scentPreference: scentPreference ? String(scentPreference).trim() : ''
+    };
+
+    console.log('Normalized payload:', normalizedPayload);
 
     // Load recommendations from JSON file
     const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');

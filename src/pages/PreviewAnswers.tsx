@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
@@ -6,18 +7,38 @@ import { toast } from 'sonner';
 
 const PreviewAnswers = () => {
   const navigate = useNavigate();
-  const answers = {
-    skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
-    conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
-    concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
-    texturePreference: JSON.parse(localStorage.getItem('texturePreference') || localStorage.getItem('texture') || '""'),
-    scentPreference: JSON.parse(localStorage.getItem('scentPreference') || localStorage.getItem('fragrance') || '""'),
-    newsletter: localStorage.getItem('newsletter') || ''
-  };
+  const [answers, setAnswers] = React.useState({
+    skinType: '',
+    conditions: '',
+    concerns: '',
+    texturePreference: '',
+    scentPreference: '',
+    newsletter: ''
+  });
+
+  React.useEffect(() => {
+    // Load all answers when component mounts
+    const loadedAnswers = {
+      skinType: localStorage.getItem('skinType') ? JSON.parse(localStorage.getItem('skinType') || '""') : '',
+      conditions: localStorage.getItem('conditions') ? JSON.parse(localStorage.getItem('conditions') || '""') : '',
+      concerns: localStorage.getItem('concerns') ? JSON.parse(localStorage.getItem('concerns') || '""') : '',
+      texturePreference: localStorage.getItem('texture') ? JSON.parse(localStorage.getItem('texture') || '""') : '',
+      scentPreference: localStorage.getItem('fragrance') ? JSON.parse(localStorage.getItem('fragrance') || '""') : '',
+      newsletter: localStorage.getItem('newsletter') || ''
+    };
+
+    setAnswers(loadedAnswers);
+
+    // Redirect if essential answers are missing
+    if (!loadedAnswers.skinType || !loadedAnswers.conditions || !loadedAnswers.concerns) {
+      toast.error('Veuillez compléter toutes les questions requises.');
+      navigate('/skin-type-quiz');
+    }
+  }, [navigate]);
 
   const questionsMap = {
     skinType: "Votre type de peau",
-    conditions: "Vos conditions particulières", 
+    conditions: "Vos conditions particulières",
     concerns: "Vos préoccupations principales",
     texturePreference: "Vos préférences de texture",
     scentPreference: "Vos préférences de parfum"
@@ -27,26 +48,21 @@ const PreviewAnswers = () => {
     try {
       if (!answers.skinType || !answers.conditions || !answers.concerns) {
         toast.error('Veuillez compléter toutes les questions requises.');
-        navigate('/skin-type-quiz');
         return;
       }
-
-      const payload = {
-        skinType: answers.skinType,
-        conditions: answers.conditions,
-        concerns: answers.concerns,
-        texturePreference: answers.texturePreference || '',
-        scentPreference: answers.scentPreference || ''
-      };
-
-      console.log('Sending payload:', payload);
 
       const response = await fetch('/api/recommendations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          skinType: answers.skinType,
+          conditions: answers.conditions,
+          concerns: answers.concerns,
+          texturePreference: answers.texturePreference || '',
+          scentPreference: answers.scentPreference || ''
+        }),
       });
 
       if (!response.ok) {
@@ -54,15 +70,15 @@ const PreviewAnswers = () => {
       }
 
       const data = await response.json();
-
+      
       if (!data.recommendations) {
         throw new Error('No recommendations found');
       }
 
-      navigate('/recommendations', { 
-        state: { 
+      navigate('/recommendations', {
+        state: {
           recommendations: data.recommendations,
-          answers: payload
+          answers: answers
         }
       });
     } catch (error) {
@@ -70,10 +86,6 @@ const PreviewAnswers = () => {
       toast.error('Impossible d\'obtenir les recommandations. Veuillez réessayer.');
     }
   };
-
-  const relevantAnswers = Object.entries(answers).filter(
-    ([key]) => !key.toLowerCase().includes('newsletter')
-  );
 
   return (
     <div 
@@ -100,10 +112,10 @@ const PreviewAnswers = () => {
             </h2>
 
             <div className="space-y-4 mb-8">
-              {relevantAnswers.map(([key, value]) => (
+              {Object.entries(questionsMap).map(([key, question]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
-                  <span className="font-medium text-[#4A4A4A]">{questionsMap[key] || key}</span>
-                  <span className="text-[#666]">{String(value)}</span>
+                  <span className="font-medium text-[#4A4A4A]">{question}</span>
+                  <span className="text-[#666]">{answers[key] || '---'}</span>
                 </div>
               ))}
             </div>
