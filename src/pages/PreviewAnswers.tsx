@@ -30,25 +30,24 @@ const PreviewAnswers = () => {
         return;
       }
 
+      // Extract all possible variations of answer fields
       const payload = {
-        skinType: answers.SkinType || answers.skinType || '',
-        conditions: answers.Condition || answers.conditions || '',
-        concerns: answers.Concern || answers.concerns || '',
+        skinType: answers.SkinType || answers.skinType || answers['Skin Type'] || '',
+        conditions: answers.Condition || answers.conditions || answers.Conditions || '',
+        concerns: answers.Concern || answers.concerns || answers.Concerns || '',
         texturePreference: answers.TexturePreference || answers.texturePreference || '',
         scentPreference: answers.ScentPreference || answers.scentPreference || ''
       };
 
-      console.log('Validation payload:', payload);
+      console.log('Processing payload:', payload);
 
-      // Validate that at least one of the required fields is present
-      const hasRequiredFields = Boolean(
-        (payload.skinType && payload.skinType !== '') ||
-        (payload.conditions && payload.conditions !== '') ||
-        (payload.concerns && payload.concerns !== '')
-      );
+      // Validate all required fields
+      const requiredFields = ['skinType', 'conditions', 'concerns'];
+      const missingFields = requiredFields.filter(field => !payload[field] || payload[field] === '');
 
-      if (!hasRequiredFields) {
-        toast.error('Missing required answers. Please complete at least one required question.');
+      if (missingFields.length > 0) {
+        console.log('Missing fields:', missingFields);
+        navigate('/skin-type-quiz');
         return;
       }
 
