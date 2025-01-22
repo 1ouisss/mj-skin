@@ -2,6 +2,7 @@
 const express = require("express");
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 
@@ -17,6 +18,10 @@ app.use((req, res, next) => {
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
+
+// Load recommendations data
+const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
+const data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
 
 // API Routes
 app.get("/api/test", (req, res) => {
@@ -41,14 +46,21 @@ app.post("/api/recommendations", async (req, res) => {
       });
     }
 
-    const userData = { ...req.body };
-    console.log("Processing request with temporary data");
+    const { skinType, conditions, concerns } = req.body;
+    let result = null;
 
-    // Load recommendations from JSON file
-    const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
-    const recommendations = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
-
-    let result = recommendations?.SkinType?.[skinType];
+    // Try finding recommendations by skin type
+    if (skinType && data.SkinType?.[skinType]) {
+      result = data.SkinType[skinType];
+    }
+    // If not found, try conditions
+    else if (conditions && data.Condition?.[conditions]) {
+      result = data.Condition[conditions];
+    }
+    // Finally try concerns
+    else if (concerns && data.Concerns?.[concerns]) {
+      result = data.Concerns[concerns];
+    }
 
     if (!result) {
       return res.status(404).json({
@@ -61,10 +73,6 @@ app.post("/api/recommendations", async (req, res) => {
       success: true,
       recommendations: result
     });
-
-    // Clean up user data
-    console.log("Cleaning up temporary user data");
-    req.body = null;
 
   } catch (error) {
     console.error('Error:', error);
