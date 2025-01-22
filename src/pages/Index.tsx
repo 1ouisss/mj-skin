@@ -14,7 +14,7 @@ const Index = () => {
       }}
     >
       <div className="index-overlay absolute inset-0 bg-gradient-to-b from-transparent to-white/30 backdrop-blur-[2px]" />
-      
+
       <div className="index-content relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

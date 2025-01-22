@@ -119,7 +119,7 @@ const App = () => {
                     name !== 'Index' && (
                       <Route
                         key={name}
-                        path={`/${name.toLowerCase().replace('quiz', '')}`}
+                        path={`/${name.toLowerCase()}`}
                         element={
                           <Suspense fallback={<LoadingScreen />}>
                             <ErrorBoundary>

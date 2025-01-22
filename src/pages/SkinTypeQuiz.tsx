@@ -16,7 +16,7 @@ const SkinTypeQuiz = () => {
         scentPreference: ''
       };
       localStorage.setItem('quizAnswers', JSON.stringify(initialAnswers));
-      navigate("/conditions");
+      navigate("/conditionsquiz");
     } catch (error) {
       console.error('Error saving skin type:', error);
     }

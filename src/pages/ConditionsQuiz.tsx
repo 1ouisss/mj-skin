@@ -7,7 +7,7 @@ const ConditionsQuiz = () => {
 
   const handleOptionClick = (condition: string) => {
     localStorage.setItem('conditions', JSON.stringify(condition));
-    navigate("/concerns-quiz");
+    navigate("/concernsquiz");
   };
 
   return (
