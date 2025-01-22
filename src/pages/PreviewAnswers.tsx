@@ -60,7 +60,32 @@ const PreviewAnswers = () => {
                 Modifier
               </button>
               <button
-                onClick={() => navigate('/recommendations', { state: { selectedAnswers: answers }})}
+                onClick={async () => {
+                  try {
+                    const response = await fetch('/api/recommendations', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        skinType: answers.SkinType,
+                        conditions: answers.Condition,
+                        concerns: answers.Concern,
+                        texturePreference: answers.TexturePreference,
+                        scentPreference: answers.ScentPreference
+                      }),
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to get recommendations');
+                    
+                    const data = await response.json();
+                    navigate('/recommendations', { 
+                      state: { recommendations: data.recommendations }
+                    });
+                  } catch (error) {
+                    console.error('Error getting recommendations:', error);
+                  }
+                }}
                 className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
               >
                 Voir les recommandations

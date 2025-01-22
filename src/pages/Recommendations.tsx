@@ -10,12 +10,21 @@ const Recommendations = () => {
   const recommendations = location.state?.recommendations;
 
   useEffect(() => {
-    if (!recommendations) {
+    if (!location.state?.recommendations) {
       navigate('/skin-type-quiz');
     }
-  }, [recommendations, navigate]);
+  }, [location.state, navigate]);
 
-  if (!recommendations) return null;
+  if (!recommendations) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl mb-4">Loading recommendations...</h2>
+          <p>If you're seeing this for too long, please start the quiz again.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div 
