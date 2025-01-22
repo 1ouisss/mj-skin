@@ -39,7 +39,6 @@ const App = () => (
       <BrowserRouter>
         <ErrorBoundary>
           <Routes>
-            <Route path="*" element={<Navigate to="/" replace />} />
             {Object.entries(pages).map(([name, Component]) => (
               <Route
                 key={name}
@@ -53,6 +52,7 @@ const App = () => (
                 }
               />
             ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ErrorBoundary>
       </BrowserRouter>
