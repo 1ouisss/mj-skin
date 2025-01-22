@@ -1,55 +1,17 @@
 {
-  "SkinType": {
+  "skinTypes": {
     "Sèche": {
       "products": ["Crème Fraîche", "Eau de Néroli enrichie", "Lotus Sacré"],
       "routine": {
-        "Matin": ["Nettoyage avec Crème Fraîche", "Application d'Eau de Néroli enrichie", "Application de Lotus Sacré", "Sérum Immortelle pour sceller l'hydratation"],
-        "Soir": ["Nettoyage avec Crème Fraîche", "Eau de Néroli enrichie", "Sérum Immortelle", "Masque Collagène avec Karité Vanillé (1-3 fois/semaine)"],
-        "Résultat": "Hydratation profonde, confort immédiat, peau revitalisée 😊"
+        "Matin": ["Nettoyage avec Crème Fraîche", "Application d'Eau de Néroli enrichie"],
+        "Soir": ["Nettoyage avec Crème Fraîche", "Masque Collagène"]
       }
     },
     "Grasse": {
-      "products": ["Huile Nettoyante avec Gel d'Aloès", "Eau d'Orange", "Gel Sébo"],
+      "products": ["Huile Nettoyante", "Eau d'Orange", "Gel Sébo"],
       "routine": {
-        "Matin": ["Nettoyage avec Huile Nettoyante + Gel d'Aloès", "Eau d'Orange", "Gel Sébo"],
-        "Soir": ["Nettoyage avec Huile Nettoyante seule", "Eau d'Orange", "Masque Exfopur"],
-        "Résultat": "Contrôle du sébum, peau matifiée, réduction des imperfections 🍊"
-      }
-    },
-    "Mixte": {
-      "products": ["Huile Nettoyante", "Eau de Rose", "Phytocomplexe"],
-      "routine": {
-        "Matin": ["Nettoyage avec Huile Nettoyante", "Eau de Rose", "Phytocomplexe", "Sérum Rose"],
-        "Soir": ["Nettoyage avec Huile Nettoyante", "Eau de Rose", "Sérum Rose"],
-        "Résultat": "Équilibre hydratation/sébum, éclat du teint 🌸"
-      }
-    }
-  },
-  "Condition": {
-    "Acné": {
-      "products": ["Huile Nettoyante avec Gel d'Aloès", "Dermopur Acné", "Eau de Néroli"],
-      "routine": {
-        "Matin": ["Nettoyage avec Huile Nettoyante + Gel d'Aloès", "Eau de Néroli", "Gel Sébo"],
-        "Soir": ["Nettoyage avec Dermopur Acné", "Masque Exfopur", "Sérum Gel Sébo"],
-        "Résultat": "Peau purifiée, réduction des boutons 🙌"
-      }
-    },
-    "Eczéma": {
-      "products": ["Huile de Jojoba", "Baume Apaisant & Protecteur"],
-      "routine": {
-        "Matin": ["Nettoyage avec Huile de Jojoba", "Baume Apaisant & Protecteur"],
-        "Soir": ["Nettoyage avec Huile de Jojoba", "Baume Apaisant & Protecteur"],
-        "Résultat": "Réduction des irritations, peau apaisée 💚"
-      }
-    }
-  },
-  "Concerns": {
-    "Rides": {
-      "products": ["Huile Nettoyante + Mousseline Kukui", "Magnolia", "Sérum Magnolia"],
-      "routine": {
-        "Matin": ["Nettoyage avec Huile Nettoyante", "Eau Magnolia", "Sérum Magnolia"],
-        "Soir": ["Nettoyage avec Huile Nettoyante", "Eau Magnolia", "Sérum Magnolia", "Masque Collagène"],
-        "Résultat": "Réduction des rides, peau éclatante 😍"
+        "Matin": ["Nettoyage avec Huile Nettoyante", "Gel Sébo"],
+        "Soir": ["Nettoyage avec Eau d'Orange"]
       }
     }
   }

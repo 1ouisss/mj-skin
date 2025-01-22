@@ -1,65 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from "react";
 import { useQuiz } from '../context/QuizContext';
-import { useNavigate } from 'react-router-dom';
-import { RecommendationResult } from '../types/skincare';
-import { toast } from 'sonner';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
+import data from "../data/skincare-db.json";
 
-const Recommendations = React.memo(() => {
+const Recommendations = () => {
   const { state } = useQuiz();
-  const navigate = useNavigate();
-  const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [recommendations, setRecommendations] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchRecommendations = async () => {
-      try {
-        const response = await fetch('/api/recommendations', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            skinType: state.skinType,
-            conditions: state.conditions,
-            concerns: state.concerns
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch recommendations');
-        }
-
-        const data = await response.json();
-        setRecommendations(data.recommendations);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching recommendations:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch recommendations');
-        toast.error('Unable to load recommendations');
-      } finally {
-        setLoading(false);
+    try {
+      const { skinType } = state;
+      if (!data.skinTypes[skinType]) {
+        throw new Error("Aucune recommandation trouvée pour ce type de peau");
       }
-    };
-
-    fetchRecommendations();
+      setRecommendations(data.skinTypes[skinType]);
+    } catch (err) {
+      setError(err.message);
+    }
   }, [state]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Chargement de vos recommandations...</p>
-      </div>
-    );
-  }
 
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Error: {error}</p>
+        <p>Erreur: {error}</p>
       </div>
     );
   }
@@ -67,7 +32,7 @@ const Recommendations = React.memo(() => {
   if (!recommendations) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Aucune recommandation trouvée</p>
+        <p>Chargement...</p>
       </div>
     );
   }
@@ -83,7 +48,7 @@ const Recommendations = React.memo(() => {
           Vos Recommandations Personnalisées
         </h1>
 
-        <Card className="mb-8">
+        <Card>
           <CardContent className="p-6">
             <h2 className="text-2xl mb-4">Produits Recommandés</h2>
             <div className="space-y-4">
@@ -122,19 +87,12 @@ const Recommendations = React.memo(() => {
                   ))}
                 </ul>
               </div>
-              {recommendations.routine.Résultat && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-xl mb-2">Résultats Attendus</h3>
-                  <p>{recommendations.routine.Résultat}</p>
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
       </motion.div>
     </div>
   );
-});
+};
 
-Recommendations.displayName = 'Recommendations';
 export default Recommendations;
