@@ -96,16 +96,19 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(STORAGE_KEY);
   };
 
-  const validateAndProceed = (currentStep: string, nextStep: string) => {
+  const validateAndProceed = async (currentStep: string, nextStep: string): Promise<boolean> => {
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    
     if (nextStep === 'recommendations') {
-      if (!validateState(state)) {
+      const isValid = requiredFields.every(field => state[field]);
+      if (!isValid) {
         toast.error('Veuillez compléter toutes les questions requises');
         navigate('/skintypequiz');
-        return;
+        return false;
       }
       dispatch({ type: 'SET_COMPLETED', value: true });
     }
-    navigate(`/${nextStep.toLowerCase()}`);
+    return true;
   };
 
   const restoreState = (): boolean => {

@@ -10,11 +10,20 @@ interface QuizStepProps {
 }
 
 export function QuizStep({ step, onNext }: QuizStepProps) {
-  const { state, setAnswer } = useQuiz();
+  const { state, setAnswer, validateAndProceed } = useQuiz();
+  const navigate = useNavigate();
 
-  const handleOptionClick = (value: string) => {
+  const handleOptionClick = async (value: string) => {
     setAnswer(step.field as keyof typeof state, value);
-    onNext();
+    
+    const isValid = await validateAndProceed(step.id, step.nextStep || '');
+    if (isValid) {
+      if (step.nextStep === 'recommendations') {
+        navigate('/recommendations');
+      } else {
+        onNext();
+      }
+    }
   };
 
   return (
