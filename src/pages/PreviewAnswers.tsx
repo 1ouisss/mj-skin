@@ -5,9 +5,18 @@ import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
+interface QuizAnswers {
+  skinType: string;
+  conditions: string;
+  concerns: string;
+  texturePreference: string;
+  scentPreference: string;
+  newsletter: string;
+}
+
 const PreviewAnswers = () => {
   const navigate = useNavigate();
-  const [answers, setAnswers] = React.useState({
+  const [answers, setAnswers] = React.useState<QuizAnswers>({
     skinType: '',
     conditions: '',
     concerns: '',
@@ -28,14 +37,17 @@ const PreviewAnswers = () => {
       };
 
       console.log('Loaded answers:', loadedAnswers);
-      setAnswers(loadedAnswers);
 
       if (!loadedAnswers.skinType || !loadedAnswers.conditions || !loadedAnswers.concerns) {
+        toast.error('Veuillez compléter toutes les questions requises');
         navigate('/skin-type-quiz');
+        return;
       }
+
+      setAnswers(loadedAnswers);
     } catch (error) {
       console.error('Error loading answers:', error);
-      toast.error('Une erreur est survenue lors du chargement de vos réponses.');
+      toast.error('Une erreur est survenue lors du chargement de vos réponses');
       navigate('/skin-type-quiz');
     }
   }, [navigate]);
@@ -58,10 +70,7 @@ const PreviewAnswers = () => {
 
   const handleSeeRecommendations = () => {
     try {
-      if (!answers.skinType || !answers.conditions || !answers.concerns) {
-        toast.error('Veuillez compléter toutes les questions requises');
-        return;
-      }
+      if (!validateAnswers()) return;
 
       const payload = {
         skinType: answers.skinType,
@@ -77,9 +86,13 @@ const PreviewAnswers = () => {
         replace: true 
       });
     } catch (error) {
-      console.error('Error getting recommendations:', error);
-      toast.error('Impossible d\'obtenir les recommandations. Veuillez réessayer.');
+      console.error('Error navigating to recommendations:', error);
+      toast.error('Une erreur est survenue. Veuillez réessayer.');
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
@@ -117,7 +130,7 @@ const PreviewAnswers = () => {
 
             <div className="flex justify-center gap-4">
               <button
-                onClick={() => navigate(-1)}
+                onClick={handleBack}
                 className="px-6 py-2 border border-[#4A4A4A] text-[#4A4A4A] rounded-md hover:bg-gray-100 transition-colors"
               >
                 Modifier
