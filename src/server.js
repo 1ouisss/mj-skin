@@ -23,17 +23,44 @@ app.get("/api/test", (req, res) => {
 
 // Recommendations Route
 app.post("/api/recommendations", async (req, res) => {
+  console.group('=== /api/recommendations Request ===');
+  console.time('request-duration');
+  
   try {
     const { skinType, conditions, concerns } = req.body;
+    
+    // Log incoming request
+    console.log('Incoming Request:', {
+      timestamp: new Date().toISOString(),
+      body: req.body,
+      headers: req.headers,
+      ip: req.ip
+    });
 
     // Validate payload
-    if (!skinType || !conditions || !concerns) {
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+    
+    if (missingFields.length > 0) {
+      console.warn('Validation Error:', {
+        missingFields,
+        receivedPayload: req.body
+      });
       return res.status(400).json({
-        error: "Missing required fields: skinType, conditions, or concerns.",
+        error: `Missing required fields: ${missingFields.join(', ')}`,
+        receivedFields: Object.keys(req.body)
       });
     }
 
     // Query Airtable
+    console.log('Querying Airtable:', {
+      filterCriteria: {
+        skinType,
+        conditions,
+        concerns
+      }
+    });
+
     const records = await base("Recommendations")
       .select({
         filterByFormula: `AND(
@@ -44,7 +71,14 @@ app.post("/api/recommendations", async (req, res) => {
       })
       .all();
 
+    console.log('Airtable Query Results:', {
+      recordCount: records.length,
+      fields: records.length > 0 ? Object.keys(records[0].fields) : [],
+      timestamp: new Date().toISOString()
+    });
+
     if (!records.length) {
+      console.warn('No matching recommendations found in Airtable');
       return res
         .status(404)
         .json({ error: "No matching recommendations found." });
@@ -72,6 +106,12 @@ app.post("/api/recommendations", async (req, res) => {
     `;
 
     // Call OpenAI
+    console.log('Calling OpenAI:', {
+      model: "gpt-3.5-turbo",
+      promptLength: prompt.length,
+      timestamp: new Date().toISOString()
+    });
+
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
@@ -79,16 +119,34 @@ app.post("/api/recommendations", async (req, res) => {
       max_tokens: 1000,
     });
 
+    console.log('OpenAI Response:', {
+      status: 'success',
+      responseLength: completion.choices[0].message.content.length,
+      finishReason: completion.choices[0].finish_reason,
+      timestamp: new Date().toISOString()
+    });
+
     res.json({
       success: true,
       recommendations: completion.choices[0].message.content,
     });
   } catch (error) {
-    console.error("Error in /api/recommendations:", error.message);
-    res.status(500).json({
+    console.error('Error in /api/recommendations:', {
+      errorName: error.name,
+      errorMessage: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+
+    const statusCode = error.status || 500;
+    res.status(statusCode).json({
       error: "Internal Server Error",
       details: error.message,
+      timestamp: new Date().toISOString()
     });
+  } finally {
+    console.timeEnd('request-duration');
+    console.groupEnd();
   }
 });
 
