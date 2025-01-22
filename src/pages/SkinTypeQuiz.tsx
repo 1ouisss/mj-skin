@@ -6,8 +6,20 @@ const SkinTypeQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (skinType: string) => {
-    localStorage.setItem('skinType', JSON.stringify(skinType));
-    navigate("/conditions-quiz");
+    try {
+      localStorage.setItem('skinType', JSON.stringify(skinType));
+      const initialAnswers = {
+        skinType,
+        conditions: '',
+        concerns: '',
+        texturePreference: '',
+        scentPreference: ''
+      };
+      localStorage.setItem('quizAnswers', JSON.stringify(initialAnswers));
+      navigate("/conditions");
+    } catch (error) {
+      console.error('Error saving skin type:', error);
+    }
   };
 
   return (
