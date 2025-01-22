@@ -1,13 +1,12 @@
 
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
-import nesting from 'tailwindcss/nesting';
+import nestingPlugin from 'tailwindcss/nesting/index.js';
 
 export default {
-  plugins: {
-    'tailwindcss/nesting': {},
-    'tailwindcss': {},
-    'autoprefixer': {},
-  },
-  from: 'src/index.css'
+  plugins: [
+    nestingPlugin(),
+    tailwindcss(),
+    autoprefixer()
+  ]
 }
