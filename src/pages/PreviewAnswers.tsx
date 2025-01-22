@@ -9,10 +9,16 @@ import { SkinType, Condition, Concern, QuizAnswers } from '../types/skincare';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
+  console.log('[PreviewAnswers] Component mounted');
+
   const storedAnswers = localStorage.getItem('quizAnswers');
+  console.log('[PreviewAnswers] Raw stored answers:', storedAnswers);
+
   const answers = storedAnswers ? JSON.parse(storedAnswers) as QuizAnswers : null;
+  console.log('[PreviewAnswers] Parsed answers:', answers);
 
   const questionsMap = React.useMemo(() => {
+    console.log('[PreviewAnswers] Building questionsMap with answers:', answers);
     if (!answers) return {};
     return {
       'Type de peau': answers.skinType || 'Non spécifié',
@@ -24,8 +30,10 @@ export default function PreviewAnswers() {
   }, [answers]);
 
   const handleSeeRecommendations = () => {
+    console.log('[PreviewAnswers] Handling see recommendations');
     try {
       if (!answers) {
+        console.error('[PreviewAnswers] No answers found, redirecting to quiz');
         toast.error('Veuillez compléter le quiz');
         navigate('/skintype');
         return;
@@ -39,21 +47,26 @@ export default function PreviewAnswers() {
         scentPreference: answers.scentPreference || ''
       };
 
+      console.log('[PreviewAnswers] Setting validated answers:', payload);
       localStorage.setItem('validatedAnswers', JSON.stringify(payload));
+
+      console.log('[PreviewAnswers] Navigating to recommendations with payload');
       navigate('/recommendations', { 
         state: { answers: payload }
       });
     } catch (error) {
-      console.error('Error:', error);
+      console.error('[PreviewAnswers] Error:', error);
       toast.error('Une erreur est survenue');
     }
   };
 
   const handleBack = () => {
+    console.log('[PreviewAnswers] Navigating back');
     navigate(-1);
   };
 
   if (!answers) {
+    console.log('[PreviewAnswers] No answers found, redirecting to initial quiz');
     navigate('/skintype');
     return null;
   }

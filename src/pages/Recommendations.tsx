@@ -8,16 +8,24 @@ import { QuizAnswers, RecommendationResult } from '../types/skincare';
 import skincareDb from '../data/skincare-db.json';
 
 export default function Recommendations() {
+  console.log('[Recommendations] Component mounted');
   const location = useLocation();
   const navigate = useNavigate();
   const [hasMounted, setHasMounted] = React.useState(false);
+  
+  console.log('[Recommendations] Location state:', location.state);
   const answers = location.state?.answers as QuizAnswers | undefined;
+  console.log('[Recommendations] Initial answers from location:', answers);
 
   React.useEffect(() => {
+    console.log('[Recommendations] useEffect running, hasMounted:', hasMounted);
     if (!hasMounted) {
       setHasMounted(true);
+      console.log('[Recommendations] Checking for answers:', answers);
       if (!answers) {
+        console.log('[Recommendations] No answers in location state, checking localStorage');
         const savedAnswers = localStorage.getItem('validatedAnswers');
+        console.log('[Recommendations] Saved answers from localStorage:', savedAnswers);
         if (savedAnswers) {
           try {
             const parsedAnswers = JSON.parse(savedAnswers);
