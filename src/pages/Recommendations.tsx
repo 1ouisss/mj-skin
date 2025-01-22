@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useQuiz } from '../context/QuizContext';
 import { useNavigate } from 'react-router-dom';
@@ -17,13 +16,18 @@ export default function Recommendations() {
     console.group('Recommendations - Initialization');
     console.log('Initial answers:', answers);
 
+    console.group('Recommendations - Validation');
+    console.log('Current answers:', answers);
+
     if (!validateAnswers()) {
       console.error('Invalid answers state');
       toast.error('Veuillez compléter toutes les questions');
-      navigate('/skintype', { replace: true });
+      navigate('/skintypequiz', { replace: true });
       console.groupEnd();
       return;
     }
+    console.log('Answers validation passed');
+    console.groupEnd();
 
     const fetchRecommendations = async () => {
       try {

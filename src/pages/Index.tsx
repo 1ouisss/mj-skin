@@ -56,8 +56,8 @@ const Index = () => {
           whileTap={{ scale: 0.98 }}
           onClick={() => {
             console.log('Starting new quiz session');
-            const { clearAnswers } = useQuiz();
-            clearAnswers();
+            const quizContext = useQuiz();
+            quizContext.clearAnswers();
             localStorage.setItem('quizAnswers', JSON.stringify({}));
             navigate("/skintypequiz");
           }}

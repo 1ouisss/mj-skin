@@ -102,9 +102,8 @@ const App = () => {
             <ErrorBoundary>
               <TooltipProvider>
                 <Toaster />
-            <BrowserRouter>
-              <ErrorBoundary>
-                <Routes>
+            <ErrorBoundary>
+              <Routes>
                   <Route 
                     path="/" 
                     element={
@@ -153,7 +152,6 @@ const App = () => {
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </ErrorBoundary>
-            </BrowserRouter>
           </TooltipProvider>
             </ErrorBoundary>
           </QuizProvider>
