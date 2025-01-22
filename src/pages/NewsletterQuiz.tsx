@@ -6,15 +6,15 @@ const NewsletterQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (choice: string) => {
-    console.log("Newsletter choice:", choice);
     const answers = {
-      Newsletter: choice,
-      Choice: choice === "yes" ? "Je souhaite recevoir la newsletter" : "Je ne souhaite pas recevoir la newsletter"
+      "Newsletter": choice,
+      "Choix Newsletter": choice === "yes" ? "Je souhaite recevoir la newsletter" : "Je ne souhaite pas recevoir la newsletter"
     };
     navigate("/preview", { 
       state: { 
         selectedAnswers: answers
-      }
+      },
+      replace: true
     });
   };
 
