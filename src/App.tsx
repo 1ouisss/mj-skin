@@ -46,15 +46,62 @@ const App = () => {
 
   useEffect(() => {
     console.log('[App] Component mounted');
-    return () => console.log('[App] Component unmounting');
+    // Clear localStorage for fresh state
+    try {
+      const storedAnswers = localStorage.getItem('quizAnswers');
+      console.log('Current stored answers:', storedAnswers);
+      
+      // Debug any React state management issues
+      if (process.env.NODE_ENV === 'development') {
+        const reactDevTools = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
+        if (reactDevTools) {
+          console.log('React DevTools detected');
+        }
+      }
+    } catch (error) {
+      console.error('[App] Storage error:', error);
+    }
+
+    return () => {
+      console.log('[App] Component unmounting');
+      console.log('[App] Final state check');
+    };
+  }, []);
+
+  // Add global error handler
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.group('[Global Error Handler]');
+      console.error('Uncaught error:', event.error);
+      console.error('Error message:', event.message);
+      console.error('Error stack:', event.error?.stack);
+      console.groupEnd();
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.group('[Unhandled Promise Rejection]');
+      console.error('Promise rejection:', event.reason);
+      console.error('Promise stack:', event.reason?.stack);
+      console.groupEnd();
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
   }, []);
 
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <QuizProvider>
-          <TooltipProvider>
-            <Toaster />
+        <ErrorBoundary>
+          <QuizProvider>
+            <ErrorBoundary>
+              <TooltipProvider>
+                <Toaster />
             <BrowserRouter>
               <ErrorBoundary>
                 <Routes>
@@ -88,7 +135,9 @@ const App = () => {
               </ErrorBoundary>
             </BrowserRouter>
           </TooltipProvider>
-        </QuizProvider>
+            </ErrorBoundary>
+          </QuizProvider>
+        </ErrorBoundary>
       </QueryClientProvider>
     </ErrorBoundary>
   );
