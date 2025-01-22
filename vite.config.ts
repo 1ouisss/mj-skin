@@ -8,16 +8,11 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 8080,
-    proxy: {
-      '/api': {
-        target: 'http://0.0.0.0:3001',
-        changeOrigin: true,
-      }
-    }
+    strictPort: true,
   },
   build: {
     outDir: 'dist',
-    assetsDir: 'assets'
+    sourcemap: true
   },
   resolve: {
     alias: {
