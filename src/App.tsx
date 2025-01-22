@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
@@ -6,6 +7,21 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { QuizProvider } from './context/QuizContext';
+
+const NotFound = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-4xl font-bold mb-4">404</h1>
+      <p className="mb-4">Page non trouvée</p>
+      <button 
+        onClick={() => window.location.href = '/'} 
+        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+      >
+        Retour à l'accueil
+      </button>
+    </div>
+  </div>
+);
 
 const DebugRouter = () => {
   const location = useLocation();
@@ -71,7 +87,7 @@ const App = () => {
                   />
                 )
               )}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>
         </QuizProvider>
