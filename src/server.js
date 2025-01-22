@@ -23,10 +23,23 @@ app.get("/api/test", (req, res) => {
 });
 
 // Recommendations Route
+const sanitizeInput = (input) => {
+  if (typeof input === 'string') {
+    return input.trim().replace(/[<>]/g, '');
+  }
+  return input;
+};
+
 app.post("/api/recommendations", async (req, res) => {
   const requestId = Math.random().toString(36).substring(7);
   console.group(`=== /api/recommendations Request (ID: ${requestId}) ===`);
   console.time(`request-${requestId}-duration`);
+  
+  const startTime = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - startTime;
+    console.log(`[${requestId}] Response sent in ${duration}ms with status ${res.statusCode}`);
+  });
 
   try {
     if (!req.body) {

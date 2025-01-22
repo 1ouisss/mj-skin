@@ -12,6 +12,8 @@ const Recommendations = React.memo(() => {
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // Added error state
+
 
   useEffect(() => {
     console.group('Recommendations - Component Lifecycle');
@@ -41,9 +43,9 @@ const Recommendations = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    let retryCount = 0;
     const MAX_RETRIES = 3;
-    
+    let attempt = 0;
+
     const fetchRecommendations = async () => {
       try {
         if (!validateAnswers()) {
@@ -53,8 +55,7 @@ const Recommendations = React.memo(() => {
           return;
         }
 
-        console.log('Fetching recommendations with:', answers);
-      try {
+        console.log(`[Attempt ${attempt + 1}/${MAX_RETRIES}] Fetching recommendations with:`, answers);
         const response = await fetch('/api/recommendations', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -62,49 +63,57 @@ const Recommendations = React.memo(() => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch recommendations');
+          const errorData = await response.json();
+          throw new Error(errorData.message || `Failed to fetch recommendations: ${response.status}`);
         }
 
         const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to fetch recommendations');
-        }
 
-        if (!data.recommendations || !data.recommendations.Products) {
+        //Basic response validation.  A schema would be better
+        if (!data || !data.recommendations || !data.recommendations.Products || !data.recommendations.Routine) {
           throw new Error('Invalid recommendation data received');
         }
 
         console.log('API response:', data);
         setRecommendations(data.recommendations);
-        setLoading(false);
+        setError(null); // Clear error on success
       } catch (error) {
         console.error('Error fetching recommendations:', error);
-        
-        if (retryCount < MAX_RETRIES) {
-          retryCount++;
-          toast.warning(`Retrying... (${retryCount}/${MAX_RETRIES})`);
-          setTimeout(fetchRecommendations, 1000 * retryCount);
+        setError(error.message); // Set error message
+
+        if (attempt < MAX_RETRIES) {
+          attempt++;
+          toast.warning(`Retrying... (${attempt}/${MAX_RETRIES})`);
+          setTimeout(fetchRecommendations, 1000 * attempt);
         } else {
           toast.error('Unable to fetch recommendations. Please try again later.');
           setLoading(false);
           navigate('/preview', { replace: true });
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchRecommendations();
-    
+
     return () => {
       console.log('Cleaning up recommendations component');
     };
-    console.groupEnd();
-  }, [answers, navigate, validateAnswers]);
+  }, [answers, navigate]); // Removed validateAnswers dependency
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p>Chargement de vos recommandations...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Error: {error}</p>
       </div>
     );
   }
@@ -119,7 +128,7 @@ const Recommendations = React.memo(() => {
 
   return (
     <div className="min-h-screen p-4">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-4xl mx-auto space-y-8"
