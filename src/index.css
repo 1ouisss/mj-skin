@@ -170,10 +170,24 @@ button {
 }
 
 .treatment-button {
-  @apply flex items-center justify-center gap-4 bg-white/90 backdrop-blur-sm 
-         hover:bg-white text-[#2C2C2C] rounded-full py-6 px-8 
-         shadow-lg transition-all duration-300 w-full
-         hover:shadow-xl hover:transform hover:scale-[1.02];
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: rgb(255 255 255 / 0.9);
+  backdrop-filter: blur(4px);
+  color: #2C2C2C;
+  border-radius: 9999px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.treatment-button:hover {
+  background-color: white;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  transform: scale(1.02);
 }
 
 /* Styles généraux existants */
