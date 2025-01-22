@@ -41,7 +41,8 @@ app.post("/api/recommendations", async (req, res) => {
       });
     }
 
-    const { skinType } = req.body;
+    const userData = { ...req.body };
+    console.log("Processing request with temporary data");
 
     // Load recommendations from JSON file
     const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
@@ -60,6 +61,10 @@ app.post("/api/recommendations", async (req, res) => {
       success: true,
       recommendations: result
     });
+
+    // Clean up user data
+    console.log("Cleaning up temporary user data");
+    req.body = null;
 
   } catch (error) {
     console.error('Error:', error);

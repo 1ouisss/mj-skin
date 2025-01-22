@@ -24,6 +24,11 @@ const Recommendations = React.memo(() => {
     console.log('Component mounted');
     console.log('Initial state:', state);
 
+    return () => {
+      console.log("Clearing user data after recommendations");
+      localStorage.removeItem('validatedAnswers');
+    };
+
     const validateAndInitialize = async () => {
       try {
         // Check context state first
