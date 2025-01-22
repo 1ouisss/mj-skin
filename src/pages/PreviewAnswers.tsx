@@ -24,13 +24,27 @@ const PreviewAnswers = () => {
     try {
       console.log('Quiz answers:', answers);
       
+      if (!answers || Object.keys(answers).length === 0) {
+        toast.error('No quiz answers found. Please complete the quiz.');
+        navigate('/skin-type-quiz');
+        return;
+      }
+
       const payload = {
-        skinType: answers?.SkinType || '',
-        conditions: answers?.Condition || '',
-        concerns: answers?.Concern || '',
-        texturePreference: answers?.TexturePreference || '',
-        scentPreference: answers?.ScentPreference || ''
+        skinType: answers.SkinType || answers.skinType || '',
+        conditions: answers.Condition || answers.conditions || '',
+        concerns: answers.Concern || answers.concerns || '',
+        texturePreference: answers.TexturePreference || answers.texturePreference || '',
+        scentPreference: answers.ScentPreference || answers.scentPreference || ''
       };
+
+      // Validate required fields
+      if (!payload.skinType || !payload.conditions || !payload.concerns) {
+        toast.error('Missing required answers. Please complete all required questions.');
+        return;
+      }
+
+      console.log('Processed payload:', payload);
 
       console.log('Sending payload:', payload);
 
