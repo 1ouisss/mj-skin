@@ -7,42 +7,83 @@ import { Card, CardContent } from '../components/ui/card';
 import { ArrowLeft, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { QuizAnswers } from '../types/skincare';
+import { useQuiz } from '../context/QuizContext';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
   const [answers, setAnswers] = React.useState<QuizAnswers | null>(null);
+  const { state } = useQuiz();
 
   React.useEffect(() => {
+    console.group('PreviewAnswers Component');
+    console.log('Component mounted');
+    console.log('Context state:', state);
+    
     try {
       const storedAnswers = localStorage.getItem('quizAnswers');
+      console.log('Raw stored answers:', storedAnswers);
+      
       if (!storedAnswers) {
-        console.error('No answers found');
+        console.error('No answers found in localStorage');
         toast.error('Veuillez compléter le quiz');
         navigate('/skintype', { replace: true });
         return;
       }
+
       const parsedAnswers = JSON.parse(storedAnswers);
-      console.log('Loaded answers:', parsedAnswers);
+      console.log('Parsed answers:', parsedAnswers);
+
+      // Validate required fields
+      const requiredFields = ['skinType', 'conditions', 'concerns'];
+      const missingFields = requiredFields.filter(field => !parsedAnswers[field]);
+
+      if (missingFields.length > 0) {
+        console.error('Missing required fields:', missingFields);
+        toast.error('Réponses incomplètes');
+        navigate('/skintype', { replace: true });
+        return;
+      }
+
       setAnswers(parsedAnswers);
     } catch (error) {
-      console.error('Error loading answers:', error);
+      console.error('Error processing answers:', error);
       toast.error('Une erreur est survenue');
       navigate('/skintype', { replace: true });
     }
+
+    return () => console.groupEnd();
   }, [navigate]);
 
   const handleSeeRecommendations = () => {
+    console.log('Handling recommendations click');
+    console.log('Current answers state:', answers);
+
     if (!answers) {
+      console.error('No answers available');
       toast.error('Veuillez compléter le quiz');
       return;
     }
-    localStorage.setItem('validatedAnswers', JSON.stringify(answers));
-    navigate('/recommendations');
+
+    try {
+      localStorage.setItem('validatedAnswers', JSON.stringify(answers));
+      console.log('Validated answers stored successfully');
+      navigate('/recommendations');
+    } catch (error) {
+      console.error('Error storing validated answers:', error);
+      toast.error('Une erreur est survenue');
+    }
   };
 
   const handleBack = () => navigate(-1);
 
-  if (!answers) return null;
+  if (!answers) {
+    console.log('Rendering loading state');
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center">
+        <p className="text-lg">Chargement de vos réponses...</p>
+      </div>
+    );
+  }
 
   const questionsMap = {
     'Type de peau': answers.skinType || 'Non spécifié',
@@ -51,6 +92,8 @@ export default function PreviewAnswers() {
     'Texture préférée': answers.texturePreference || 'Non spécifié',
     'Parfum préféré': answers.scentPreference || 'Non spécifié'
   };
+
+  console.log('Rendering preview with answers:', questionsMap);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
