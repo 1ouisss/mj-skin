@@ -8,17 +8,20 @@ import { toast } from 'sonner';
 const PreviewAnswers = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const answers = location.state?.selectedAnswers;
+  const answers = {
+    skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
+    conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
+    concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
+    texturePreference: JSON.parse(localStorage.getItem('texture') || '""'),
+    scentPreference: JSON.parse(localStorage.getItem('fragrance') || '""'),
+    newsletter: localStorage.getItem('newsletter') || ''
+  };
 
   React.useEffect(() => {
-    if (!location.state?.selectedAnswers) {
-      navigate('/');
+    if (!answers.skinType || !answers.conditions || !answers.concerns) {
+      navigate('/skin-type-quiz');
     }
-  }, [location.state, navigate]);
-
-  if (!answers) {
-    return <div>Loading...</div>;
-  }
+  }, [answers, navigate]);
 
   const handleSeeRecommendations = async () => {
     try {
