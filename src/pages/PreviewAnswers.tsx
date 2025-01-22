@@ -1,101 +1,35 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
-import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
 import { ArrowLeft, Check } from 'lucide-react';
-import type { QuizAnswers } from '../types/skincare';
+import { toast } from 'sonner';
+import { SkinType, Condition, Concern, QuizAnswers } from '../types/skincare';
 
-const PreviewAnswers = () => {
+export default function PreviewAnswers() {
   const navigate = useNavigate();
-  const [answers, setAnswers] = React.useState<QuizAnswers>({
-    skinType: '' as any,
-    conditions: '' as any,
-    concerns: '' as any,
-    texturePreference: '',
-    scentPreference: '',
-    newsletter: ''
-  });
+  const storedAnswers = localStorage.getItem('quizAnswers');
+  const answers = storedAnswers ? JSON.parse(storedAnswers) as QuizAnswers : null;
 
-  React.useEffect(() => {
-    try {
-      const loadedAnswers = {
-        skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
-        conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
-        concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
-        texturePreference: JSON.parse(localStorage.getItem('texturePreference') || localStorage.getItem('texture') || '""'),
-        scentPreference: JSON.parse(localStorage.getItem('scentPreference') || localStorage.getItem('fragrance') || '""'),
-        newsletter: localStorage.getItem('newsletter') || ''
-      };
-
-      console.log('Loaded answers:', loadedAnswers);
-
-      if (!loadedAnswers.skinType || !loadedAnswers.conditions || !loadedAnswers.concerns) {
-        toast.error('Veuillez compléter toutes les questions requises');
-        navigate('/skin-type-quiz');
-        return;
-      }
-
-      setAnswers(loadedAnswers as QuizAnswers);
-    } catch (error) {
-      console.error('Error loading answers:', error);
-      toast.error('Une erreur est survenue lors du chargement de vos réponses');
-      navigate('/skin-type-quiz');
-    }
-  }, [navigate]);
-
-  const questionsMap = {
-    "Type de peau": answers.skinType,
-    "Conditions particulières": answers.conditions,
-    "Préoccupations principales": answers.concerns,
-    "Préférences de texture": answers.texturePreference || '---',
-    "Préférences de parfum": answers.scentPreference || '---'
-  };
-
-  const validateAnswers = (): boolean => {
-    try {
-      if (!answers.skinType || !answers.conditions || !answers.concerns) {
-        throw new Error('Questions requises manquantes');
-      }
-
-      const validSkinTypes: SkinType[] = ['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Terne', 'Normale'];
-      const validConditions: Condition[] = ['Acné', 'Eczéma', 'Aucune'];
-      const validConcerns: Concern[] = ['Rides', 'Rougeurs', 'Points noirs', 'Cernes', 'Taches pigmentaires', 
-                                       'Boutons', 'Imperfections', 'Pores dilatés', 'Perte de fermeté'];
-
-      if (!validSkinTypes.includes(answers.skinType as SkinType) ||
-          !validConditions.includes(answers.conditions as Condition) ||
-          !validConcerns.includes(answers.concerns as Concern)) {
-        throw new Error('Réponses invalides détectées');
-      }
-      return true;
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erreur de validation');
-      navigate('/skin-type-quiz');
-      return false;
-    }
-    
-    // Validate against allowed values
-    const validSkinTypes: SkinType[] = ['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Terne', 'Normale'];
-    const validConditions: Condition[] = ['Acné', 'Eczéma', 'Aucune'];
-    const validConcerns: Concern[] = ['Rides', 'Rougeurs', 'Points noirs', 'Cernes', 'Taches pigmentaires', 
-                                     'Boutons', 'Imperfections', 'Pores dilatés', 'Perte de fermeté'];
-
-    if (!validSkinTypes.includes(answers.skinType as SkinType) ||
-        !validConditions.includes(answers.conditions as Condition) ||
-        !validConcerns.includes(answers.concerns as Concern)) {
-      toast.error('Certaines réponses sont invalides');
-      navigate('/skin-type-quiz');
-      return false;
-    }
-    return true;
-  };
+  const questionsMap = React.useMemo(() => {
+    if (!answers) return {};
+    return {
+      'Type de peau': answers.skinType || 'Non spécifié',
+      'Condition': answers.conditions || 'Non spécifié',
+      'Préoccupation': answers.concerns || 'Non spécifié',
+      'Texture préférée': answers.texturePreference || 'Non spécifié',
+      'Parfum préféré': answers.scentPreference || 'Non spécifié'
+    };
+  }, [answers]);
 
   const handleSeeRecommendations = () => {
     try {
-      if (!validateAnswers()) return;
+      if (!answers) {
+        toast.error('Veuillez compléter le quiz');
+        navigate('/skintype');
+        return;
+      }
 
       const payload = {
         skinType: answers.skinType as SkinType,
@@ -106,20 +40,23 @@ const PreviewAnswers = () => {
       };
 
       localStorage.setItem('validatedAnswers', JSON.stringify(payload));
-      console.log('Processing payload:', payload);
       navigate('/recommendations', { 
-        state: { answers: payload },
-        replace: false 
+        state: { answers: payload }
       });
     } catch (error) {
-      console.error('Error navigating to recommendations:', error);
-      toast.error('Une erreur est survenue. Veuillez réessayer.');
+      console.error('Error:', error);
+      toast.error('Une erreur est survenue');
     }
   };
 
   const handleBack = () => {
     navigate(-1);
   };
+
+  if (!answers) {
+    navigate('/skintype');
+    return null;
+  }
 
   return (
     <div 
@@ -132,7 +69,6 @@ const PreviewAnswers = () => {
       }}
     >
       <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
-
       <motion.div 
         className="w-full max-w-2xl relative z-10"
         initial={{ opacity: 0, y: 20 }}
@@ -144,7 +80,6 @@ const PreviewAnswers = () => {
             <h2 className="text-4xl font-playfair text-center mb-8 text-[#4A4A4A]">
               Confirmez vos réponses
             </h2>
-
             <div className="space-y-4 mb-8">
               {Object.entries(questionsMap).map(([question, answer], index) => (
                 <motion.div
@@ -159,7 +94,6 @@ const PreviewAnswers = () => {
                 </motion.div>
               ))}
             </div>
-
             <div className="flex justify-between items-center gap-4">
               <Button
                 variant="outline"
@@ -182,6 +116,4 @@ const PreviewAnswers = () => {
       </motion.div>
     </div>
   );
-};
-
-export default PreviewAnswers;
+}

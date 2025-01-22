@@ -13,21 +13,20 @@ export default function Recommendations() {
   const answers = location.state?.answers as QuizAnswers;
 
   React.useEffect(() => {
-    if (initialLoad && !answers) {
+    if (!answers) {
       const savedAnswers = localStorage.getItem('validatedAnswers');
       if (savedAnswers) {
-        const parsedAnswers = JSON.parse(savedAnswers);
         navigate('/recommendations', { 
-          state: { answers: parsedAnswers },
+          state: { answers: JSON.parse(savedAnswers) },
           replace: true 
         });
       } else {
         toast.error('Données manquantes. Veuillez refaire le quiz.');
         navigate('/skintype', { replace: true });
       }
+      return;
     }
-    setInitialLoad(false);
-  }, []);
+  }, [answers, navigate]);
 
   const recommendations = React.useMemo<RecommendationResult | null>(() => {
     if (!answers) return null;
