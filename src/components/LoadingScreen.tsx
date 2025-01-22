@@ -16,6 +16,7 @@ export const LoadingScreen = () => {
         loading="lazy"
       />
       <div className="w-12 h-12 border-4 border-[#4A4A4A] border-t-transparent rounded-full animate-spin" />
+      <p className="mt-4 text-[#4A4A4A] font-playfair">Chargement...</p>
     </motion.div>
   );
 };

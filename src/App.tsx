@@ -93,11 +93,11 @@ const App = () => (
             </Suspense>
           } />
           <Route path="/recommendations" element={
-            <Suspense fallback={<LoadingScreen />}>
-              <ErrorBoundary>
+            <ErrorBoundary>
+              <Suspense fallback={<LoadingScreen />}>
                 <Recommendations />
-              </ErrorBoundary>
-            </Suspense>
+              </Suspense>
+            </ErrorBoundary>
           } />
           <Route path="/preview" element={
             <Suspense fallback={<LoadingScreen />}>
