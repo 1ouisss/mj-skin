@@ -1,158 +1,72 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
-import { getRecommendations } from '../utils/recommendations';
 
-import { SkinType, Condition, Concern, TexturePreference, ScentPreference, RecommendationResult } from '../types/skincare';
-import { ErrorBoundary } from '../components/ErrorBoundary';
-
-interface RecommendationsProps {
-  selectedAnswers: {
-    skinType: SkinType;
-    condition: Condition;
-    concern: Concern;
-    texturePreference: TexturePreference;
-    scentPreference: ScentPreference;
-  };
-}
-
-const Recommendations: React.FC<RecommendationsProps> = () => {
+const Recommendations = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const selectedAnswers = location.state?.selectedAnswers;
-  const [recommendation, setRecommendation] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  if (!selectedAnswers) {
-    navigate('/');
-    return null;
-  }
+  const recommendations = location.state?.recommendations;
 
   useEffect(() => {
-    try {
-      const result = getRecommendations(
-        selectedAnswers.skinType,
-        selectedAnswers.condition,
-        selectedAnswers.concern,
-        selectedAnswers.texturePreference,
-        selectedAnswers.scentPreference
-      );
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setRecommendation(result);
-      }
-    } catch (err) {
-      setError('Une erreur est survenue lors du chargement des recommandations.');
-    } finally {
-      setLoading(false);
+    if (!recommendations) {
+      navigate('/skin-type-quiz');
     }
-  }, [selectedAnswers]);
+  }, [recommendations, navigate]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-2xl font-playfair text-[#4A4A4A]">Chargement des recommandations...</p>
-      </div>
-    );
-  }
-
-  if (error || !recommendation) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-2xl font-playfair text-[#4A4A4A]">{error || 'Aucune recommandation trouvée.'}</p>
-      </div>
-    );
-  }
+  if (!recommendations) return null;
 
   return (
-    <div className="min-h-screen w-full px-4 py-12 md:py-20"
-      style={{
-        backgroundImage: `url('/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png')`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-      }}>
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
-      
-      <div className="max-w-7xl mx-auto relative z-10">
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-playfair text-center mb-12 text-[#4A4A4A]">
-            Vos Produits Recommandés
-          </h2>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-white p-8"
+    >
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-light mb-8">Vos recommandations personnalisées</h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {recommendation.Products?.map((product: string, index: number) => (
-              <Card key={index} className="bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-6">
-                  <p className="text-lg text-[#4A4A4A] text-center font-playfair">
-                    {product}
-                  </p>
-                </CardContent>
-              </Card>
+        <section className="mb-12">
+          <h2 className="text-2xl mb-4">Produits recommandés</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recommendations.Products?.map((product: string, index: number) => (
+              <motion.div
+                key={index}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="p-4 border rounded-lg shadow-sm"
+              >
+                {product}
+              </motion.div>
             ))}
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <Card className="bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-8">
-              <h2 className="text-3xl font-playfair text-center mb-8 text-[#4A4A4A]">
-                Votre Routine Recommandée
-              </h2>
-
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-2xl mb-4 font-playfair text-[#4A4A4A]">Matin</h3>
-                  <ul className="space-y-2">
-                    {recommendation.Routine?.Matin?.map((step: string, index: number) => (
-                      <li key={index} className="text-lg text-[#4A4A4A]">
-                        {step}
-                      </li>
+        <section>
+          <h2 className="text-2xl mb-4">Votre routine</h2>
+          {recommendations.Routine && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {Object.entries(recommendations.Routine).map(([time, steps]: [string, any], index: number) => (
+                <motion.div
+                  key={time}
+                  initial={{ x: index % 2 === 0 ? -20 : 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.2 }}
+                  className="p-6 bg-gray-50 rounded-lg"
+                >
+                  <h3 className="text-xl mb-4 capitalize">{time}</h3>
+                  <ol className="space-y-2">
+                    {Array.isArray(steps) && steps.map((step: string, stepIndex: number) => (
+                      <li key={stepIndex} className="text-gray-700">{step}</li>
                     ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-2xl mb-4 font-playfair text-[#4A4A4A]">Soir</h3>
-                  <ul className="space-y-2">
-                    {recommendation.Routine?.Soir?.map((step: string, index: number) => (
-                      <li key={index} className="text-lg text-[#4A4A4A]">
-                        {step}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <p className="text-lg italic text-[#4A4A4A] text-center mt-6">
-                  {recommendation.Routine?.Résultat}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.section>
+                  </ol>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default function RecommendationsWithErrorBoundary(props: RecommendationsProps) {
-  return (
-    <ErrorBoundary>
-      <Recommendations {...props} />
-    </ErrorBoundary>
-  );
-}
+export default Recommendations;
