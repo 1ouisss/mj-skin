@@ -10,7 +10,7 @@ const NewsletterQuiz = () => {
       "Newsletter": choice,
       "Choix Newsletter": choice === "yes" ? "Je souhaite recevoir la newsletter" : "Je ne souhaite pas recevoir la newsletter"
     };
-    navigate("/preview", { 
+    navigate("/recommendations", { 
       state: { 
         selectedAnswers: answers
       },

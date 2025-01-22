@@ -10,6 +10,7 @@ const QUIZ_STEPS = [
   '/treatmentquiz',
   '/fragrancequiz',
   '/routinequiz',
+  '/newsletterquiz',
   '/preview',
   '/recommendations'
 ];
