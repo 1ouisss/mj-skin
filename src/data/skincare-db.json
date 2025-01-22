@@ -12,8 +12,8 @@
                     "Avec parfum naturel": {
                       "Products": [
                         "Crème Fraîche",
-                        "Eau de Néroli enrichie",
-                        "Lotus Sacré", 
+                        "Eau de Néroli enrichie", 
+                        "Lotus Sacré",
                         "Sérum Immortelle",
                         "Masque collagène avec Karité Vanillé"
                       ],
@@ -26,11 +26,135 @@
                         ],
                         "Soir": [
                           "Nettoyage avec Crème Fraîche",
-                          "Application d'Eau de Néroli enrichie",
+                          "Application d'Eau de Néroli enrichie", 
                           "Sérum Immortelle",
                           "Masque collagène avec Karité Vanillé (1-3 fois par semaine)"
                         ],
                         "Résultat": "Hydratation profonde, confort immédiat, peau revitalisée. 😊"
+                      }
+                    },
+                    "Sans huiles essentielles": {
+                      "Products": [
+                        "Crème Fraîche",
+                        "Sérum Neutre",
+                        "Sublimateur sans parfum"
+                      ],
+                      "Routine": {
+                        "Matin": [
+                          "Nettoyage avec Crème Fraîche",
+                          "Application de Sérum Neutre",
+                          "Application de Sublimateur"
+                        ],
+                        "Soir": [
+                          "Nettoyage avec Crème Fraîche",
+                          "Application de Sérum Neutre",
+                          "Hydratation légère sans parfum"
+                        ],
+                        "Résultat": "Peau apaisée et hydratée, sans irritation. 😌"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Eczéma": {
+          "Concern": {
+            "Rougeurs": {
+              "TexturePreference": {
+                "Légère": {
+                  "ScentPreference": {
+                    "Sans huiles essentielles": {
+                      "Products": [
+                        "Huile de Jojoba",
+                        "Baume Apaisant & Protecteur"
+                      ],
+                      "Routine": {
+                        "Matin": [
+                          "Nettoyage doux avec Huile de Jojoba",
+                          "Application généreuse de Baume Apaisant & Protecteur"
+                        ],
+                        "Soir": [
+                          "Nettoyage avec Huile de Jojoba",
+                          "Application du Baume Apaisant & Protecteur"
+                        ],
+                        "Résultat": "Apaisement des irritations, réduction de l'inconfort. 🌿"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Grasse": {
+      "Condition": {
+        "Acné": {
+          "Concern": {
+            "Points noirs": {
+              "TexturePreference": {
+                "Légère": {
+                  "ScentPreference": {
+                    "Avec parfum naturel": {
+                      "Products": [
+                        "Huile Nettoyante avec Gel d'Aloès",
+                        "Eau d'Orange",
+                        "Gel Sébo",
+                        "Exfopur"
+                      ],
+                      "Routine": {
+                        "Matin": [
+                          "Nettoyage avec Huile Nettoyante + Gel d'Aloès",
+                          "Application d'Eau d'Orange",
+                          "Application de Gel Sébo"
+                        ],
+                        "Soir": [
+                          "Double nettoyage avec Huile Nettoyante",
+                          "Application d'Eau d'Orange",
+                          "Masque Exfopur (1-3 fois par semaine)"
+                        ],
+                        "Résultat": "Contrôle du sébum, peau matifiée, réduction des imperfections. ✨"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mixte": {
+      "Condition": {
+        "Aucune": {
+          "Concern": {
+            "Rougeurs": {
+              "TexturePreference": {
+                "Légère": {
+                  "ScentPreference": {
+                    "Avec parfum naturel": {
+                      "Products": [
+                        "Huile Nettoyante",
+                        "Eau de Rose",
+                        "Phytocomplexe",
+                        "Sérum Rose"
+                      ],
+                      "Routine": {
+                        "Matin": [
+                          "Nettoyage avec Huile Nettoyante",
+                          "Application d'Eau de Rose",
+                          "Application de Phytocomplexe",
+                          "Sérum Rose"
+                        ],
+                        "Soir": [
+                          "Nettoyage avec Huile Nettoyante",
+                          "Application d'Eau de Rose",
+                          "Sérum Rose"
+                        ],
+                        "Résultat": "Équilibre hydratation/sébum, éclat du teint. 💫"
                       }
                     }
                   }
