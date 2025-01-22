@@ -4,13 +4,16 @@ import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 import { getRecommendations } from '../utils/recommendations';
 
+import { SkinType, Condition, Concern, TexturePreference, ScentPreference, RecommendationResult } from '../types/skincare';
+import { ErrorBoundary } from '../components/ErrorBoundary';
+
 interface RecommendationsProps {
   selectedAnswers: {
-    skinType: string;
-    condition: string;
-    concern: string;
-    texturePreference: string;
-    scentPreference: string;
+    skinType: SkinType;
+    condition: Condition;
+    concern: Concern;
+    texturePreference: TexturePreference;
+    scentPreference: ScentPreference;
   };
 }
 
@@ -137,4 +140,10 @@ const Recommendations: React.FC<RecommendationsProps> = ({ selectedAnswers }) =>
   );
 };
 
-export default Recommendations;
+export default function RecommendationsWithErrorBoundary(props: RecommendationsProps) {
+  return (
+    <ErrorBoundary>
+      <Recommendations {...props} />
+    </ErrorBoundary>
+  );
+}
