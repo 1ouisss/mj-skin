@@ -55,8 +55,9 @@ app.post("/api/recommendations", async (req, res) => {
     console.log('Received payload:', { skinType, conditions, concerns, texturePreference, scentPreference });
 
     // Validate required fields
-    if (!skinType || !conditions || !concerns) {
-      console.warn('Missing required fields:', { skinType, conditions, concerns });
+    if (!skinType || !conditions || !concerns || 
+        !['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Terne', 'Normale'].includes(skinType)) {
+      console.warn('Missing or invalid fields:', { skinType, conditions, concerns });
       return res.status(400).json({
         error: "Bad Request",
         message: "Veuillez compléter toutes les questions requises."

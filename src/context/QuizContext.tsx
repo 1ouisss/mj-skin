@@ -36,7 +36,12 @@ const validateState = (state: any): state is QuizState => {
 
 const persistState = (state: QuizState) => {
   try {
-    if (DEBUG) console.log('[QuizContext] Persisting state:', state);
+    if (DEBUG) {
+      console.group('[QuizContext] State Persistence');
+      console.log('Persisting state:', state);
+      console.log('Timestamp:', new Date().toISOString());
+      console.groupEnd();
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     return true;
   } catch (error) {

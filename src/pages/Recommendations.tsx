@@ -12,7 +12,11 @@ const Recommendations = React.memo(() => {
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // Added error state
+  const [error, setError] = useState<string | null>(null);
+  
+  const validateAnswers = () => {
+    return state.skinType && state.conditions && state.concerns;
+  };
 
 
   useEffect(() => {
@@ -100,7 +104,7 @@ const Recommendations = React.memo(() => {
     return () => {
       console.log('Cleaning up recommendations component');
     };
-  }, [answers, navigate]); // Removed validateAnswers dependency
+  }, [state, navigate]); // Using state instead of answers
 
   if (loading) {
     return (
