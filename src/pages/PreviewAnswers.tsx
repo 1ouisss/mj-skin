@@ -22,6 +22,11 @@ const PreviewAnswers = () => {
 
   const handleSeeRecommendations = async () => {
     try {
+      if (!answers?.SkinType || !answers?.Condition || !answers?.Concern) {
+        toast.error('Missing required answers. Please complete the quiz.');
+        return;
+      }
+
       const payload = {
         skinType: answers.SkinType,
         conditions: answers.Condition,
@@ -29,6 +34,8 @@ const PreviewAnswers = () => {
         texturePreference: answers.TexturePreference || '',
         scentPreference: answers.ScentPreference || ''
       };
+
+      console.log('Sending payload:', payload);
 
       const response = await fetch('/api/recommendations', {
         method: 'POST',

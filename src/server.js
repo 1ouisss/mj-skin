@@ -25,6 +25,15 @@ app.post("/api/recommendations", async (req, res) => {
 
   try {
     const { skinType, conditions: condition, concerns: concern, texturePreference, scentPreference } = req.body;
+    
+    console.log('Received payload:', { skinType, condition, concern, texturePreference, scentPreference });
+
+    if (!skinType || !condition || !concern) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "Missing required fields"
+      });
+    }
 
     // Load recommendations from JSON file
     const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
