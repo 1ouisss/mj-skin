@@ -12,10 +12,12 @@ const Recommendations = () => {
   useEffect(() => {
     const loadRecommendations = async () => {
       try {
-        const { skinType, conditions, concerns } = state;
+        const { skinType, conditions, concerns, completed } = state;
         
-        if (!skinType || !conditions || !concerns) {
-          throw new Error("Informations manquantes");
+        if (!completed || !skinType || !conditions || !concerns) {
+          toast.error('Veuillez compléter toutes les questions requises');
+          navigate('/skintypequiz');
+          return;
         }
 
         const recommendationKey = `${skinType.toLowerCase()}`;

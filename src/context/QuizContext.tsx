@@ -1,190 +1,136 @@
-
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
-const DEBUG = true;
 
 type QuizState = {
   skinType: string;
   conditions: string;
   concerns: string;
-  texturePreference?: string;
-  scentPreference?: string;
+  zones: string[];
+  treatment: string;
+  fragrance: string;
+  routine: string;
+  newsletter: boolean;
+  completed: boolean;
 };
 
 type QuizAction = 
-  | { type: 'SET_ANSWER'; field: keyof QuizState; value: string }
+  | { type: 'SET_ANSWER'; field: keyof QuizState; value: any }
   | { type: 'CLEAR_ANSWERS' }
-  | { type: 'RESTORE_STATE'; state: QuizState };
+  | { type: 'SET_COMPLETED'; value: boolean };
 
 const initialState: QuizState = {
   skinType: '',
   conditions: '',
   concerns: '',
-  texturePreference: '',
-  scentPreference: ''
+  zones: [],
+  treatment: '',
+  fragrance: '',
+  routine: '',
+  newsletter: false,
+  completed: false
 };
 
-const STORAGE_KEY = 'quizAnswers';
+const STORAGE_KEY = 'quiz_state';
 
-const validateState = (state: any): state is QuizState => {
-  try {
-    if (!state || typeof state !== 'object') return false;
-    const requiredFields = ['skinType', 'conditions', 'concerns'];
-    const hasRequiredFields = requiredFields.every(field => typeof state[field] === 'string');
-    if (!hasRequiredFields) return false;
-    
-    // Validate field values
-    if (state.skinType && !['dry', 'oily', 'combination', 'normal', 'sensitive'].includes(state.skinType)) {
-      return false;
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('State validation error:', error);
-    return false;
-  }
-};
-
-const persistState = (state: QuizState) => {
-  try {
-    if (DEBUG) {
-      console.group('[QuizContext] State Persistence');
-      console.log('Persisting state:', state);
-      console.log('Timestamp:', new Date().toISOString());
-      console.groupEnd();
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    return true;
-  } catch (error) {
-    console.error('[QuizContext] Failed to persist state:', error);
-    return false;
-  }
-};
-
-const loadPersistedState = (): QuizState | null => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return null;
-    
-    const parsedState = JSON.parse(stored);
-    if (!validateState(parsedState)) {
-      console.warn('[QuizContext] Invalid persisted state, resetting');
-      localStorage.removeItem(STORAGE_KEY);
-      return null;
-    }
-    
-    if (DEBUG) console.log('[QuizContext] Loaded persisted state:', parsedState);
-    return parsedState;
-  } catch (error) {
-    console.error('[QuizContext] Failed to load persisted state:', error);
-    return null;
-  }
-};
+function validateState(state: QuizState): boolean {
+  const requiredFields = ['skinType', 'conditions', 'concerns'];
+  return requiredFields.every(field => Boolean(state[field]));
+}
 
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
-  if (DEBUG) console.log('[QuizContext] Reducer action:', action.type, action);
-  
   switch (action.type) {
-    case 'SET_ANSWER': {
-      const newState = { ...state, [action.field]: action.value };
-      persistState(newState);
-      return newState;
-    }
-    case 'CLEAR_ANSWERS': {
-      localStorage.removeItem(STORAGE_KEY);
+    case 'SET_ANSWER':
+      return {
+        ...state,
+        [action.field]: action.value
+      };
+    case 'SET_COMPLETED':
+      return {
+        ...state,
+        completed: action.value
+      };
+    case 'CLEAR_ANSWERS':
       return initialState;
-    }
-    case 'RESTORE_STATE': {
-      if (!validateState(action.state)) {
-        console.error('[QuizContext] Invalid state restoration attempt');
-        return state;
-      }
-      return action.state;
-    }
     default:
       return state;
   }
 }
 
-interface QuizContextType {
-  state: QuizState;
-  setAnswer: (field: keyof QuizState, value: string) => void;
-  validateAndProceed: (currentStep: string, nextStep: string) => void;
+interface QuizContextType extends QuizState {
+  setAnswer: (field: keyof QuizState, value: any) => void;
   clearAnswers: () => void;
+  validateAndProceed: (currentStep: string, nextStep: string) => void;
   restoreState: () => boolean;
 }
 
-export const QuizContext = createContext<QuizContextType | undefined>(undefined);
+const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export function QuizProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(quizReducer, initialState);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('[QuizContext] Provider mounted, attempting state restoration');
     restoreState();
   }, []);
 
-  const restoreState = (): boolean => {
-    const persistedState = loadPersistedState();
-    if (persistedState && validateState(persistedState)) {
-      dispatch({ type: 'RESTORE_STATE', state: persistedState });
-      console.log('[QuizContext] State restored successfully:', persistedState);
-      return true;
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      console.error('Failed to persist quiz state:', error);
     }
-    console.warn('[QuizContext] No valid state to restore');
-    return false;
-  };
+  }, [state]);
 
-  const setAnswer = (field: keyof QuizState, value: string) => {
-    if (DEBUG) console.log('[QuizContext] Setting answer:', field, value);
+  const setAnswer = (field: keyof QuizState, value: any) => {
     dispatch({ type: 'SET_ANSWER', field, value });
   };
 
-  const validateAndProceed = (currentStep: string, nextStep: string) => {
-    if (DEBUG) {
-      console.group('[QuizContext] validateAndProceed');
-      console.log('Current step:', currentStep);
-      console.log('Next step:', nextStep);
-      console.log('Current state:', state);
-    }
+  const clearAnswers = () => {
+    dispatch({ type: 'CLEAR_ANSWERS' });
+    localStorage.removeItem(STORAGE_KEY);
+  };
 
-    // Always validate state before proceeding
-    const requiredFields = ['skinType', 'conditions', 'concerns'];
-    const missingFields = requiredFields.filter(field => !state[field]);
-    
-    if ((nextStep === 'recommendations' || nextStep === 'previewanswers') && missingFields.length > 0) {
-      console.warn('Missing required fields:', missingFields);
+  const validateAndProceed = (currentStep: string, nextStep: string) => {
+    const isValid = validateState(state);
+
+    if (nextStep === 'recommendations' && !isValid) {
       toast.error('Veuillez compléter toutes les questions requises');
       navigate('/skintypequiz');
       return;
     }
 
-    // Ensure state is persisted before navigation
-    persistState(state);
-
-    if (DEBUG) {
-      console.log('Validation passed, navigating to:', nextStep);
-      console.groupEnd();
+    if (nextStep === 'recommendations') {
+      dispatch({ type: 'SET_COMPLETED', value: true });
     }
 
     navigate(`/${nextStep.toLowerCase()}`);
   };
 
-  const clearAnswers = () => {
-    if (DEBUG) console.log('[QuizContext] Clearing answers');
-    dispatch({ type: 'CLEAR_ANSWERS' });
+  const restoreState = (): boolean => {
+    try {
+      const savedState = localStorage.getItem(STORAGE_KEY);
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        if (validateState(parsedState)) {
+          dispatch({ type: 'SET_COMPLETED', value: parsedState.completed }); //Added this line to restore completed status.
+          dispatch({ type: 'RESTORE_STATE', value: parsedState });
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to restore quiz state:', error);
+    }
+    return false;
   };
 
   return (
-    <QuizContext.Provider value={{ 
-      state, 
-      setAnswer, 
-      validateAndProceed, 
+    <QuizContext.Provider value={{
+      ...state,
+      setAnswer,
       clearAnswers,
-      restoreState 
+      validateAndProceed,
+      restoreState
     }}>
       {children}
     </QuizContext.Provider>
@@ -193,7 +139,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
 
 export function useQuiz() {
   const context = useContext(QuizContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useQuiz must be used within a QuizProvider');
   }
   return context;
