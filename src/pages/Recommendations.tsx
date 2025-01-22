@@ -13,18 +13,22 @@ export default function Recommendations() {
   const navigate = useNavigate();
   const [hasRedirected, setHasRedirected] = React.useState(false);
   const [localAnswers, setLocalAnswers] = React.useState<QuizAnswers | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
   
   console.log('[Recommendations] Location state:', location.state);
   const answers = location.state?.answers as QuizAnswers | undefined;
   console.log('[Recommendations] Initial answers from location:', answers);
 
   React.useEffect(() => {
-    if (answers) {
-      setLocalAnswers(answers);
-      return;
-    }
+    const initializeAnswers = async () => {
+      try {
+        if (answers) {
+          setLocalAnswers(answers);
+          setIsLoading(false);
+          return;
+        }
 
-    console.log('[Recommendations] useEffect running, hasRedirected:', hasRedirected);
+        console.log('[Recommendations] useEffect running, hasRedirected:', hasRedirected);
     if (!hasRedirected) {
       setHasRedirected(true);
       console.log('[Recommendations] No answers in location state, checking localStorage');
@@ -34,7 +38,8 @@ export default function Recommendations() {
       if (savedAnswers) {
         try {
           const parsedAnswers = JSON.parse(savedAnswers);
-          navigate('', { state: { answers: parsedAnswers }, replace: true });
+          setLocalAnswers(parsedAnswers);
+          setIsLoading(false);
         } catch (error) {
           console.error('Error parsing saved answers:', error);
           toast.error('Une erreur est survenue. Veuillez refaire le quiz.');
@@ -44,7 +49,9 @@ export default function Recommendations() {
         toast.error('Données manquantes. Veuillez refaire le quiz.');
         navigate('/skintype', { replace: true });
       }
-    }
+    };
+
+    initializeAnswers();
   }, [hasRedirected, answers, navigate]);
 
   const getRecommendations = React.useCallback((quizAnswers: QuizAnswers): RecommendationResult | null => {
@@ -85,7 +92,7 @@ export default function Recommendations() {
     [localAnswers, getRecommendations]
   );
 
-  if (!localAnswers || !recommendations) {
+  if (isLoading || !localAnswers || !recommendations) {
     return <LoadingScreen />;
   }
 
