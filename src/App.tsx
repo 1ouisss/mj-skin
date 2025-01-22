@@ -92,19 +92,36 @@ const App = () => {
                   </SuspenseWrapper>
                 } 
               />
-              {Object.entries(pages).map(([name, Component]) => 
-                name !== 'Index' && (
-                  <Route
-                    key={name}
-                    path={`/${name.toLowerCase()}`}
-                    element={
-                      <SuspenseWrapper>
-                        <Component />
-                      </SuspenseWrapper>
-                    }
-                  />
-                )
-              )}
+              {quizSteps.map((step) => (
+  <Route
+    key={step.id}
+    path={`/${step.id}`}
+    element={
+      <SuspenseWrapper>
+        <QuizStep 
+          step={step}
+          onNext={() => navigate(`/${getNextStepId(step.id)}`)}
+        />
+      </SuspenseWrapper>
+    }
+  />
+))}
+<Route
+  path="/preview"
+  element={
+    <SuspenseWrapper>
+      <pages.preview />
+    </SuspenseWrapper>
+  }
+/>
+<Route
+  path="/recommendations"
+  element={
+    <SuspenseWrapper>
+      <pages.recommendations />
+    </SuspenseWrapper>
+  }
+/>
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>
