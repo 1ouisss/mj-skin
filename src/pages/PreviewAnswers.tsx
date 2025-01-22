@@ -55,8 +55,24 @@ const PreviewAnswers = () => {
   };
 
   const validateAnswers = (): boolean => {
-    if (!answers.skinType || !answers.conditions || !answers.concerns) {
-      toast.error('Veuillez compléter toutes les questions requises');
+    try {
+      if (!answers.skinType || !answers.conditions || !answers.concerns) {
+        throw new Error('Questions requises manquantes');
+      }
+
+      const validSkinTypes: SkinType[] = ['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Terne', 'Normale'];
+      const validConditions: Condition[] = ['Acné', 'Eczéma', 'Aucune'];
+      const validConcerns: Concern[] = ['Rides', 'Rougeurs', 'Points noirs', 'Cernes', 'Taches pigmentaires', 
+                                       'Boutons', 'Imperfections', 'Pores dilatés', 'Perte de fermeté'];
+
+      if (!validSkinTypes.includes(answers.skinType as SkinType) ||
+          !validConditions.includes(answers.conditions as Condition) ||
+          !validConcerns.includes(answers.concerns as Concern)) {
+        throw new Error('Réponses invalides détectées');
+      }
+      return true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Erreur de validation');
       navigate('/skin-type-quiz');
       return false;
     }

@@ -1,17 +1,25 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const LoadingScreen: React.FC = () => {
+export const LoadingScreen: React.FC = React.memo(() => {
   React.useEffect(() => {
-    console.log('[LoadingScreen] Mounted');
-    return () => console.log('[LoadingScreen] Unmounted');
+    const timeoutId = setTimeout(() => {
+      console.warn('[LoadingScreen] Still loading after 5s');
+    }, 5000);
+    
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-sm"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-50"
     >
       <div className="flex flex-col items-center gap-4">
         <motion.div
@@ -23,4 +31,6 @@ export const LoadingScreen: React.FC = () => {
       </div>
     </motion.div>
   );
-};
+});
+
+LoadingScreen.displayName = 'LoadingScreen';

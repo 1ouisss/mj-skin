@@ -37,6 +37,13 @@ export default function Recommendations() {
     try {
       const { skinType, conditions, concerns, texturePreference, scentPreference } = answers;
       
+      console.group('[Recommendations Processing]');
+      console.log('Processing inputs:', { skinType, conditions, concerns, texturePreference, scentPreference });
+      
+      if (!skinType || !conditions || !concerns) {
+        throw new Error('Données requises manquantes');
+      }
+      
       // Get base recommendations by skin type
       let result = skincareDb?.SkinType?.[skinType];
       
