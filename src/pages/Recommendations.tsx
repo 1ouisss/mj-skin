@@ -8,9 +8,13 @@ import { QuizAnswers, RecommendationResult } from '../types/skincare';
 import skincareDb from '../data/skincare-db.json';
 
 export default function Recommendations() {
+  console.group('[Recommendations]');
   const location = useLocation();
   const navigate = useNavigate();
   const { answers } = location.state as { answers?: QuizAnswers } || {};
+  
+  console.log('Location state:', location.state);
+  console.log('Answers:', answers);
 
   React.useEffect(() => {
     if (!answers) {

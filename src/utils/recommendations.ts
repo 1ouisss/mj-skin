@@ -18,6 +18,8 @@ export const getRecommendations = (
   texturePreference: TexturePreference,
   scentPreference: ScentPreference
 ): RecommendationResult => {
+  console.group('[getRecommendations]');
+  console.log('Input:', { skinType, condition, concern, texturePreference, scentPreference });
   try {
     const cacheKey = `${skinType}-${condition}-${concern}-${texturePreference}-${scentPreference}`;
     

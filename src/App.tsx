@@ -29,6 +29,17 @@ const queryClient = new QueryClient({
   },
 });
 
+const DEBUG = true;
+
+const logRouteChange = (location: any) => {
+  if (DEBUG) {
+    console.group('[Navigation]');
+    console.log('Route changed:', location.pathname);
+    console.log('State:', location.state);
+    console.groupEnd();
+  }
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
