@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -17,7 +18,8 @@ type QuizState = {
 type QuizAction = 
   | { type: 'SET_ANSWER'; field: keyof QuizState; value: any }
   | { type: 'CLEAR_ANSWERS' }
-  | { type: 'SET_COMPLETED'; value: boolean };
+  | { type: 'SET_COMPLETED'; value: boolean }
+  | { type: 'RESTORE_STATE'; value: QuizState };
 
 const initialState: QuizState = {
   skinType: '',
@@ -52,6 +54,8 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
       };
     case 'CLEAR_ANSWERS':
       return initialState;
+    case 'RESTORE_STATE':
+      return action.value;
     default:
       return state;
   }
@@ -64,7 +68,7 @@ interface QuizContextType extends QuizState {
   restoreState: () => boolean;
 }
 
-const QuizContext = createContext<QuizContextType | undefined>(undefined);
+export const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export function QuizProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(quizReducer, initialState);
@@ -113,7 +117,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       if (savedState) {
         const parsedState = JSON.parse(savedState);
         if (validateState(parsedState)) {
-          dispatch({ type: 'SET_COMPLETED', value: parsedState.completed }); //Added this line to restore completed status.
+          dispatch({ type: 'SET_COMPLETED', value: parsedState.completed });
           dispatch({ type: 'RESTORE_STATE', value: parsedState });
           return true;
         }
