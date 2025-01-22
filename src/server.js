@@ -15,10 +15,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static files from the dist directory
-app.use(express.static(path.join(__dirname, '../dist')));
-app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
-
 // Load recommendations data
 const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
 const data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
@@ -26,22 +22,15 @@ const data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
 // Recommendations Route
 app.post("/recommendations", async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({
-        error: "Bad Request",
-        message: "Request body is missing"
-      });
-    }
-
     const { skinType, conditions, concerns } = req.body;
     let result = null;
 
-    if (skinType && data.SkinType?.[skinType]) {
-      result = data.SkinType[skinType];
-    } else if (conditions && data.Condition?.[conditions]) {
-      result = data.Condition[conditions];
-    } else if (concerns && data.Concerns?.[concerns]) {
-      result = data.Concerns[concerns];
+    if (skinType && data.skinTypes?.[skinType]) {
+      result = data.skinTypes[skinType];
+    } else if (conditions && data.conditions?.[conditions]) {
+      result = data.conditions[conditions];
+    } else if (concerns && data.concerns?.[concerns]) {
+      result = data.concerns[concerns];
     }
 
     if (!result) {
@@ -63,11 +52,6 @@ app.post("/recommendations", async (req, res) => {
       message: error.message
     });
   }
-});
-
-// SPA routing - must be after recommendation route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 const PORT = process.env.PORT || 8080;
