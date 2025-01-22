@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -9,36 +10,42 @@ import skincareDb from '../data/skincare-db.json';
 export default function Recommendations() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [initialLoad, setInitialLoad] = React.useState(true);
-  const answers = location.state?.answers as QuizAnswers;
+  const [hasMounted, setHasMounted] = React.useState(false);
+  const answers = location.state?.answers as QuizAnswers | undefined;
 
   React.useEffect(() => {
-    if (!answers) {
-      const savedAnswers = localStorage.getItem('validatedAnswers');
-      if (savedAnswers) {
-        navigate('/recommendations', { 
-          state: { answers: JSON.parse(savedAnswers) },
-          replace: true 
-        });
-      } else {
-        toast.error('Données manquantes. Veuillez refaire le quiz.');
-        navigate('/skintype', { replace: true });
+    if (!hasMounted) {
+      setHasMounted(true);
+      if (!answers) {
+        const savedAnswers = localStorage.getItem('validatedAnswers');
+        if (savedAnswers) {
+          try {
+            const parsedAnswers = JSON.parse(savedAnswers);
+            navigate('', { state: { answers: parsedAnswers }, replace: true });
+          } catch (error) {
+            console.error('Error parsing saved answers:', error);
+            toast.error('Une erreur est survenue. Veuillez refaire le quiz.');
+            navigate('/skintype', { replace: true });
+          }
+        } else {
+          toast.error('Données manquantes. Veuillez refaire le quiz.');
+          navigate('/skintype', { replace: true });
+        }
       }
-      return;
     }
-  }, [answers, navigate]);
+  }, [hasMounted, answers, navigate]);
 
-  const recommendations = React.useMemo<RecommendationResult | null>(() => {
-    if (!answers) return null;
-
+  const getRecommendations = React.useCallback((quizAnswers: QuizAnswers): RecommendationResult | null => {
     try {
-      const { skinType, conditions, concerns } = answers;
+      const { skinType, conditions, concerns } = quizAnswers;
       if (!skinType || !conditions || !concerns) return null;
 
       let result = skincareDb?.SkinType?.[skinType];
+      
       if (conditions && result?.Condition?.[conditions]) {
         result = result.Condition[conditions];
       }
+      
       if (concerns && result?.Concern?.[concerns]) {
         result = result.Concern[concerns];
       }
@@ -49,17 +56,22 @@ export default function Recommendations() {
           Routine: {
             Matin: [],
             Soir: [],
-            Résultat: "Aucune recommandation trouvée pour vos critères."
+            Résultat: "Aucune recommandation trouvée."
           }
         };
       }
 
       return result;
     } catch (error) {
-      console.error('Error processing recommendations:', error);
+      console.error('Error getting recommendations:', error);
       return null;
     }
-  }, [answers]);
+  }, []);
+
+  const recommendations = React.useMemo(() => 
+    answers ? getRecommendations(answers) : null, 
+    [answers, getRecommendations]
+  );
 
   if (!answers || !recommendations) {
     return <LoadingScreen />;
