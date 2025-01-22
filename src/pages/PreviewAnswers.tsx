@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -14,16 +15,12 @@ export default function PreviewAnswers() {
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
-    console.group('[PreviewAnswers] Component Lifecycle');
     console.log('Component mounted, current state:', state);
 
     const validateAndRestoreState = () => {
-      console.log('[PreviewAnswers] Current state:', state);
       if (!state.skinType || !state.conditions || !state.concerns) {
         console.log('[PreviewAnswers] Incomplete state, attempting restoration');
-        const restoredState = restoreState();
-        console.log('[PreviewAnswers] Restored state:', restoredState);
-        if (!restoredState) {
+        if (!restoreState()) {
           console.warn('[PreviewAnswers] State restoration failed');
           toast.error('Veuillez compléter le quiz');
           navigate('/skintypequiz', { replace: true });
@@ -40,27 +37,19 @@ export default function PreviewAnswers() {
     }
 
     setLoading(false);
-    console.groupEnd();
-
-    return () => {
-      console.log('[PreviewAnswers] Component unmounting');
-    };
   }, [state, navigate, restoreState]);
 
   const navigateToRecommendations = () => {
-    console.log('Attempting to navigate to recommendations');
-    if (!answers) {
-      console.error('Cannot navigate: answers are missing');
+    if (!state || !state.skinType || !state.conditions || !state.concerns) {
       toast.error('Veuillez compléter le quiz');
       return;
     }
 
     try {
-      localStorage.setItem('validatedAnswers', JSON.stringify(answers));
-      console.log('Validated answers stored, navigating to recommendations');
-      navigate('/recommendations', { state: { answers } });
+      localStorage.setItem('validatedAnswers', JSON.stringify(state));
+      navigate('/recommendations');
     } catch (error) {
-      console.error('Error storing validated answers:', error);
+      console.error('Error storing answers:', error);
       toast.error('Une erreur est survenue');
     }
   };
@@ -73,16 +62,16 @@ export default function PreviewAnswers() {
     );
   }
 
-  if (!answers) {
-    return <Navigate to="/skintype" replace />;
+  if (!state || !state.skinType || !state.conditions || !state.concerns) {
+    return <Navigate to="/skintypequiz" replace />;
   }
 
   const questionsMap = {
-    'Type de peau': answers.skinType,
-    'Condition': answers.conditions,
-    'Préoccupation': answers.concerns,
-    'Texture préférée': answers.texturePreference || 'Non spécifié',
-    'Parfum préféré': answers.scentPreference || 'Non spécifié'
+    'Type de peau': state.skinType,
+    'Condition': state.conditions,
+    'Préoccupation': state.concerns,
+    'Texture préférée': state.texturePreference || 'Non spécifié',
+    'Parfum préféré': state.scentPreference || 'Non spécifié'
   };
 
   return (
