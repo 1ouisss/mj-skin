@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
@@ -11,18 +10,19 @@ import { useQuiz } from '../context/QuizContext';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
-  const [answers, setAnswers] = React.useState<QuizAnswers | null>(null);
   const { state } = useQuiz();
+  const [answers, setAnswers] = React.useState<QuizAnswers | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(() => {
-    console.group('PreviewAnswers Component');
+  useEffect(() => {
+    console.group('PreviewAnswers Debug');
     console.log('Component mounted');
-    console.log('Context state:', state);
-    
+    console.log('QuizContext state:', state);
+
     try {
       const storedAnswers = localStorage.getItem('quizAnswers');
       console.log('Raw stored answers:', storedAnswers);
-      
+
       if (!storedAnswers) {
         console.error('No answers found in localStorage');
         toast.error('Veuillez compléter le quiz');
@@ -33,12 +33,12 @@ export default function PreviewAnswers() {
       const parsedAnswers = JSON.parse(storedAnswers);
       console.log('Parsed answers:', parsedAnswers);
 
-      // Validate required fields
-      const requiredFields = ['skinType', 'conditions', 'concerns'];
-      const missingFields = requiredFields.filter(field => !parsedAnswers[field]);
-
-      if (missingFields.length > 0) {
-        console.error('Missing required fields:', missingFields);
+      if (!parsedAnswers.skinType || !parsedAnswers.conditions || !parsedAnswers.concerns) {
+        console.error('Missing required fields:', {
+          skinType: parsedAnswers.skinType,
+          conditions: parsedAnswers.conditions,
+          concerns: parsedAnswers.concerns
+        });
         toast.error('Réponses incomplètes');
         navigate('/skintype', { replace: true });
         return;
@@ -49,40 +49,22 @@ export default function PreviewAnswers() {
       console.error('Error processing answers:', error);
       toast.error('Une erreur est survenue');
       navigate('/skintype', { replace: true });
+    } finally {
+      setLoading(false);
+      console.groupEnd();
     }
+  }, [navigate, state]);
 
-    return () => console.groupEnd();
-  }, [navigate]);
-
-  const handleSeeRecommendations = () => {
-    console.log('Handling recommendations click');
-    console.log('Current answers state:', answers);
-
-    if (!answers) {
-      console.error('No answers available');
-      toast.error('Veuillez compléter le quiz');
-      return;
-    }
-
-    try {
-      localStorage.setItem('validatedAnswers', JSON.stringify(answers));
-      console.log('Validated answers stored successfully');
-      navigate('/recommendations');
-    } catch (error) {
-      console.error('Error storing validated answers:', error);
-      toast.error('Une erreur est survenue');
-    }
-  };
-
-  const handleBack = () => navigate(-1);
-
-  if (!answers) {
-    console.log('Rendering loading state');
+  if (loading) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center">
         <p className="text-lg">Chargement de vos réponses...</p>
       </div>
     );
+  }
+
+  if (!answers) {
+    return <Navigate to="/skintype" replace />;
   }
 
   const questionsMap = {
@@ -120,14 +102,14 @@ export default function PreviewAnswers() {
             <div className="flex justify-between items-center gap-4">
               <Button
                 variant="outline"
-                onClick={handleBack}
+                onClick={() => navigate(-1)}
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Modifier
               </Button>
               <Button
-                onClick={handleSeeRecommendations}
+                onClick={() => navigate('/recommendations')}
                 className="flex items-center gap-2"
               >
                 <Check className="w-4 h-4" />
