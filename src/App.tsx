@@ -56,11 +56,41 @@ const App = () => (
               <ConcernsQuiz />
             </Suspense>
           } />
-          <Route path="/zones-quiz" element={<ZonesQuiz />} />
-          <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
-          <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
-          <Route path="/routine-quiz" element={<RoutineQuiz />} />
-          <Route path="/newsletter-quiz" element={<NewsletterQuiz />} />
+          <Route path="/zones-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ErrorBoundary>
+                <ZonesQuiz />
+              </ErrorBoundary>
+            </Suspense>
+          } />
+          <Route path="/treatment-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ErrorBoundary>
+                <TreatmentQuiz />
+              </ErrorBoundary>
+            </Suspense>
+          } />
+          <Route path="/fragrance-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ErrorBoundary>
+                <FragranceQuiz />
+              </ErrorBoundary>
+            </Suspense>
+          } />
+          <Route path="/routine-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ErrorBoundary>
+                <RoutineQuiz />
+              </ErrorBoundary>
+            </Suspense>
+          } />
+          <Route path="/newsletter-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ErrorBoundary>
+                <NewsletterQuiz />
+              </ErrorBoundary>
+            </Suspense>
+          } />
           <Route path="/recommendations" element={
             <Suspense fallback={<LoadingScreen />}>
               <ErrorBoundary>
