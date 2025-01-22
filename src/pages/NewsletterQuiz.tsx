@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Heart } from "lucide-react";
@@ -48,7 +47,7 @@ const NewsletterQuiz = () => {
       {/* Right image section */}
       <div className="hidden lg:block w-1/2 relative">
         <img
-          src="/lovable-uploads/696e4663-023f-407e-987d-fbe53856877b.png"
+          src="/lovable-uploads/IMG_3219 2.jpg"
           alt="Portrait élégant en noir et blanc"
           className="object-cover w-full h-full"
         />
