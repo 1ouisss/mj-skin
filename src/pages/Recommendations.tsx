@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,16 +7,14 @@ import { QuizAnswers, RecommendationResult } from '../types/skincare';
 import skincareDb from '../data/skincare-db.json';
 
 export default function Recommendations() {
-  console.group('[Recommendations]');
   const location = useLocation();
   const navigate = useNavigate();
   const { answers } = location.state as { answers?: QuizAnswers } || {};
-  
-  console.log('Location state:', location.state);
-  console.log('Answers:', answers);
+  const [hasRedirected, setHasRedirected] = React.useState(false);
 
   React.useEffect(() => {
-    if (!answers) {
+    if (!answers && !hasRedirected) {
+      setHasRedirected(true);
       const savedAnswers = localStorage.getItem('validatedAnswers');
       if (savedAnswers) {
         navigate('/recommendations', { 
@@ -26,10 +23,14 @@ export default function Recommendations() {
         });
       } else {
         toast.error('Données manquantes. Veuillez refaire le quiz.');
-        navigate('/skin-type-quiz');
+        navigate('/skintype', { replace: true });
       }
     }
-  }, [answers, navigate]);
+  }, [answers, navigate, hasRedirected]);
+
+  if (!answers) {
+    return <LoadingScreen />;
+  }
 
   const recommendations = useMemo<RecommendationResult | null>(() => {
     if (!answers) return null;
@@ -37,27 +38,20 @@ export default function Recommendations() {
     try {
       const { skinType, conditions, concerns, texturePreference, scentPreference } = answers;
       
-      console.group('[Recommendations Processing]');
-      console.log('Processing inputs:', { skinType, conditions, concerns, texturePreference, scentPreference });
-      
       if (!skinType || !conditions || !concerns) {
         throw new Error('Données requises manquantes');
       }
       
-      // Get base recommendations by skin type
       let result = skincareDb?.SkinType?.[skinType];
       
-      // Apply condition filter if available
       if (conditions && result?.Condition?.[conditions]) {
         result = result.Condition[conditions];
       }
       
-      // Apply concern filter if available
       if (concerns && result?.Concern?.[concerns]) {
         result = result.Concern[concerns];
       }
 
-      // Validate result structure
       if (!result?.Products || !result?.Routine) {
         console.warn('Invalid recommendation structure:', { result });
         return {
@@ -70,7 +64,6 @@ export default function Recommendations() {
         };
       }
 
-      // Apply texture and scent preferences (if implemented in data structure)
       const finalResult = {
         ...result,
         Products: result.Products.filter(product => {
@@ -87,31 +80,6 @@ export default function Recommendations() {
       return null;
     }
   }, [answers]);
-
-  if (!answers) {
-    return (
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-sm"
-      >
-        <div className="text-center max-w-md mx-auto p-8">
-          <h2 className="text-2xl font-playfair mb-4 text-[#4A4A4A]">
-            Données manquantes
-          </h2>
-          <p className="text-[#666] mb-6">
-            Veuillez retourner au quiz pour obtenir vos recommandations.
-          </p>
-          <button
-            onClick={() => navigate('/skin-type-quiz')}
-            className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
-          >
-            Recommencer le quiz
-          </button>
-        </div>
-      </motion.div>
-    );
-  }
 
   if (!recommendations) {
     return <LoadingScreen />;
@@ -152,7 +120,7 @@ export default function Recommendations() {
             <p className="text-[#666] italic">Aucun produit trouvé pour vos critères.</p>
           )}
         </section>
-
+        
         <section>
           <h2 className="text-2xl mb-4">Votre routine</h2>
           {recommendations.Routine && Object.entries(recommendations.Routine).map(([time, steps], index) => (
