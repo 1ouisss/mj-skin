@@ -2,24 +2,20 @@ const express = require("express");
 const path = require('path');
 const fs = require('fs');
 const app = express();
+
+// Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../dist')));
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
 
-// Add rate limiting
-const rateLimit = require('express-rate-limit');
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
-});
-app.use('/api/recommendations', limiter);
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, '../dist')));
 
-// Test Route
+// API Routes
 app.get("/api/test", (req, res) => {
-  res.send("Server is running correctly!");
+  res.json({ status: "Server is running correctly!" });
 });
 
 // Recommendations Route
@@ -34,10 +30,7 @@ app.post("/api/recommendations", async (req, res) => {
   const requestId = Math.random().toString(36).substring(7);
   console.group(`=== /api/recommendations Request (ID: ${requestId}) ===`);
   console.time(`request-${requestId}-duration`);
-  
-  const MAX_RETRIES = 3;
-  const RETRY_DELAY = 1000;
-  
+
   const startTime = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - startTime;
@@ -54,11 +47,11 @@ app.post("/api/recommendations", async (req, res) => {
 
     const { skinType, conditions, concerns, texturePreference, scentPreference } = req.body;
     console.log('Raw payload:', req.body);
-    
+
     console.log('Received payload:', { skinType, conditions, concerns, texturePreference, scentPreference });
 
     // Validate required fields
-    if (!skinType || !conditions || !concerns || 
+    if (!skinType || !conditions || !concerns ||
         !['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Terne', 'Normale'].includes(skinType)) {
       console.warn('Missing or invalid fields:', { skinType, conditions, concerns });
       return res.status(400).json({
@@ -93,8 +86,8 @@ app.post("/api/recommendations", async (req, res) => {
     const normalizedSkinType = skinType.trim();
     const normalizedCondition = conditions.trim();
     const normalizedConcern = concerns.trim();
-    const normalizedTexture = texturePreference.trim();
-    const normalizedScent = scentPreference.trim();
+    const normalizedTexture = texturePreference ? texturePreference.trim() : '';
+    const normalizedScent = scentPreference ? scentPreference.trim() : '';
 
     console.log('Looking up recommendations for:', {
       normalizedSkinType,
@@ -106,7 +99,7 @@ app.post("/api/recommendations", async (req, res) => {
 
     // Get base recommendations by skin type
     let result = recommendations?.SkinType?.[normalizedSkinType];
-    
+
     // If we have a condition, try to get more specific recommendations
     if (normalizedCondition && result?.Condition?.[normalizedCondition]) {
       result = result.Condition[normalizedCondition];
@@ -147,18 +140,12 @@ app.post("/api/recommendations", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
-// Serve index.html for all other routes to support SPA routing
+// Handle SPA routing - must be after API routes
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'), {
-    headers: {
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    }
-  });
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
