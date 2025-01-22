@@ -23,7 +23,7 @@ function App() {
   return (
     <ErrorBoundary>
       <TooltipProvider>
-        <Toaster />
+        <Toaster /> {/* Toaster correctly placed within the App component */}
         <ProgressBar />
         <BackButton />
         <Suspense fallback={<LoadingScreen message="Chargement..." />}>
@@ -39,7 +39,6 @@ function App() {
             <Route path="/newsletterquiz" element={<NewsletterQuiz />} />
             <Route path="/preview" element={<PreviewAnswers />} />
             <Route path="/recommendations" element={<Recommendations />} />
-            {/* Route path="*" element={<Navigate to="/" replace />} /> */} {/*Removed Navigate as per the edited code.  May need to be added back depending on requirements.*/}
           </Routes>
         </Suspense>
       </TooltipProvider>

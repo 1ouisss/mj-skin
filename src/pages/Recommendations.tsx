@@ -1,115 +1,89 @@
-import { useState, useEffect } from "react";
-import { useQuiz } from '../context/QuizContext';
-import { Card, CardContent } from '../components/ui/card';
-import { motion } from 'framer-motion';
-import data from "../data/skincare-db.json";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuiz } from '@/context/QuizContext';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import skinCareData from '@/data/skincare-db.json';
 
-const Recommendations = () => {
+export default function Recommendations() {
   const { state } = useQuiz();
-  const [recommendations, setRecommendations] = useState(null);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadRecommendations = async () => {
-      try {
-        const { skinType, conditions, concerns, completed } = state;
-        
-        if (!completed || !skinType || !conditions || !concerns) {
-          toast.error('Veuillez compléter toutes les questions requises');
-          navigate('/skintypequiz');
-          return;
-        }
+  React.useEffect(() => {
+    if (!state.skinType) {
+      toast.error('Veuillez compléter toutes les questions requises');
+      navigate('/skintypequiz');
+      return;
+    }
+  }, [state, navigate]);
 
-        const recommendationKey = `${skinType.toLowerCase()}`;
-        if (!data.skinTypes?.[recommendationKey]) {
-          throw new Error("Aucune recommandation trouvée");
-        }
+  const getRecommendations = () => {
+    // Try finding by skin type first
+    let recommendations = skinCareData.SkinType?.[state.skinType];
 
-        console.log('[Recommendations] Loading data:', { skinType, conditions, concerns });
-        setRecommendations(data.skinTypes[recommendationKey]);
-        setError(null);
-      } catch (err) {
-        console.error('[Recommendations] Error:', err);
-        setError(err.message);
-        setRecommendations(null);
-      }
-    };
+    // If not found, try conditions
+    if (!recommendations && state.conditions) {
+      recommendations = skinCareData.Condition?.[state.conditions];
+    }
 
-    loadRecommendations();
-  }, [state]);
+    // Finally try concerns
+    if (!recommendations && state.concerns) {
+      recommendations = skinCareData.Concerns?.[state.concerns];
+    }
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Erreur: {error}</p>
-      </div>
-    );
-  }
+    return recommendations || null;
+  };
+
+  const recommendations = getRecommendations();
 
   if (!recommendations) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Chargement...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <h1 className="text-2xl font-bold mb-4">Aucune recommandation trouvée</h1>
+        <Button onClick={() => navigate('/')}>Recommencer</Button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto space-y-8"
-      >
-        <h1 className="text-4xl font-playfair text-center mb-8">
-          Vos Recommandations Personnalisées
-        </h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <h1 className="text-2xl font-bold mb-6">Vos Recommandations Personnalisées</h1>
 
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-2xl mb-4">Produits Recommandés</h2>
-            <div className="space-y-4">
-              {recommendations.products.map((product, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="p-4 bg-gray-50 rounded-lg"
-                >
-                  {product}
-                </motion.div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="w-full max-w-2xl space-y-6">
+        <section className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
+          <ul className="list-disc pl-6 space-y-2">
+            {recommendations.Products && Object.entries(recommendations.Products).map(([key, value]) => (
+              <li key={key}>{key}: {value as string}</li>
+            ))}
+          </ul>
+        </section>
 
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-2xl mb-4">Votre Routine</h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl mb-2">Matin</h3>
-                <ul className="list-disc pl-6">
-                  {recommendations.routine.Matin.map((step, index) => (
-                    <li key={index} className="mb-2">{step}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xl mb-2">Soir</h3>
-                <ul className="list-disc pl-6">
-                  {recommendations.routine.Soir.map((step, index) => (
-                    <li key={index} className="mb-2">{step}</li>
-                  ))}
-                </ul>
-              </div>
+        <section className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
+
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-medium mb-2">Matin ☀️</h3>
+              <p>{recommendations.Routine?.Matin}</p>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+
+            <div>
+              <h3 className="font-medium mb-2">Soir 🌙</h3>
+              <p>{recommendations.Routine?.Soir}</p>
+            </div>
+
+            <div className="mt-4">
+              <h3 className="font-medium">Résultat attendu ✨</h3>
+              <p>{recommendations.Routine?.["Résultat attendu"]}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <Button className="mt-8" onClick={() => navigate('/')}>
+        Retour à l'accueil
+      </Button>
     </div>
   );
-};
-
-export default Recommendations;
+}
