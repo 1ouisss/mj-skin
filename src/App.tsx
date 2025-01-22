@@ -7,6 +7,8 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { QuizProvider } from './context/QuizContext';
+import { ProgressBar } from './components/ProgressBar';
+import { BackButton } from './components/BackButton';
 
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -79,6 +81,8 @@ const App = () => {
           <TooltipProvider>
             <DebugRouter />
             <Toaster />
+            <ProgressBar />
+            <BackButton />
             <Routes>
               <Route 
                 path="/" 
