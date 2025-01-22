@@ -4,5 +4,5 @@ module.exports = {
     'tailwindcss': {},
     'autoprefixer': {},
   },
-  from: undefined
+  from: 'src/index.css'
 }
