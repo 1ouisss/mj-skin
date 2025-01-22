@@ -48,7 +48,7 @@ const NewsletterQuiz = () => {
       {/* Right image section */}
       <div className="hidden lg:block w-1/2 relative">
         <img
-          src="/lovable-uploads/ae1a36e1-116e-4f8a-b952-722a01c604e2.png"
+          src="/lovable-uploads/696e4663-023f-407e-987d-fbe53856877b.png"
           alt="Portrait élégant en noir et blanc"
           className="object-cover w-full h-full"
         />
