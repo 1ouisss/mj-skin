@@ -7,7 +7,34 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 const Recommendations = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const recommendations = location.state?.recommendations;
+  const answers = location.state?.selectedAnswers;
+  const [recommendations, setRecommendations] = React.useState(null);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!answers) return;
+      
+      try {
+        const response = await fetch('/api/recommendations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(answers),
+        });
+        
+        if (!response.ok) throw new Error('Failed to get recommendations');
+        
+        const data = await response.json();
+        setRecommendations(data.recommendations);
+      } catch (error) {
+        console.error('Error getting recommendations:', error);
+        navigate('/skin-type-quiz');
+      }
+    };
+
+    fetchRecommendations();
+  }, [answers, navigate]);
 
   useEffect(() => {
     if (!location.state?.recommendations) {

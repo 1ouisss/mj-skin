@@ -19,6 +19,25 @@ const PreviewAnswers = () => {
     return <div>Loading...</div>;
   }
 
+  // Filter out newsletter-related answers
+  const relevantAnswers = Object.entries(answers).filter(
+    ([key]) => !key.toLowerCase().includes('newsletter')
+  );
+
+  const handleSeeRecommendations = () => {
+    navigate('/recommendations', { 
+      state: { 
+        selectedAnswers: {
+          skinType: answers.SkinType,
+          conditions: answers.Condition,
+          concerns: answers.Concern,
+          texturePreference: answers.TexturePreference || '',
+          scentPreference: answers.ScentPreference || ''
+        }
+      }
+    });
+  };
+
   return (
     <div 
       className="min-h-screen w-full flex items-center justify-center px-4 py-12"
@@ -44,7 +63,7 @@ const PreviewAnswers = () => {
             </h2>
 
             <div className="space-y-4 mb-8">
-              {Object.entries(answers).map(([key, value]) => (
+              {relevantAnswers.map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
                   <span className="font-medium text-[#4A4A4A]">{key}</span>
                   <span className="text-[#666]">{String(value)}</span>
@@ -60,32 +79,7 @@ const PreviewAnswers = () => {
                 Modifier
               </button>
               <button
-                onClick={async () => {
-                  try {
-                    const response = await fetch('/api/recommendations', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        skinType: answers.SkinType,
-                        conditions: answers.Condition,
-                        concerns: answers.Concern,
-                        texturePreference: answers.TexturePreference,
-                        scentPreference: answers.ScentPreference
-                      }),
-                    });
-                    
-                    if (!response.ok) throw new Error('Failed to get recommendations');
-                    
-                    const data = await response.json();
-                    navigate('/recommendations', { 
-                      state: { recommendations: data.recommendations }
-                    });
-                  } catch (error) {
-                    console.error('Error getting recommendations:', error);
-                  }
-                }}
+                onClick={handleSeeRecommendations}
                 className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
               >
                 Voir les recommandations
