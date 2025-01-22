@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
@@ -7,14 +7,26 @@ import { ArrowLeft, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { SkinType, Condition, Concern, QuizAnswers } from '../types/skincare';
 
+// Create Quiz Context
+const QuizContext = createContext<{ answers: QuizAnswers | null, setAnswers: React.Dispatch<React.SetStateAction<QuizAnswers | null>> }>({ answers: null, setAnswers: () => {} });
+
+export const QuizProvider = ({ children }: { children: ReactNode }) => {
+  const [answers, setAnswers] = useState<QuizAnswers | null>(null);
+  return (
+    <QuizContext.Provider value={{ answers, setAnswers }}>
+      {children}
+    </QuizContext.Provider>
+  );
+};
+
+export const useQuiz = () => useContext(QuizContext);
+
+
 export default function PreviewAnswers() {
   const navigate = useNavigate();
   console.log('[PreviewAnswers] Component mounted');
 
-  const storedAnswers = localStorage.getItem('quizAnswers');
-  console.log('[PreviewAnswers] Raw stored answers:', storedAnswers);
-
-  const answers = storedAnswers ? JSON.parse(storedAnswers) as QuizAnswers : null;
+  const { state: { answers } } = useQuiz();
   console.log('[PreviewAnswers] Parsed answers:', answers);
 
   const questionsMap = React.useMemo(() => {

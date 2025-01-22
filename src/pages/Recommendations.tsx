@@ -9,28 +9,24 @@ import skincareDb from '../data/skincare-db.json';
 
 export default function Recommendations() {
   console.log('[Recommendations] Component mounted');
-  const location = useLocation();
   const navigate = useNavigate();
-  const [hasRedirected, setHasRedirected] = React.useState(false);
-  const [localAnswers, setLocalAnswers] = React.useState<QuizAnswers | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const { state: { answers } } = useQuiz();
   
-  console.log('[Recommendations] Location state:', location.state);
-  const answers = location.state?.answers as QuizAnswers | undefined;
-  console.log('[Recommendations] Initial answers from location:', answers);
+  console.log('[Recommendations] Current answers:', answers);
 
   React.useEffect(() => {
     console.group('=== Recommendations Debug ===');
-    console.log('[Recommendations] Location state:', location);
     console.log('[Recommendations] Current answers:', answers);
     
     const initializeAnswers = async () => {
       try {
-        if (answers) {
-          setLocalAnswers(answers);
-          setIsLoading(false);
+        if (Object.keys(answers).length === 0) {
+          toast.error('Veuillez compléter le quiz');
+          navigate('/skintype');
           return;
         }
+        setIsLoading(false);
 
         console.log('[Recommendations] useEffect running, hasRedirected:', hasRedirected);
     if (!hasRedirected) {

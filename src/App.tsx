@@ -38,9 +38,11 @@ const App = () => {
   React.useEffect(() => {
     return () => console.groupEnd();
   }, []);
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <QuizProvider>
+        <TooltipProvider>
+          <Toaster />
       <BrowserRouter>
         <ErrorBoundary>
           <Routes>
