@@ -35,13 +35,23 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={
-            <Suspense fallback={<LoadingScreen />}>
-              <AnimatePresence mode="wait">
-                <Index />
-              </AnimatePresence>
-            </Suspense>
-          } />
+          <Route
+            path="/"
+            element={
+              <Suspense fallback={<LoadingScreen />}>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Index />
+                  </motion.div>
+                </AnimatePresence>
+              </Suspense>
+            }
+          />
           <Route path="/skin-type-quiz" element={
             <Suspense fallback={<LoadingScreen />}>
               <SkinTypeQuiz />

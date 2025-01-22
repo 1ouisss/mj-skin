@@ -76,7 +76,15 @@ export default function Recommendations() {
     );
   }
 
-  if (!recommendations) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (answers) {
+      setIsLoading(false);
+    }
+  }, [answers]);
+
+  if (isLoading || !recommendations) {
     return <LoadingScreen />;
   }
 
