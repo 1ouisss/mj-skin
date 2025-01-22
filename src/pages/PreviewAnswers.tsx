@@ -57,6 +57,21 @@ const PreviewAnswers = () => {
   const validateAnswers = (): boolean => {
     if (!answers.skinType || !answers.conditions || !answers.concerns) {
       toast.error('Veuillez compléter toutes les questions requises');
+      navigate('/skin-type-quiz');
+      return false;
+    }
+    
+    // Validate against allowed values
+    const validSkinTypes: SkinType[] = ['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Terne', 'Normale'];
+    const validConditions: Condition[] = ['Acné', 'Eczéma', 'Aucune'];
+    const validConcerns: Concern[] = ['Rides', 'Rougeurs', 'Points noirs', 'Cernes', 'Taches pigmentaires', 
+                                     'Boutons', 'Imperfections', 'Pores dilatés', 'Perte de fermeté'];
+
+    if (!validSkinTypes.includes(answers.skinType as SkinType) ||
+        !validConditions.includes(answers.conditions as Condition) ||
+        !validConcerns.includes(answers.concerns as Concern)) {
+      toast.error('Certaines réponses sont invalides');
+      navigate('/skin-type-quiz');
       return false;
     }
     return true;
@@ -67,17 +82,18 @@ const PreviewAnswers = () => {
       if (!validateAnswers()) return;
 
       const payload = {
-        skinType: answers.skinType,
-        conditions: answers.conditions,
-        concerns: answers.concerns,
+        skinType: answers.skinType as SkinType,
+        conditions: answers.conditions as Condition,
+        concerns: answers.concerns as Concern,
         texturePreference: answers.texturePreference || '',
         scentPreference: answers.scentPreference || ''
       };
 
+      localStorage.setItem('validatedAnswers', JSON.stringify(payload));
       console.log('Processing payload:', payload);
       navigate('/recommendations', { 
         state: { answers: payload },
-        replace: true 
+        replace: false 
       });
     } catch (error) {
       console.error('Error navigating to recommendations:', error);

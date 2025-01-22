@@ -10,6 +10,22 @@ export default function Recommendations() {
   const location = useLocation();
   const navigate = useNavigate();
   const { answers } = location.state || {};
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!answers) {
+      const savedAnswers = localStorage.getItem('validatedAnswers');
+      if (savedAnswers) {
+        navigate('/recommendations', { 
+          state: { answers: JSON.parse(savedAnswers) },
+          replace: true
+        });
+      } else {
+        toast.error('Données manquantes. Veuillez refaire le quiz.');
+        navigate('/skin-type-quiz');
+      }
+    }
+  }, [answers, navigate]);
 
   const recommendations = useMemo(() => {
     if (!answers) return null;
