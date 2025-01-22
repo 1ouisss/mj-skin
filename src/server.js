@@ -87,8 +87,12 @@ app.post("/api/recommendations", async (req, res) => {
         LOWER(TRIM({SkinType})) = LOWER("${skinType}"),
         LOWER(TRIM({Conditions})) = LOWER("${conditions}"),
         LOWER(TRIM({Concerns})) = LOWER("${concerns}")
-      )`
+      )`,
+      timestamp: new Date().toISOString()
     });
+
+    console.log('📊 Raw Request Body:', req.body);
+    console.log('🔑 Headers Present:', Object.keys(req.headers));
 
     const records = await base("Recommendations")
       .select({
