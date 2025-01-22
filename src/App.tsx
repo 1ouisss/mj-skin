@@ -57,7 +57,21 @@ const queryClient = new QueryClient({
   },
 });
 
+const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <Suspense fallback={
+    <LoadingScreen 
+      message="Chargement de la page..." 
+      timeout={30000}
+      onTimeout={() => toast.error("Le chargement prend plus de temps que prévu.")}
+    />
+  }>
+    {children}
+  </Suspense>
+);
+
 const App = () => {
+  console.log('[App] Rendering');
+  
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -69,9 +83,9 @@ const App = () => {
               <Route 
                 path="/" 
                 element={
-                  <Suspense fallback={<LoadingScreen timeout={30000} />}>
+                  <SuspenseWrapper>
                     <pages.Index />
-                  </Suspense>
+                  </SuspenseWrapper>
                 } 
               />
               {Object.entries(pages).map(([name, Component]) => 
@@ -80,9 +94,9 @@ const App = () => {
                     key={name}
                     path={`/${name.toLowerCase()}`}
                     element={
-                      <Suspense fallback={<LoadingScreen timeout={30000} />}>
+                      <SuspenseWrapper>
                         <Component />
-                      </Suspense>
+                      </SuspenseWrapper>
                     }
                   />
                 )

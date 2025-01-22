@@ -7,6 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 
 const Recommendations = React.memo(() => {
+  console.log('[Recommendations] Rendering');
   const { state, restoreState } = useQuiz();
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
