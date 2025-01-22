@@ -15,11 +15,13 @@ type QuizState = {
   completed: boolean;
 };
 
-type QuizAction = 
-  | { type: 'SET_ANSWER'; field: keyof QuizState; value: any }
-  | { type: 'CLEAR_ANSWERS' }
-  | { type: 'SET_COMPLETED'; value: boolean }
-  | { type: 'RESTORE_STATE'; value: QuizState };
+type QuizContextType = {
+  state: QuizState;
+  setAnswer: (field: keyof QuizState, value: any) => void;
+  clearAnswers: () => void;
+  validateAndProceed: (currentStep: string, nextStep: string) => void;
+  restoreState: () => boolean;
+};
 
 const initialState: QuizState = {
   skinType: '',
@@ -32,6 +34,12 @@ const initialState: QuizState = {
   newsletter: false,
   completed: false
 };
+
+type QuizAction = 
+  | { type: 'SET_ANSWER'; field: keyof QuizState; value: any }
+  | { type: 'CLEAR_ANSWERS' }
+  | { type: 'SET_COMPLETED'; value: boolean }
+  | { type: 'RESTORE_STATE'; value: QuizState };
 
 const STORAGE_KEY = 'quiz_state';
 
@@ -59,13 +67,6 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
     default:
       return state;
   }
-}
-
-interface QuizContextType extends QuizState {
-  setAnswer: (field: keyof QuizState, value: any) => void;
-  clearAnswers: () => void;
-  validateAndProceed: (currentStep: string, nextStep: string) => void;
-  restoreState: () => boolean;
 }
 
 export const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -96,9 +97,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   };
 
   const validateAndProceed = (currentStep: string, nextStep: string) => {
-    const isValid = validateState(state);
-
-    if (nextStep === 'recommendations' && !isValid) {
+    if (nextStep === 'recommendations' && !validateState(state)) {
       toast.error('Veuillez compléter toutes les questions requises');
       navigate('/skintypequiz');
       return;
@@ -117,7 +116,6 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       if (savedState) {
         const parsedState = JSON.parse(savedState);
         if (validateState(parsedState)) {
-          dispatch({ type: 'SET_COMPLETED', value: parsedState.completed });
           dispatch({ type: 'RESTORE_STATE', value: parsedState });
           return true;
         }
@@ -128,23 +126,25 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     return false;
   };
 
+  const value = {
+    state,
+    setAnswer,
+    clearAnswers,
+    validateAndProceed,
+    restoreState
+  };
+
   return (
-    <QuizContext.Provider value={{
-      ...state,
-      setAnswer,
-      clearAnswers,
-      validateAndProceed,
-      restoreState
-    }}>
+    <QuizContext.Provider value={value}>
       {children}
     </QuizContext.Provider>
   );
 }
 
-export function useQuiz() {
+export const useQuiz = () => {
   const context = useContext(QuizContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useQuiz must be used within a QuizProvider');
   }
   return context;
-}
+};
