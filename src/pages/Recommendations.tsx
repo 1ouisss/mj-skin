@@ -29,27 +29,24 @@ export default function Recommendations() {
       return result;
     } catch (error) {
       console.error('Error processing recommendations:', error);
+      toast.error('Une erreur est survenue lors du traitement des recommandations');
       return null;
     }
   }, [answers]);
 
   if (!answers) {
-    return <LoadingScreen />;
-  }
-
-  if (!recommendations) {
     return (
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-sm"
       >
         <div className="text-center max-w-md mx-auto p-8">
           <h2 className="text-2xl font-playfair mb-4 text-[#4A4A4A]">
-            Aucune recommandation trouvée
+            Données manquantes
           </h2>
           <p className="text-[#666] mb-6">
-            Nous n'avons pas trouvé de recommandations correspondant à vos critères.
+            Veuillez retourner au quiz pour obtenir vos recommandations.
           </p>
           <button
             onClick={() => navigate('/skin-type-quiz')}
@@ -60,6 +57,10 @@ export default function Recommendations() {
         </div>
       </motion.div>
     );
+  }
+
+  if (!recommendations) {
+    return <LoadingScreen />;
   }
 
   return (
