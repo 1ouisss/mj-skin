@@ -1,8 +1,8 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useEffect } from 'react-router-dom';
 
 const DebugRouter = () => {
   const location = useLocation();
@@ -15,7 +15,7 @@ const DebugRouter = () => {
 };
 import { TooltipProvider } from './components/ui/tooltip';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { QuizProvider } from './context/QuizContext';
