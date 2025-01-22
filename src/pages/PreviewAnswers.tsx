@@ -25,12 +25,11 @@ const PreviewAnswers = () => {
       console.log('Quiz answers:', answers);
       
       const payload = {
-        skinType: answers?.['SkinType'] || answers?.['skinType'],
-        conditions: answers?.['Condition'] || answers?.['conditions'],
-        concerns: answers?.['Concern'] || answers?.['concerns'],
-        concerns: answers.Concern,
-        texturePreference: answers.TexturePreference || '',
-        scentPreference: answers.ScentPreference || ''
+        skinType: answers?.SkinType || '',
+        conditions: answers?.Condition || '',
+        concerns: answers?.Concern || '',
+        texturePreference: answers?.TexturePreference || '',
+        scentPreference: answers?.ScentPreference || ''
       };
 
       console.log('Sending payload:', payload);
