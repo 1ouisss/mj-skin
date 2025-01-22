@@ -1,60 +1,43 @@
-
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 const PreviewAnswers = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const answers = {
     skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
     conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
     concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
-    texturePreference: JSON.parse(localStorage.getItem('texture') || '""'),
-    scentPreference: JSON.parse(localStorage.getItem('fragrance') || '""'),
+    texture: JSON.parse(localStorage.getItem('texture') || '""'),
+    fragrance: JSON.parse(localStorage.getItem('fragrance') || '""'),
     newsletter: localStorage.getItem('newsletter') || ''
   };
 
-  React.useEffect(() => {
-    if (!answers.skinType || !answers.conditions || !answers.concerns) {
-      navigate('/skin-type-quiz');
-    }
-  }, [answers, navigate]);
+  const questionsMap = {
+    skinType: "Votre type de peau",
+    conditions: "Vos conditions particulières",
+    concerns: "Vos préoccupations principales",
+    texture: "Vos préférences de texture",
+    fragrance: "Vos préférences de parfum"
+  };
 
   const handleSeeRecommendations = async () => {
     try {
-      console.log('Quiz answers:', answers);
-      
-      if (!answers) {
-        toast.error('No quiz answers found. Please complete the quiz.');
+      if (!answers.skinType || !answers.conditions || !answers.concerns) {
+        toast.error('Veuillez compléter toutes les questions requises.');
         navigate('/skin-type-quiz');
         return;
       }
 
-      // Extract all possible variations of answer fields
       const payload = {
-        skinType: answers.SkinType || answers.skinType || answers['Skin Type'] || '',
-        conditions: answers.Condition || answers.conditions || answers.Conditions || '',
-        concerns: answers.Concern || answers.concerns || answers.Concerns || '',
-        texturePreference: answers.TexturePreference || answers.texturePreference || '',
-        scentPreference: answers.ScentPreference || answers.scentPreference || ''
+        skinType: answers.skinType,
+        conditions: answers.conditions,
+        concerns: answers.concerns,
+        texturePreference: answers.texture || '',
+        scentPreference: answers.fragrance || ''
       };
-
-      console.log('Processing payload:', payload);
-
-      // Validate all required fields
-      const requiredFields = ['skinType', 'conditions', 'concerns'];
-      const missingFields = requiredFields.filter(field => !payload[field] || payload[field] === '');
-
-      if (missingFields.length > 0) {
-        console.log('Missing fields:', missingFields);
-        navigate('/skin-type-quiz');
-        return;
-      }
-
-      console.log('Processed payload:', payload);
 
       console.log('Sending payload:', payload);
 
@@ -71,13 +54,12 @@ const PreviewAnswers = () => {
       }
 
       const data = await response.json();
-      
+
       if (!data.recommendations) {
         throw new Error('No recommendations found');
       }
 
       navigate('/recommendations', { 
-        replace: true,
         state: { 
           recommendations: data.recommendations,
           answers: payload
@@ -85,7 +67,7 @@ const PreviewAnswers = () => {
       });
     } catch (error) {
       console.error('Error getting recommendations:', error);
-      toast.error(error.response?.data?.message || 'Unable to get recommendations. Please try again.');
+      toast.error('Impossible d\'obtenir les recommandations. Veuillez réessayer.');
     }
   };
 
@@ -120,7 +102,7 @@ const PreviewAnswers = () => {
             <div className="space-y-4 mb-8">
               {relevantAnswers.map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
-                  <span className="font-medium text-[#4A4A4A]">{key}</span>
+                  <span className="font-medium text-[#4A4A4A]">{questionsMap[key] || key}</span>
                   <span className="text-[#666]">{String(value)}</span>
                 </div>
               ))}
