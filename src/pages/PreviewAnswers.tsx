@@ -1,23 +1,12 @@
-
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 
-interface PreviewAnswersProps {
-  selectedAnswers?: {
-    skinType: string;
-    condition: string;
-    concern: string;
-    texturePreference: string;
-    scentPreference: string;
-  };
-}
-
-const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
+const PreviewAnswers = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const answers = selectedAnswers || location.state?.selectedAnswers;
+  const answers = location.state?.selectedAnswers;
 
   if (!answers) {
     navigate('/');
@@ -35,7 +24,7 @@ const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
       }}
     >
       <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
-      
+
       <motion.div 
         className="w-full max-w-2xl relative z-10"
         initial={{ opacity: 0, y: 20 }}
@@ -47,7 +36,7 @@ const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
             <h2 className="text-4xl font-playfair text-center mb-8 text-[#4A4A4A]">
               Confirmez vos réponses
             </h2>
-            
+
             <div className="space-y-4 mb-8">
               {Object.entries(answers).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
