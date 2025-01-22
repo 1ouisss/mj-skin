@@ -58,7 +58,8 @@ const PreviewAnswers = () => {
 
   const handleSeeRecommendations = () => {
     try {
-      if (!validateAnswers()) {
+      if (!answers.skinType || !answers.conditions || !answers.concerns) {
+        toast.error('Veuillez compléter toutes les questions requises');
         return;
       }
 
@@ -71,7 +72,10 @@ const PreviewAnswers = () => {
       };
 
       console.log('Processing payload:', payload);
-      navigate('/recommendations', { state: { answers: payload } });
+      navigate('/recommendations', { 
+        state: { answers: payload },
+        replace: true 
+      });
     } catch (error) {
       console.error('Error getting recommendations:', error);
       toast.error('Impossible d\'obtenir les recommandations. Veuillez réessayer.');

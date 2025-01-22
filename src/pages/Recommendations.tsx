@@ -15,15 +15,16 @@ export default function Recommendations() {
     if (!answers) return null;
 
     try {
-      const { skinType, conditions, concerns } = answers;
+      const { skinType, conditions } = answers;
       let result = skincareDb?.SkinType?.[skinType];
       
       if (conditions && result?.Condition?.[conditions]) {
         result = result.Condition[conditions];
       }
 
-      if (concerns && result?.Concern?.[concerns]) {
-        result = result.Concern[concerns];
+      if (!result?.Products || !result?.Routine) {
+        toast.error('Aucune recommandation trouvée pour vos critères');
+        return null;
       }
 
       return result;
