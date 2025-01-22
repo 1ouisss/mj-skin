@@ -37,19 +37,17 @@ const DebugRouter = () => {
   return null;
 };
 
-const pages = {
-  Index: lazy(() => import('./pages/Index')),
-  'skintypequiz': lazy(() => import('./pages/SkinTypeQuiz')),
-  'conditionsquiz': lazy(() => import('./pages/ConditionsQuiz')),
-  'concernsquiz': lazy(() => import('./pages/ConcernsQuiz')),
-  'zonesquiz': lazy(() => import('./pages/ZonesQuiz')),
-  'treatmentquiz': lazy(() => import('./pages/TreatmentQuiz')),
-  'fragrancequiz': lazy(() => import('./pages/FragranceQuiz')),
-  'routinequiz': lazy(() => import('./pages/RoutineQuiz')),
-  'newsletterquiz': lazy(() => import('./pages/NewsletterQuiz')),
-  'preview': lazy(() => import('./pages/PreviewAnswers')),
-  'recommendations': lazy(() => import('./pages/Recommendations'))
-};
+const SkinTypeQuiz = lazy(() => import('./pages/SkinTypeQuiz'));
+const ConditionsQuiz = lazy(() => import('./pages/ConditionsQuiz'));
+const ConcernsQuiz = lazy(() => import('./pages/ConcernsQuiz'));
+const ZonesQuiz = lazy(() => import('./pages/ZonesQuiz'));
+const TreatmentQuiz = lazy(() => import('./pages/TreatmentQuiz'));
+const FragranceQuiz = lazy(() => import('./pages/FragranceQuiz'));
+const RoutineQuiz = lazy(() => import('./pages/RoutineQuiz'));
+const NewsletterQuiz = lazy(() => import('./pages/NewsletterQuiz'));
+const PreviewAnswers = lazy(() => import('./pages/PreviewAnswers'));
+const Recommendations = lazy(() => import('./pages/Recommendations'));
+const Index = lazy(() => import('./pages/Index'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -100,7 +98,14 @@ const App = () => {
                   path={`/${step.id}`}
                   element={
                     <SuspenseWrapper>
-                      {React.createElement(pages[step.component])}
+                      {step.id === 'skintypequiz' && <SkinTypeQuiz />}
+                      {step.id === 'conditionsquiz' && <ConditionsQuiz />}
+                      {step.id === 'concernsquiz' && <ConcernsQuiz />}
+                      {step.id === 'zonesquiz' && <ZonesQuiz />}
+                      {step.id === 'treatmentquiz' && <TreatmentQuiz />}
+                      {step.id === 'fragrancequiz' && <FragranceQuiz />}
+                      {step.id === 'routinequiz' && <RoutineQuiz />}
+                      {step.id === 'newsletterquiz' && <NewsletterQuiz />}
                     </SuspenseWrapper>
                   }
                 />
