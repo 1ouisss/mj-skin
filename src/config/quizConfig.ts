@@ -1,4 +1,3 @@
-
 import { Flower2, Droplets, Scale, Cloud, Sparkles, Waves, Eye, Circle, Sun, Heart, Zap, Search, ArrowDown } from 'lucide-react';
 
 export type QuizStep = {
@@ -14,7 +13,7 @@ export type QuizStep = {
   backgroundImage?: string;
 };
 
-export const quizSteps: QuizStep[] = [
+export const quizStepsDetailed: QuizStep[] = [
   {
     id: 'skintype',
     title: 'Quel est votre type de peau ?',
@@ -50,13 +49,19 @@ export const quizSteps: QuizStep[] = [
   }
   // Add other steps here...
 ];
+
 export const quizSteps = [
-  { id: 'skintypequiz', title: 'Type de Peau' },
-  { id: 'conditionsquiz', title: 'Conditions' },
-  { id: 'concernsquiz', title: 'Préoccupations' },
-  { id: 'zonesquiz', title: 'Zones' },
-  { id: 'treatmentquiz', title: 'Traitement' },
-  { id: 'fragrancequiz', title: 'Parfum' },
-  { id: 'routinequiz', title: 'Routine' },
-  { id: 'newsletterquiz', title: 'Newsletter' }
+  { id: 'skintypequiz', title: 'Type de Peau', component: 'SkinTypeQuiz' },
+  { id: 'conditionsquiz', title: 'Conditions', component: 'ConditionsQuiz' },
+  { id: 'concernsquiz', title: 'Préoccupations', component: 'ConcernsQuiz' },
+  { id: 'zonesquiz', title: 'Zones', component: 'ZonesQuiz' },
+  { id: 'treatmentquiz', title: 'Traitement', component: 'TreatmentQuiz' },
+  { id: 'fragrancequiz', title: 'Parfum', component: 'FragranceQuiz' },
+  { id: 'routinequiz', title: 'Routine', component: 'RoutineQuiz' },
+  { id: 'newsletterquiz', title: 'Newsletter', component: 'NewsletterQuiz' }
 ];
+
+export const getNextStepId = (currentStepId: string): string => {
+  const currentIndex = quizSteps.findIndex(step => step.id === currentStepId);
+  return currentIndex < quizSteps.length - 1 ? quizSteps[currentIndex + 1].id : 'preview';
+};

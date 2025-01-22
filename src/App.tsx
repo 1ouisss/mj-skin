@@ -9,7 +9,8 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { QuizProvider } from './context/QuizContext';
 import { ProgressBar } from './components/ProgressBar';
 import { BackButton } from './components/BackButton';
-import { quizSteps } from './config/quizConfig';
+import { quizSteps, getNextStepId } from './config/quizConfig';
+import { toast } from 'sonner';
 
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -99,7 +100,7 @@ const App = () => {
                   path={`/${step.id}`}
                   element={
                     <SuspenseWrapper>
-                      {React.createElement(pages[step.id.charAt(0).toUpperCase() + step.id.slice(1)])}
+                      {React.createElement(pages[step.component])}
                     </SuspenseWrapper>
                   }
                 />
