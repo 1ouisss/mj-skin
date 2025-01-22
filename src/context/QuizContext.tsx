@@ -151,10 +151,13 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       console.log('Current state:', state);
     }
 
-    if (nextStep === 'previewanswers') {
-      if (!state.skinType || !state.conditions || !state.concerns) {
+    if (nextStep === 'recommendations' || nextStep === 'previewanswers') {
+      const requiredFields = ['skinType', 'conditions', 'concerns'];
+      const missingFields = requiredFields.filter(field => !state[field]);
+      
+      if (missingFields.length > 0) {
+        console.warn('Missing required fields:', missingFields);
         toast.error('Veuillez compléter toutes les questions requises');
-        navigate('/skintypequiz');
         return;
       }
     }
