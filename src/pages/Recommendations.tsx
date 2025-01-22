@@ -10,7 +10,8 @@ const Recommendations = React.memo(() => {
   console.log('[Recommendations] Rendering');
   const { state, restoreState } = useQuiz();
   const navigate = useNavigate();
-  const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
+  const [recommendations, setRecommendations] = useState<any>(null);
+  const { state } = useQuiz();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -159,6 +160,25 @@ const Recommendations = React.memo(() => {
       </div>
     );
   }
+
+  const getRecommendations = () => {
+    try {
+      const data = require('../data/skincare-db.json');
+      const skinTypeRecs = data.SkinType[state.skinType];
+      const conditionRecs = state.conditions ? data.Condition[state.conditions] : null;
+      const concernRecs = state.concerns ? data.Concerns[state.concerns] : null;
+      
+      return skinTypeRecs || conditionRecs || concernRecs || null;
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const recs = getRecommendations();
+    setRecommendations(recs);
+  }, [state]);
 
   return (
     <div className="min-h-screen p-4">

@@ -1,227 +1,55 @@
 {
   "SkinType": {
     "Sèche": {
-      "Condition": {
-        "Acné": {
-          "Concern": {
-            "Rides": {
-              "TexturePreference": {
-                "Légère": {
-                  "ScentPreference": {
-                    "Avec parfum naturel": {
-                      "Products": [
-                        "Crème Fraîche",
-                        "Eau de Néroli enrichie",
-                        "Sérum Purifiant",
-                        "Masque Argile"
-                      ],
-                      "Routine": {
-                        "Matin": [
-                          "Nettoyage avec Crème Fraîche",
-                          "Application d'Eau de Néroli enrichie",
-                          "Sérum Purifiant"
-                        ],
-                        "Soir": [
-                          "Nettoyage avec Crème Fraîche",
-                          "Application d'Eau de Néroli enrichie",
-                          "Masque Argile (2-3 fois par semaine)"
-                        ],
-                        "Résultat": "Peau hydratée et purifiée"
-                      }
-                    },
-                    "Sans huiles essentielles": {
-                      "Products": [
-                        "Crème Fraîche Sans Parfum",
-                        "Eau de Néroli Pure",
-                        "Sérum Purifiant Neutre"
-                      ],
-                      "Routine": {
-                        "Matin": [
-                          "Nettoyage avec Crème Fraîche Sans Parfum",
-                          "Application d'Eau de Néroli Pure",
-                          "Sérum Purifiant Neutre"
-                        ],
-                        "Soir": [
-                          "Nettoyage avec Crème Fraîche Sans Parfum",
-                          "Application d'Eau de Néroli Pure"
-                        ],
-                        "Résultat": "Peau apaisée et équilibrée"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "Eczéma": {
-          "Products": [
-            "Huile de Jojoba",
-            "Baume Apaisant & Protecteur"
-          ],
-          "Routine": {
-            "Matin": [
-              "Nettoyage doux avec Huile de Jojoba",
-              "Application généreuse de Baume Apaisant & Protecteur"
-            ],
-            "Soir": [
-              "Nettoyage avec Huile de Jojoba",
-              "Application du Baume Apaisant & Protecteur"
-            ],
-            "Résultat": "Peau protégée et soulagée"
-          }
-        }
-      },
-      "Products": [
-        "Crème Fraîche",
-        "Eau de Néroli enrichie",
-        "Lotus Sacré",
-        "Sérum Immortelle",
-        "Masque collagène avec Karité Vanillé"
-      ],
-      "Routine": {
-        "Matin": [
-          "Nettoyage avec Crème Fraîche",
-          "Application d'Eau de Néroli enrichie",
-          "Application de Lotus Sacré",
-          "Sérum Immortelle pour sceller l'hydratation"
-        ],
-        "Soir": [
-          "Nettoyage avec Crème Fraîche",
-          "Application d'Eau de Néroli enrichie",
-          "Sérum Immortelle",
-          "Masque collagène avec Karité Vanillé (1-3 fois par semaine)"
-        ]
+      "products": ["Crème Fraîche", "Eau de Néroli enrichie", "Lotus Sacré"],
+      "routine": {
+        "Matin": ["Nettoyage avec Crème Fraîche", "Application d'Eau de Néroli enrichie", "Application de Lotus Sacré", "Sérum Immortelle pour sceller l'hydratation"],
+        "Soir": ["Nettoyage avec Crème Fraîche", "Eau de Néroli enrichie", "Sérum Immortelle", "Masque Collagène avec Karité Vanillé (1-3 fois/semaine)"],
+        "Résultat": "Hydratation profonde, confort immédiat, peau revitalisée 😊"
       }
     },
     "Grasse": {
-      "Condition": {
-        "Acné": {
-          "Concern": {
-            "Rides": {
-              "TexturePreference": {
-                "Légère": {
-                  "ScentPreference": {
-                    "Avec parfum naturel": {
-                      "Products": [
-                        "Huile Nettoyante avec Gel d'Aloès",
-                        "Eau d'Orange",
-                        "Gel Sébo",
-                        "Exfopur"
-                      ],
-                      "Routine": {
-                        "Matin": [
-                          "Nettoyage avec Huile Nettoyante + Gel d'Aloès",
-                          "Application d'Eau d'Orange",
-                          "Application de Gel Sébo"
-                        ],
-                        "Soir": [
-                          "Double nettoyage avec Huile Nettoyante",
-                          "Application d'Eau d'Orange",
-                          "Masque Exfopur (1-3 fois par semaine)"
-                        ],
-                        "Résultat": "Peau purifiée et matifiée"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "Products": [
-        "Huile Nettoyante avec Gel d'Aloès",
-        "Eau d'Orange",
-        "Gel Sébo",
-        "Exfopur"
-      ],
-      "Routine": {
-        "Matin": [
-          "Nettoyage avec Huile Nettoyante + Gel d'Aloès",
-          "Application d'Eau d'Orange",
-          "Application de Gel Sébo"
-        ],
-        "Soir": [
-          "Double nettoyage avec Huile Nettoyante",
-          "Application d'Eau d'Orange",
-          "Masque Exfopur (1-3 fois par semaine)"
-        ]
+      "products": ["Huile Nettoyante avec Gel d'Aloès", "Eau d'Orange", "Gel Sébo"],
+      "routine": {
+        "Matin": ["Nettoyage avec Huile Nettoyante + Gel d'Aloès", "Eau d'Orange", "Gel Sébo"],
+        "Soir": ["Nettoyage avec Huile Nettoyante seule", "Eau d'Orange", "Masque Exfopur"],
+        "Résultat": "Contrôle du sébum, peau matifiée, réduction des imperfections 🍊"
       }
     },
     "Mixte": {
-      "Condition": {
-        "Acné": {
-          "Concern": {
-            "Rides": {
-              "TexturePreference": {
-                "Légère": {
-                  "ScentPreference": {
-                    "Avec parfum naturel": {
-                      "Products": [
-                        "Huile Nettoyante",
-                        "Eau de Rose",
-                        "Phytocomplexe",
-                        "Sérum Rose"
-                      ],
-                      "Routine": {
-                        "Matin": [
-                          "Nettoyage avec Huile Nettoyante",
-                          "Application d'Eau de Rose",
-                          "Application de Phytocomplexe"
-                        ],
-                        "Soir": [
-                          "Nettoyage avec Huile Nettoyante",
-                          "Application d'Eau de Rose",
-                          "Sérum Rose"
-                        ],
-                        "Résultat": "Peau équilibrée et régénérée"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "Products": [
-        "Huile Nettoyante",
-        "Eau de Rose",
-        "Phytocomplexe",
-        "Sérum Rose"
-      ],
-      "Routine": {
-        "Matin": [
-          "Nettoyage avec Huile Nettoyante",
-          "Application d'Eau de Rose",
-          "Application de Phytocomplexe",
-          "Sérum Rose"
-        ],
-        "Soir": [
-          "Nettoyage avec Huile Nettoyante",
-          "Application d'Eau de Rose",
-          "Sérum Rose"
-        ]
+      "products": ["Huile Nettoyante", "Eau de Rose", "Phytocomplexe"],
+      "routine": {
+        "Matin": ["Nettoyage avec Huile Nettoyante", "Eau de Rose", "Phytocomplexe", "Sérum Rose"],
+        "Soir": ["Nettoyage avec Huile Nettoyante", "Eau de Rose", "Sérum Rose"],
+        "Résultat": "Équilibre hydratation/sébum, éclat du teint 🌸"
+      }
+    }
+  },
+  "Condition": {
+    "Acné": {
+      "products": ["Huile Nettoyante avec Gel d'Aloès", "Dermopur Acné", "Eau de Néroli"],
+      "routine": {
+        "Matin": ["Nettoyage avec Huile Nettoyante + Gel d'Aloès", "Eau de Néroli", "Gel Sébo"],
+        "Soir": ["Nettoyage avec Dermopur Acné", "Masque Exfopur", "Sérum Gel Sébo"],
+        "Résultat": "Peau purifiée, réduction des boutons 🙌"
       }
     },
-    "Condition": {
-      "Eczéma": {
-        "Products": [
-          "Huile de Jojoba",
-          "Baume Apaisant & Protecteur"
-        ],
-        "Routine": {
-          "Matin": [
-            "Nettoyage doux avec Huile de Jojoba",
-            "Application généreuse de Baume Apaisant & Protecteur"
-          ],
-          "Soir": [
-            "Nettoyage avec Huile de Jojoba",
-            "Application du Baume Apaisant & Protecteur"
-          ],
-          "Résultat": "Peau protégée et soulagée"
-        }
+    "Eczéma": {
+      "products": ["Huile de Jojoba", "Baume Apaisant & Protecteur"],
+      "routine": {
+        "Matin": ["Nettoyage avec Huile de Jojoba", "Baume Apaisant & Protecteur"],
+        "Soir": ["Nettoyage avec Huile de Jojoba", "Baume Apaisant & Protecteur"],
+        "Résultat": "Réduction des irritations, peau apaisée 💚"
+      }
+    }
+  },
+  "Concerns": {
+    "Rides": {
+      "products": ["Huile Nettoyante + Mousseline Kukui", "Magnolia", "Sérum Magnolia"],
+      "routine": {
+        "Matin": ["Nettoyage avec Huile Nettoyante", "Eau Magnolia", "Sérum Magnolia"],
+        "Soir": ["Nettoyage avec Huile Nettoyante", "Eau Magnolia", "Sérum Magnolia", "Masque Collagène"],
+        "Résultat": "Réduction des rides, peau éclatante 😍"
       }
     }
   }
