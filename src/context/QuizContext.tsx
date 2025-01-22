@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { quizSteps } from '../config/quizConfig';
 
 type QuizState = {
   skinType: string;
@@ -15,13 +16,11 @@ type QuizState = {
   completed: boolean;
 };
 
-type QuizContextType = {
-  state: QuizState;
-  setAnswer: (field: keyof QuizState, value: any) => void;
-  clearAnswers: () => void;
-  validateAndProceed: (currentStep: string, nextStep: string) => void;
-  restoreState: () => boolean;
-};
+type QuizAction = 
+  | { type: 'SET_ANSWER'; field: keyof QuizState; value: any }
+  | { type: 'CLEAR_ANSWERS' }
+  | { type: 'SET_COMPLETED'; value: boolean }
+  | { type: 'RESTORE_STATE'; value: QuizState };
 
 const initialState: QuizState = {
   skinType: '',
@@ -35,17 +34,11 @@ const initialState: QuizState = {
   completed: false
 };
 
-type QuizAction = 
-  | { type: 'SET_ANSWER'; field: keyof QuizState; value: any }
-  | { type: 'CLEAR_ANSWERS' }
-  | { type: 'SET_COMPLETED'; value: boolean }
-  | { type: 'RESTORE_STATE'; value: QuizState };
-
 const STORAGE_KEY = 'quiz_state';
 
 function validateState(state: QuizState): boolean {
-  // Required fields for recommendations
-  return Boolean(state.skinType && state.conditions && state.concerns);
+  const requiredFields = ['skinType', 'conditions', 'concerns'];
+  return requiredFields.every(field => Boolean(state[field]));
 }
 
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
@@ -68,6 +61,13 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
       return state;
   }
 }
+
+type QuizContextType = {
+  state: QuizState;
+  setAnswer: (field: keyof QuizState, value: any) => void;
+  clearAnswers: () => void;
+  validateAndProceed: (currentStep: string, nextStep: string) => Promise<boolean>;
+};
 
 export const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
@@ -97,10 +97,8 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   };
 
   const validateAndProceed = async (currentStep: string, nextStep: string): Promise<boolean> => {
-    const requiredFields = ['skinType', 'conditions', 'concerns'];
-    
     if (nextStep === 'recommendations') {
-      const isValid = requiredFields.every(field => state[field]);
+      const isValid = validateState(state);
       if (!isValid) {
         toast.error('Veuillez compléter toutes les questions requises');
         navigate('/skintypequiz');
@@ -111,28 +109,25 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     return true;
   };
 
-  const restoreState = (): boolean => {
+  const restoreState = () => {
     try {
       const savedState = localStorage.getItem(STORAGE_KEY);
       if (savedState) {
         const parsedState = JSON.parse(savedState);
         if (validateState(parsedState)) {
           dispatch({ type: 'RESTORE_STATE', value: parsedState });
-          return true;
         }
       }
     } catch (error) {
       console.error('Failed to restore quiz state:', error);
     }
-    return false;
   };
 
   const value = {
     state,
     setAnswer,
     clearAnswers,
-    validateAndProceed,
-    restoreState
+    validateAndProceed
   };
 
   return (
