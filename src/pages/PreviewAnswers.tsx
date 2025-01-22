@@ -10,17 +10,17 @@ const PreviewAnswers = () => {
     skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
     conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
     concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
-    texturePreference: JSON.parse(localStorage.getItem('texture') || '""'),
-    scentPreference: JSON.parse(localStorage.getItem('fragrance') || '""'),
+    texturePreference: JSON.parse(localStorage.getItem('texturePreference') || localStorage.getItem('texture') || '""'),
+    scentPreference: JSON.parse(localStorage.getItem('scentPreference') || localStorage.getItem('fragrance') || '""'),
     newsletter: localStorage.getItem('newsletter') || ''
   };
 
   const questionsMap = {
     skinType: "Votre type de peau",
-    conditions: "Vos conditions particulières",
+    conditions: "Vos conditions particulières", 
     concerns: "Vos préoccupations principales",
-    texture: "Vos préférences de texture",
-    fragrance: "Vos préférences de parfum"
+    texturePreference: "Vos préférences de texture",
+    scentPreference: "Vos préférences de parfum"
   };
 
   const handleSeeRecommendations = async () => {
