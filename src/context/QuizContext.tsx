@@ -6,6 +6,7 @@ interface QuizContextType {
   answers: any;
   setAnswers: (answers: any) => void;
   validateAndProceed: (currentStep: string, nextStep: string) => void;
+  clearAnswers: () => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -27,18 +28,40 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const validateAndProceed = (currentStep: string, nextStep: string) => {
+    console.group('QuizContext - validateAndProceed');
+    console.log('Current step:', currentStep);
+    console.log('Next step:', nextStep);
+    console.log('Current answers:', answers);
+
     const stored = localStorage.getItem('quizAnswers');
     if (!stored) {
       console.error('No quiz answers found');
       navigate('/');
       return;
     }
+
+    const parsedAnswers = JSON.parse(stored);
     
+    if (nextStep === 'previewanswers') {
+      if (!parsedAnswers.skinType || !parsedAnswers.conditions || !parsedAnswers.concerns) {
+        console.error('Missing required fields');
+        navigate('/skintypequiz');
+        return;
+      }
+    }
+    
+    console.log('Navigating to:', nextStep);
+    console.groupEnd();
     navigate(`/${nextStep.toLowerCase()}`);
   };
 
+  const clearAnswers = () => {
+    localStorage.removeItem('quizAnswers');
+    setAnswers({});
+  };
+
   return (
-    <QuizContext.Provider value={{ answers, setAnswers, validateAndProceed }}>
+    <QuizContext.Provider value={{ answers, setAnswers, validateAndProceed, clearAnswers }}>
       {children}
     </QuizContext.Provider>
   );

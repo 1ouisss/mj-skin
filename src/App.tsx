@@ -109,7 +109,21 @@ const App = () => {
                     path="/" 
                     element={
                       <Suspense fallback={<LoadingScreen />}>
-                        <ErrorBoundary>
+                        <ErrorBoundary
+                          fallback={
+                            <div className="flex min-h-screen items-center justify-center">
+                              <div className="text-center">
+                                <h2 className="text-xl font-semibold">Une erreur est survenue</h2>
+                                <button 
+                                  onClick={() => window.location.reload()}
+                                  className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                                >
+                                  Réessayer
+                                </button>
+                              </div>
+                            </div>
+                          }
+                        >
                           <pages.Index />
                         </ErrorBoundary>
                       </Suspense>
