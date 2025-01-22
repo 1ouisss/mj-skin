@@ -1,12 +1,8 @@
 
-import nesting from '@tailwindcss/nesting'
-import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
-
-export default {
+module.exports = {
   plugins: {
-    '@tailwindcss/nesting': {},
-    tailwindcss: {},
-    autoprefixer: {},
+    'tailwindcss': {},
+    'autoprefixer': {},
   },
+  from: undefined
 }
