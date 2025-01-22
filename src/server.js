@@ -1,3 +1,4 @@
+
 const express = require("express");
 const path = require('path');
 const cors = require('cors');
@@ -17,9 +18,29 @@ app.use((req, res, next) => {
 
 // Load recommendations data
 const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
-const data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
+let data;
 
-// Recommendations Route
+try {
+  data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
+} catch (error) {
+  console.error('Failed to load skincare database:', error);
+  process.exit(1);
+}
+
+// Recommendations Route - GET all data
+app.get("/recommendations", (req, res) => {
+  try {
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error serving recommendations:', error);
+    res.status(500).json({
+      error: "Internal Server Error",
+      message: error.message
+    });
+  }
+});
+
+// Recommendations Route - POST for filtered results
 app.post("/recommendations", async (req, res) => {
   try {
     const { skinType, conditions, concerns } = req.body;
