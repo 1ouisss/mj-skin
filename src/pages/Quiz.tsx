@@ -10,25 +10,21 @@ const Quiz = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isValid = await validateAndProceed('quiz', 'recommendations');
+    const canProceed = await validateAndProceed('quiz', 'recommendations');
     
-    if (isValid) {
+    if (canProceed) {
       navigate('/recommendations');
-    } else {
-      toast.error('Veuillez compléter toutes les questions requises');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-4">
-        {/* Quiz questions will be rendered by QuizStep component */}
-      </div>
+      {/* Quiz questions rendered by QuizStep component */}
       <button 
         type="submit"
         className="w-full px-4 py-2 text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
       >
-        Voir mes recommandations
+        Voir les recommandations
       </button>
     </form>
   );

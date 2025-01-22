@@ -124,10 +124,18 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       
       if (!isValid) {
         toast.error('Veuillez compléter toutes les questions requises');
-        navigate('/skintypequiz');
+        if (!state.skinType) {
+          navigate('/skintypequiz');
+        } else if (!state.conditions) {
+          navigate('/conditionsquiz');
+        } else if (!state.concerns) {
+          navigate('/concernsquiz');
+        }
         return false;
       }
+      
       dispatch({ type: 'SET_COMPLETED', value: true });
+      return true;
     }
     return true;
   };
