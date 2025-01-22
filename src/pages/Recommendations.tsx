@@ -7,7 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 
 export default function Recommendations() {
-  const { answers, validateAnswers } = useQuiz();
+  const { state, restoreState } = useQuiz();
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,23 @@ export default function Recommendations() {
   useEffect(() => {
     console.group('Recommendations - Component Lifecycle');
     console.log('Component mounted');
-    console.log('Initial props/state:', { answers });
+    console.log('Initial state:', state);
+
+    const validateState = () => {
+      if (!state.skinType || !state.conditions || !state.concerns) {
+        if (!restoreState()) {
+          toast.error('Données du quiz introuvables');
+          navigate('/skintype', { replace: true });
+          return false;
+        }
+      }
+      return true;
+    };
+
+    if (!validateState()) {
+      setLoading(false);
+      return;
+    }
 
     return () => {
       console.log('Component unmounting');

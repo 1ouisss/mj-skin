@@ -11,8 +11,7 @@ import { useQuiz } from '../context/QuizContext';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
-  const { state } = useQuiz();
-  const [answers, setAnswers] = React.useState<QuizAnswers | null>(null);
+  const { state, restoreState } = useQuiz();
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
@@ -20,27 +19,21 @@ export default function PreviewAnswers() {
     console.log('Component mounted');
     console.log('QuizContext state:', state);
 
-    const loadAnswers = () => {
-      try {
-        const storedAnswers = localStorage.getItem('quizAnswers');
-        console.log('Raw stored answers:', storedAnswers);
-
-        if (!storedAnswers) {
-          throw new Error('No answers found');
+    const validateAnswers = () => {
+      if (!state.skinType || !state.conditions || !state.concerns) {
+        if (!restoreState()) {
+          toast.error('Veuillez compléter le quiz');
+          navigate('/skintype', { replace: true });
+          return false;
         }
-
-        const parsedAnswers = JSON.parse(storedAnswers);
-        if (!parsedAnswers.skinType || !parsedAnswers.conditions || !parsedAnswers.concerns) {
-          throw new Error('Incomplete answers');
-        }
-
-        setAnswers(parsedAnswers);
-        return true;
-      } catch (error) {
-        console.error('Error processing answers:', error);
-        return false;
       }
+      return true;
     };
+
+    if (!validateAnswers()) {
+      setLoading(false);
+      return;
+    }
 
     if (!loadAnswers()) {
       toast.error('Veuillez compléter le quiz');
