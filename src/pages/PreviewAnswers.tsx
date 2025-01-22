@@ -39,6 +39,14 @@ export default function PreviewAnswers() {
         return;
       }
 
+      // Validate required fields
+      if (!answers.skinType || !answers.conditions || !answers.concerns) {
+        console.error('[PreviewAnswers] Missing required answers');
+        toast.error('Veuillez répondre à toutes les questions requises');
+        navigate('/skintype');
+        return;
+      }
+
       const payload = {
         skinType: answers.skinType as SkinType,
         conditions: answers.conditions as Condition,
@@ -47,16 +55,28 @@ export default function PreviewAnswers() {
         scentPreference: answers.scentPreference || ''
       };
 
+      // Validate type safety
+      if (!Object.values(SkinType).includes(payload.skinType as any) ||
+          !Object.values(Condition).includes(payload.conditions as any) ||
+          !Object.values(Concern).includes(payload.concerns as any)) {
+        console.error('[PreviewAnswers] Invalid answer types');
+        toast.error('Données invalides. Veuillez refaire le quiz.');
+        navigate('/skintype');
+        return;
+      }
+
       console.log('[PreviewAnswers] Setting validated answers:', payload);
       localStorage.setItem('validatedAnswers', JSON.stringify(payload));
 
       console.log('[PreviewAnswers] Navigating to recommendations with payload');
       navigate('/recommendations', { 
-        state: { answers: payload }
+        state: { answers: payload },
+        replace: true
       });
     } catch (error) {
       console.error('[PreviewAnswers] Error:', error);
       toast.error('Une erreur est survenue');
+      navigate('/skintype');
     }
   };
 
