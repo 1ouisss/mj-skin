@@ -38,11 +38,8 @@ const pages = {
   'skintypequiz': lazy(() => import('./pages/SkinTypeQuiz')),
   'conditionsquiz': lazy(() => import('./pages/ConditionsQuiz')),
   'concernsquiz': lazy(() => import('./pages/ConcernsQuiz')),
-  'zonesquiz': lazy(() => import('./pages/ZonesQuiz')),
-  'treatmentquiz': lazy(() => import('./pages/TreatmentQuiz')),
-  'fragrancequiz': lazy(() => import('./pages/FragranceQuiz')),
-  'routinequiz': lazy(() => import('./pages/RoutineQuiz')),
-  'newsletterquiz': lazy(() => import('./pages/NewsletterQuiz')),
+  'preview': lazy(() => import('./pages/PreviewAnswers')),
+  'recommendations': lazy(() => import('./pages/Recommendations')),
   'preview': lazy(() => import('./pages/PreviewAnswers')),
   'recommendations': lazy(() => import('./pages/Recommendations'))
 };

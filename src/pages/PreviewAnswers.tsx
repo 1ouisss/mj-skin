@@ -40,14 +40,22 @@ export default function PreviewAnswers() {
   }, [state, navigate, restoreState]);
 
   const navigateToRecommendations = () => {
-    if (!state || !state.skinType || !state.conditions || !state.concerns) {
+    if (!state.skinType || !state.conditions || !state.concerns) {
       toast.error('Veuillez compléter le quiz');
+      navigate('/skintypequiz');
       return;
     }
 
     try {
-      localStorage.setItem('validatedAnswers', JSON.stringify(state));
-      navigate('/recommendations');
+      const answers = {
+        skinType: state.skinType,
+        conditions: state.conditions,
+        concerns: state.concerns,
+        texturePreference: state.texturePreference || '',
+        scentPreference: state.scentPreference || ''
+      };
+      localStorage.setItem('validatedAnswers', JSON.stringify(answers));
+      navigate('/recommendations', { state: answers });
     } catch (error) {
       console.error('Error storing answers:', error);
       toast.error('Une erreur est survenue');

@@ -47,6 +47,17 @@ const Recommendations = React.memo(() => {
   }, []);
 
   useEffect(() => {
+    const validateAndFetch = async () => {
+      if (!state.skinType || !state.conditions || !state.concerns) {
+        const stored = localStorage.getItem('validatedAnswers');
+        if (!stored) {
+          toast.error('Veuillez compléter le quiz');
+          navigate('/skintypequiz');
+          return;
+        }
+      }
+    };
+    
     console.log('Recommendations component mounted with state:', state);
     const MAX_RETRIES = 3;
     let attempt = 0;
