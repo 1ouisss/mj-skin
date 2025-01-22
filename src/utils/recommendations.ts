@@ -8,6 +8,7 @@ interface RecommendationResult {
     Soir: string[];
     Résultat: string;
   } | null;
+  error?: string;
 }
 
 export function getRecommendations(
@@ -18,28 +19,38 @@ export function getRecommendations(
   scentPreference: string
 ): RecommendationResult {
   try {
-    const recommendation = skincareDb.SkinType[skinType]
+    const result = skincareDb.SkinType[skinType]
       ?.Condition[condition]
       ?.Concern[concern]
       ?.TexturePreference[texturePreference]
       ?.ScentPreference[scentPreference];
 
-    if (!recommendation) {
+    if (!result) {
       return {
         products: [],
-        routine: null
+        routine: {
+          Matin: [],
+          Soir: [],
+          Résultat: "Aucun résultat disponible pour cette combinaison."
+        },
+        error: "No matching recommendation found."
       };
     }
 
     return {
-      products: recommendation.Products,
-      routine: recommendation.Routine
+      products: result.Products,
+      routine: result.Routine
     };
   } catch (error) {
     console.error('Error getting recommendations:', error);
     return {
       products: [],
-      routine: null
+      routine: {
+        Matin: [],
+        Soir: [],
+        Résultat: "Veuillez réessayer."
+      },
+      error: "An error occurred while fetching recommendations."
     };
   }
 }
