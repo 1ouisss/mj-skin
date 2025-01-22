@@ -53,10 +53,8 @@ const App = () => {
               <Route 
                 path="/" 
                 element={
-                  <Suspense fallback={<LoadingScreen />}>
-                    <ErrorBoundary>
-                      <pages.Index />
-                    </ErrorBoundary>
+                  <Suspense fallback={<LoadingScreen timeout={30000} />}>
+                    <pages.Index />
                   </Suspense>
                 } 
               />
@@ -66,10 +64,8 @@ const App = () => {
                     key={name}
                     path={`/${name.toLowerCase()}`}
                     element={
-                      <Suspense fallback={<LoadingScreen />}>
-                        <ErrorBoundary>
-                          <Component />
-                        </ErrorBoundary>
+                      <Suspense fallback={<LoadingScreen timeout={30000} />}>
+                        <Component />
                       </Suspense>
                     }
                   />

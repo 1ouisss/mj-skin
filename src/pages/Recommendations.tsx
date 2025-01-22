@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
 
-export default function Recommendations() {
+const Recommendations = React.memo(() => {
   const { state, restoreState } = useQuiz();
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
@@ -160,4 +160,7 @@ export default function Recommendations() {
       </motion.div>
     </div>
   );
-}
+});
+
+Recommendations.displayName = 'Recommendations';
+export default Recommendations;
