@@ -29,7 +29,15 @@ app.post("/api/recommendations", async (req, res) => {
   console.time(`request-${requestId}-duration`);
 
   try {
+    if (!req.body) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "Request body is missing"
+      });
+    }
+
     const { skinType, conditions, concerns, texturePreference, scentPreference } = req.body;
+    console.log('Raw payload:', req.body);
     
     console.log('Received payload:', { skinType, conditions, concerns, texturePreference, scentPreference });
 

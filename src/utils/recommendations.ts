@@ -27,10 +27,21 @@ export const getRecommendations = (
       return memoizedResults.get(cacheKey);
     }
 
+    try {
     const result = skincareDb?.SkinType?.[skinType]?.Condition?.[condition]?.Concern?.[concern]
       ?.TexturePreference?.[texturePreference]?.ScentPreference?.[scentPreference];
 
-    if (!result) {
+    if (!result || !Array.isArray(result.Products) || !result.Routine) {
+      console.warn('Invalid or missing recommendation data structure');
+      return {
+        Products: [],
+        Routine: {
+          Matin: ['Nettoyant doux', 'Hydratant'],
+          Soir: ['Nettoyant doux', 'Hydratant'],
+          Résultat: "Recommandations par défaut pour votre type de peau."
+        }
+      };
+    }
       const defaultResult = {
         Products: [],
         Routine: {

@@ -40,23 +40,19 @@ const Recommendations = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    console.group('Recommendations - Data Flow');
-    console.log('Initial answers:', answers);
-
-    console.group('Recommendations - Validation');
-    console.log('Current answers:', answers);
-
-    if (!validateAnswers()) {
-      console.error('Invalid answers state');
-      toast.error('Veuillez compléter toutes les questions');
-      navigate('/skintypequiz', { replace: true });
-      console.groupEnd();
-      return;
-    }
-    console.log('Answers validation passed');
-    console.groupEnd();
-
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
+    
     const fetchRecommendations = async () => {
+      try {
+        if (!validateAnswers()) {
+          console.error('Invalid answers state');
+          toast.error('Veuillez compléter toutes les questions');
+          navigate('/skintypequiz', { replace: true });
+          return;
+        }
+
+        console.log('Fetching recommendations with:', answers);
       try {
         const response = await fetch('/api/recommendations', {
           method: 'POST',
@@ -69,18 +65,38 @@ const Recommendations = React.memo(() => {
         }
 
         const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch recommendations');
+        }
+
+        if (!data.recommendations || !data.recommendations.Products) {
+          throw new Error('Invalid recommendation data received');
+        }
+
         console.log('API response:', data);
         setRecommendations(data.recommendations);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching recommendations:', error);
-        toast.error('Une erreur est survenue');
-        navigate('/preview', { replace: true });
-      } finally {
-        setLoading(false);
+        
+        if (retryCount < MAX_RETRIES) {
+          retryCount++;
+          toast.warning(`Retrying... (${retryCount}/${MAX_RETRIES})`);
+          setTimeout(fetchRecommendations, 1000 * retryCount);
+        } else {
+          toast.error('Unable to fetch recommendations. Please try again later.');
+          setLoading(false);
+          navigate('/preview', { replace: true });
+        }
       }
     };
 
     fetchRecommendations();
+    
+    return () => {
+      console.log('Cleaning up recommendations component');
+    };
     console.groupEnd();
   }, [answers, navigate, validateAnswers]);
 
