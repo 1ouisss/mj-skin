@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 const PreviewAnswers = () => {
   const navigate = useNavigate();
@@ -19,35 +20,45 @@ const PreviewAnswers = () => {
     return <div>Loading...</div>;
   }
 
-  const handleSeeRecommendations = () => {
-    const payload = {
-      skinType: answers.SkinType,
-      conditions: answers.Condition,
-      concerns: answers.Concern,
-      texturePreference: answers.TexturePreference || '',
-      scentPreference: answers.ScentPreference || ''
-    };
+  const handleSeeRecommendations = async () => {
+    try {
+      const payload = {
+        skinType: answers.SkinType,
+        conditions: answers.Condition,
+        concerns: answers.Concern,
+        texturePreference: answers.TexturePreference || '',
+        scentPreference: answers.ScentPreference || ''
+      };
 
-    fetch('/api/recommendations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('Failed to get recommendations');
-      return response.json();
-    })
-    .then(data => {
+      const response = await fetch('/api/recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get recommendations');
+      }
+
+      const data = await response.json();
+      
+      if (!data.recommendations) {
+        throw new Error('No recommendations found');
+      }
+
       navigate('/recommendations', { 
         replace: true,
-        state: { recommendations: data.recommendations }
+        state: { 
+          recommendations: data.recommendations,
+          answers: payload
+        }
       });
-    })
-    .catch(error => {
+    } catch (error) {
       console.error('Error getting recommendations:', error);
-    });
+      toast.error('Unable to get recommendations. Please try again.');
+    }
   };
 
   const relevantAnswers = Object.entries(answers).filter(

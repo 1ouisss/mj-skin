@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ErrorBoundary } from '../components/ErrorBoundary';
@@ -7,19 +7,13 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 const Recommendations = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const recommendations = location.state?.recommendations;
+  const { recommendations, answers } = location.state || {};
 
-  useEffect(() => {
-    if (!recommendations) {
+  React.useEffect(() => {
+    if (!recommendations || !answers) {
       navigate('/skin-type-quiz');
     }
-  }, [recommendations, navigate]);
-
-  useEffect(() => {
-    if (!location.state?.recommendations) {
-      navigate('/skin-type-quiz');
-    }
-  }, [location.state, navigate]);
+  }, [recommendations, answers, navigate]);
 
   if (!recommendations) {
     return (
@@ -44,7 +38,7 @@ const Recommendations = () => {
         <section className="mb-12">
           <h2 className="text-2xl mb-4">Produits recommandés</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recommendations.Products?.map((product: string, index: number) => (
+            {recommendations.Products?.map((product, index) => (
               <motion.div
                 key={index}
                 initial={{ y: 20, opacity: 0 }}
@@ -62,7 +56,7 @@ const Recommendations = () => {
           <h2 className="text-2xl mb-4">Votre routine</h2>
           {recommendations.Routine && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {Object.entries(recommendations.Routine).map(([time, steps]: [string, any], index: number) => (
+              {Object.entries(recommendations.Routine).map(([time, steps], index) => (
                 <motion.div
                   key={time}
                   initial={{ x: index % 2 === 0 ? -20 : 20, opacity: 0 }}
@@ -72,7 +66,7 @@ const Recommendations = () => {
                 >
                   <h3 className="text-xl mb-4 capitalize">{time}</h3>
                   <ol className="space-y-2">
-                    {Array.isArray(steps) && steps.map((step: string, stepIndex: number) => (
+                    {Array.isArray(steps) && steps.map((step, stepIndex) => (
                       <li key={stepIndex} className="text-gray-700">{step}</li>
                     ))}
                   </ol>
