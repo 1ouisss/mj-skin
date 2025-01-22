@@ -37,45 +37,56 @@ const initialState: QuizState = {
 const STORAGE_KEY = 'quiz_state';
 
 function validateState(state: QuizState): boolean {
-  console.log('Validating state:', state);
+  console.group('State Validation');
+  console.log('Current state:', state);
   const requiredFields = ['skinType', 'conditions', 'concerns'];
-  return requiredFields.every(field => {
-    const isValid = Boolean(state[field]);
-    console.log(`Field ${field}: ${isValid ? 'valid' : 'invalid'}`);
-    return isValid;
+  const isValid = requiredFields.every(field => {
+    const fieldValid = Boolean(state[field]);
+    console.log(`Field ${field}: ${fieldValid ? 'valid' : 'invalid'}`);
+    return fieldValid;
   });
+  console.log('Overall validation result:', isValid);
+  console.groupEnd();
+  return isValid;
 }
 
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
-  console.log('Reducer action:', action.type, action);
+  console.group('Quiz Reducer');
+  console.log('Current state:', state);
+  console.log('Action:', action);
+  
+  let newState: QuizState;
   
   switch (action.type) {
     case 'SET_ANSWER':
-      const newState = {
+      newState = {
         ...state,
         [action.field]: action.value
       };
-      console.log('New state after SET_ANSWER:', newState);
-      return newState;
+      break;
       
     case 'CLEAR_ANSWERS':
-      console.log('Clearing all answers');
-      return initialState;
+      newState = initialState;
+      break;
       
     case 'SET_COMPLETED':
-      console.log('Setting completed:', action.value);
-      return {
+      newState = {
         ...state,
         completed: action.value
       };
+      break;
       
     case 'RESTORE_STATE':
-      console.log('Restoring state:', action.value);
-      return action.value;
+      newState = action.value;
+      break;
       
     default:
-      return state;
+      newState = state;
   }
+  
+  console.log('New state:', newState);
+  console.groupEnd();
+  return newState;
 }
 
 type QuizContextType = {
@@ -92,37 +103,47 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Quiz state updated:', state);
+    console.group('Quiz State Update');
+    console.log('Saving state to localStorage:', state);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      console.log('State saved successfully');
     } catch (error) {
       console.error('Failed to persist quiz state:', error);
     }
+    console.groupEnd();
   }, [state]);
 
   useEffect(() => {
+    console.log('Initializing Quiz Provider - Restoring state');
     restoreState();
   }, []);
 
   const setAnswer = (field: keyof QuizState, value: any) => {
-    console.log('Setting answer:', field, value);
+    console.group('Setting Answer');
+    console.log(`Field: ${field}, Value:`, value);
     dispatch({ type: 'SET_ANSWER', field, value });
+    console.groupEnd();
   };
 
   const clearAnswers = () => {
-    console.log('Clearing answers');
+    console.log('Clearing all answers');
     dispatch({ type: 'CLEAR_ANSWERS' });
     localStorage.removeItem(STORAGE_KEY);
   };
 
   const validateAndProceed = async (currentStep: string, nextStep: string): Promise<boolean> => {
-    console.log('Validating and proceeding:', { currentStep, nextStep, state });
+    console.group('Validation and Navigation');
+    console.log('Current step:', currentStep);
+    console.log('Next step:', nextStep);
+    console.log('Current state:', state);
     
     if (nextStep === 'recommendations') {
       const isValid = validateState(state);
-      console.log('Validation result:', isValid);
+      console.log('Recommendations validation result:', isValid);
       
       if (!isValid) {
+        console.warn('Invalid state detected');
         toast.error('Veuillez compléter toutes les questions requises');
         if (!state.skinType) {
           navigate('/skintypequiz');
@@ -131,28 +152,39 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
         } else if (!state.concerns) {
           navigate('/concernsquiz');
         }
+        console.groupEnd();
         return false;
       }
       
       dispatch({ type: 'SET_COMPLETED', value: true });
+      console.log('Quiz marked as completed');
+      console.groupEnd();
       return true;
     }
+    console.groupEnd();
     return true;
   };
 
   const restoreState = () => {
+    console.group('State Restoration');
     try {
       const savedState = localStorage.getItem(STORAGE_KEY);
       if (savedState) {
         const parsedState = JSON.parse(savedState);
-        console.log('Restoring saved state:', parsedState);
+        console.log('Found saved state:', parsedState);
         if (validateState(parsedState)) {
+          console.log('Restoring valid saved state');
           dispatch({ type: 'RESTORE_STATE', value: parsedState });
+        } else {
+          console.warn('Saved state validation failed');
         }
+      } else {
+        console.log('No saved state found');
       }
     } catch (error) {
       console.error('Failed to restore quiz state:', error);
     }
+    console.groupEnd();
   };
 
   const value = {
