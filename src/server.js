@@ -4,6 +4,10 @@ const fs = require('fs');
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  next();
+});
 
 // Add rate limiting
 const rateLimit = require('express-rate-limit');
@@ -120,8 +124,14 @@ app.post("/api/recommendations", async (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 // Serve index.html for all other routes to support SPA routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'), {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+  });
 });
 
 app.listen(PORT, "0.0.0.0", () => {

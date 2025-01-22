@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { TooltipProvider } from './components/ui/tooltip';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { Suspense, lazy } from 'react';
@@ -35,6 +35,7 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
         <Routes>
+          <Route path="*" element={<Navigate to="/" replace />} />
           <Route
             path="/"
             element={
