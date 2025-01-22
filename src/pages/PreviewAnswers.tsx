@@ -48,7 +48,7 @@ const PreviewAnswers = () => {
     "Vos préférences de parfum": answers.scentPreference || '---'
   };
 
-  const handleSeeRecommendations = async () => {
+  const handleSeeRecommendations = () => {
     try {
       if (!answers.skinType || !answers.conditions || !answers.concerns) {
         toast.error('Veuillez compléter toutes les questions requises');
@@ -65,29 +65,9 @@ const PreviewAnswers = () => {
 
       console.log('Processing payload:', payload);
 
-      const response = await fetch('/api/recommendations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to get recommendations');
-      }
-
-      if (!data.recommendations) {
-        throw new Error('Aucune recommandation trouvée pour ces critères');
-      }
-
+      // Navigate directly with the answers
       navigate('/recommendations', {
-        state: {
-          recommendations: data.recommendations,
-          answers: answers
-        }
+        state: { answers: payload }
       });
     } catch (error) {
       console.error('Error getting recommendations:', error);

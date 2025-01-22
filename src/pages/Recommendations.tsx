@@ -2,10 +2,11 @@
 import React, { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import skincareDb from '../data/skincare-db.json';
 import { LoadingScreen } from '../components/LoadingScreen';
 
-const Recommendations = () => {
+export default function Recommendations() {
   const location = useLocation();
   const navigate = useNavigate();
   const { answers } = location.state || {};
@@ -13,24 +14,24 @@ const Recommendations = () => {
   const recommendations = useMemo(() => {
     if (!answers) return null;
 
-    let result = skincareDb?.SkinType?.[answers.skinType];
-    
-    if (answers.conditions && result?.Condition?.[answers.conditions]) {
-      result = result.Condition[answers.conditions];
-    }
+    try {
+      const { skinType, conditions, concerns } = answers;
+      let result = skincareDb?.SkinType?.[skinType];
+      
+      if (conditions && result?.Condition?.[conditions]) {
+        result = result.Condition[conditions];
+      }
 
-    if (answers.concerns && result?.Concern?.[answers.concerns]) {
-      result = result.Concern[answers.concerns];
-    }
+      if (concerns && result?.Concern?.[concerns]) {
+        result = result.Concern[concerns];
+      }
 
-    return result;
+      return result;
+    } catch (error) {
+      console.error('Error processing recommendations:', error);
+      return null;
+    }
   }, [answers]);
-
-  React.useEffect(() => {
-    if (!answers) {
-      navigate('/skin-type-quiz');
-    }
-  }, [answers, navigate]);
 
   if (!answers) {
     return <LoadingScreen />;
@@ -38,7 +39,7 @@ const Recommendations = () => {
 
   if (!recommendations) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-sm"
@@ -62,26 +63,27 @@ const Recommendations = () => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen bg-white p-8"
     >
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-playfair mb-8">Vos recommandations personnalisées</h1>
-
+        
         <section className="mb-12">
           <h2 className="text-2xl mb-4">Produits recommandés</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {recommendations.Products?.map((product, index) => (
               <motion.div
                 key={index}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="p-4 border rounded-lg shadow-sm"
+                className="bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-sm"
               >
-                {product}
+                <h3 className="font-medium mb-2">{product.name}</h3>
+                <p className="text-[#666]">{product.description}</p>
               </motion.div>
             ))}
           </div>
@@ -89,30 +91,29 @@ const Recommendations = () => {
 
         <section>
           <h2 className="text-2xl mb-4">Votre routine</h2>
-          {recommendations.Routine && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {Object.entries(recommendations.Routine).map(([time, steps], index) => (
-                <motion.div
-                  key={time}
-                  initial={{ x: index % 2 === 0 ? -20 : 20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.2 }}
-                  className="p-6 bg-gray-50 rounded-lg"
-                >
-                  <h3 className="text-xl mb-4 capitalize">{time}</h3>
-                  <ol className="space-y-2">
-                    {Array.isArray(steps) && steps.map((step, stepIndex) => (
-                      <li key={stepIndex} className="text-gray-700">{step}</li>
-                    ))}
-                  </ol>
-                </motion.div>
-              ))}
+          {recommendations.Routine && Object.entries(recommendations.Routine).map(([time, steps], index) => (
+            <div key={time} className="mb-8">
+              <h3 className="text-xl mb-4 capitalize">{time}</h3>
+              <ol className="space-y-4">
+                {steps.map((step, stepIndex) => (
+                  <motion.li
+                    key={stepIndex}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: stepIndex * 0.1 }}
+                    className="flex items-start gap-4"
+                  >
+                    <span className="bg-[#4A4A4A] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">
+                      {stepIndex + 1}
+                    </span>
+                    <span>{step}</span>
+                  </motion.li>
+                ))}
+              </ol>
             </div>
-          )}
+          ))}
         </section>
       </div>
     </motion.div>
   );
-};
-
-export default Recommendations;
+}
