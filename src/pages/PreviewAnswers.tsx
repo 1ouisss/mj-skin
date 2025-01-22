@@ -19,11 +19,11 @@ const PreviewAnswers = () => {
   React.useEffect(() => {
     try {
       const loadedAnswers = {
-        skinType: localStorage.getItem('skinType') ? JSON.parse(localStorage.getItem('skinType') || '') : '',
-        conditions: localStorage.getItem('conditions') ? JSON.parse(localStorage.getItem('conditions') || '') : '',
-        concerns: localStorage.getItem('concerns') ? JSON.parse(localStorage.getItem('concerns') || '') : '',
-        texturePreference: localStorage.getItem('texture') ? JSON.parse(localStorage.getItem('texture') || '') : '',
-        scentPreference: localStorage.getItem('fragrance') ? JSON.parse(localStorage.getItem('fragrance') || '') : '',
+        skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
+        conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
+        concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
+        texturePreference: JSON.parse(localStorage.getItem('texturePreference') || localStorage.getItem('texture') || '""'),
+        scentPreference: JSON.parse(localStorage.getItem('scentPreference') || localStorage.getItem('fragrance') || '""'),
         newsletter: localStorage.getItem('newsletter') || ''
       };
 
