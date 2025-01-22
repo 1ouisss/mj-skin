@@ -24,7 +24,7 @@ const PreviewAnswers = () => {
     try {
       console.log('Quiz answers:', answers);
       
-      if (!answers || Object.keys(answers).length === 0) {
+      if (!answers) {
         toast.error('No quiz answers found. Please complete the quiz.');
         navigate('/skin-type-quiz');
         return;
@@ -38,9 +38,17 @@ const PreviewAnswers = () => {
         scentPreference: answers.ScentPreference || answers.scentPreference || ''
       };
 
-      // Validate required fields
-      if (!payload.skinType || !payload.conditions || !payload.concerns) {
-        toast.error('Missing required answers. Please complete all required questions.');
+      console.log('Validation payload:', payload);
+
+      // Validate that at least one of the required fields is present
+      const hasRequiredFields = Boolean(
+        (payload.skinType && payload.skinType !== '') ||
+        (payload.conditions && payload.conditions !== '') ||
+        (payload.concerns && payload.concerns !== '')
+      );
+
+      if (!hasRequiredFields) {
+        toast.error('Missing required answers. Please complete at least one required question.');
         return;
       }
 
