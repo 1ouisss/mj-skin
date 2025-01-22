@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
@@ -8,10 +9,13 @@ const PreviewAnswers = () => {
   const location = useLocation();
   const answers = location.state?.selectedAnswers;
 
-  if (!answers) {
-    navigate('/');
-    return null;
-  }
+  React.useEffect(() => {
+    if (!answers) {
+      navigate('/');
+    }
+  }, [answers, navigate]);
+
+  if (!answers) return null;
 
   return (
     <div 
@@ -41,7 +45,7 @@ const PreviewAnswers = () => {
               {Object.entries(answers).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
                   <span className="font-medium text-[#4A4A4A]">{key}</span>
-                  <span className="text-[#666]">{value}</span>
+                  <span className="text-[#666]">{value as string}</span>
                 </div>
               ))}
             </div>

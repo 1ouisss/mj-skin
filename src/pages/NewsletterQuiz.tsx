@@ -7,7 +7,13 @@ const NewsletterQuiz = () => {
 
   const handleOptionClick = (choice: string) => {
     console.log("Newsletter choice:", choice);
-    navigate("/recommendations");
+    navigate("/preview", { 
+      state: { 
+        selectedAnswers: {
+          Newsletter: choice
+        }
+      }
+    });
   };
 
   return (
