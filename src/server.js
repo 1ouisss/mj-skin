@@ -32,6 +32,16 @@ app.post("/api/recommendations", async (req, res) => {
   const requestId = Math.random().toString(36).substring(7);
   console.group(`=== /api/recommendations Request (ID: ${requestId}) ===`);
   console.time(`request-${requestId}-duration`);
+  
+  // Log request details
+  console.log('📥 Request Details:', {
+    id: requestId,
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    body: req.body,
+    timestamp: new Date().toISOString()
+  });
 
   try {
     // Log incoming request details
