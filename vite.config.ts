@@ -8,24 +8,20 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 8080,
-    hmr: {
-      host: "0.0.0.0",
-      clientPort: 443,
-      protocol: 'wss'
+    proxy: {
+      '/api': {
+        target: 'http://0.0.0.0:3001',
+        changeOrigin: true,
+      }
     }
   },
   build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    }
+    outDir: 'dist',
+    assetsDir: 'assets'
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-    },
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom']
+    }
   }
 });
