@@ -151,16 +151,19 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       console.log('Current state:', state);
     }
 
-    if (nextStep === 'recommendations' || nextStep === 'previewanswers') {
-      const requiredFields = ['skinType', 'conditions', 'concerns'];
-      const missingFields = requiredFields.filter(field => !state[field]);
-      
-      if (missingFields.length > 0) {
-        console.warn('Missing required fields:', missingFields);
-        toast.error('Veuillez compléter toutes les questions requises');
-        return;
-      }
+    // Always validate state before proceeding
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    const missingFields = requiredFields.filter(field => !state[field]);
+    
+    if ((nextStep === 'recommendations' || nextStep === 'previewanswers') && missingFields.length > 0) {
+      console.warn('Missing required fields:', missingFields);
+      toast.error('Veuillez compléter toutes les questions requises');
+      navigate('/skintypequiz');
+      return;
     }
+
+    // Ensure state is persisted before navigation
+    persistState(state);
 
     if (DEBUG) {
       console.log('Validation passed, navigating to:', nextStep);

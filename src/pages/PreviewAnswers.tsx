@@ -45,8 +45,13 @@ export default function PreviewAnswers() {
   }, [state, navigate, restoreState]);
 
   const navigateToRecommendations = () => {
-    if (!isValid) {
-      toast.error('Veuillez compléter le quiz');
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    const missingFields = requiredFields.filter(field => !state[field]);
+    
+    if (missingFields.length > 0) {
+      console.warn('Missing required fields:', missingFields);
+      toast.error('Veuillez compléter toutes les questions requises');
+      navigate('/skintypequiz');
       return;
     }
 
@@ -60,9 +65,9 @@ export default function PreviewAnswers() {
       };
       
       localStorage.setItem('validatedAnswers', JSON.stringify(validatedAnswers));
-      navigate('/recommendations', { state: validatedAnswers });
+      navigate('/recommendations');
     } catch (error) {
-      console.error('[PreviewAnswers] Error storing answers:', error);
+      console.error('[PreviewAnswers] Error:', error);
       toast.error('Une erreur est survenue');
     }
   };
