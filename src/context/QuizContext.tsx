@@ -44,8 +44,8 @@ type QuizAction =
 const STORAGE_KEY = 'quiz_state';
 
 function validateState(state: QuizState): boolean {
-  const requiredFields = ['skinType', 'conditions', 'concerns'];
-  return requiredFields.every(field => Boolean(state[field]));
+  // Required fields for recommendations
+  return Boolean(state.skinType && state.conditions && state.concerns);
 }
 
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
@@ -55,13 +55,13 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
         ...state,
         [action.field]: action.value
       };
+    case 'CLEAR_ANSWERS':
+      return initialState;
     case 'SET_COMPLETED':
       return {
         ...state,
         completed: action.value
       };
-    case 'CLEAR_ANSWERS':
-      return initialState;
     case 'RESTORE_STATE':
       return action.value;
     default:
@@ -97,16 +97,14 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   };
 
   const validateAndProceed = (currentStep: string, nextStep: string) => {
-    if (nextStep === 'recommendations' && !validateState(state)) {
-      toast.error('Veuillez compléter toutes les questions requises');
-      navigate('/skintypequiz');
-      return;
-    }
-
     if (nextStep === 'recommendations') {
+      if (!validateState(state)) {
+        toast.error('Veuillez compléter toutes les questions requises');
+        navigate('/skintypequiz');
+        return;
+      }
       dispatch({ type: 'SET_COMPLETED', value: true });
     }
-
     navigate(`/${nextStep.toLowerCase()}`);
   };
 
