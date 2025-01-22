@@ -41,6 +41,29 @@ const Recommendations = () => {
 
     try {
       setIsRequestInProgress(true);
+      const response = await fetch('/api/recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quizData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.success && data.recommendations) {
+        setRecommendations({
+          products: data.recommendations.Products,
+          routine: data.recommendations.Routine
+        });
+        setError(null);
+      }
+
+    try {
+      setIsRequestInProgress(true);
       console.group(`Recommendations Component: submitQuizData (Attempt ${attempt})`);
       console.time('request-duration');
 
