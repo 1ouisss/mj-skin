@@ -1,56 +1,48 @@
 
-import skincareDb from '../data/skincare-db.json';
+import skincareDB from "../data/skincare-db.json";
+
+interface Routine {
+  Matin: string[];
+  Soir: string[];
+  Résultat: string;
+}
 
 interface RecommendationResult {
-  products: string[];
-  routine: {
-    Matin: string[];
-    Soir: string[];
-    Résultat: string;
-  } | null;
+  Products: string[];
+  Routine: Routine;
   error?: string;
 }
 
-export function getRecommendations(
+export const getRecommendations = (
   skinType: string,
   condition: string,
   concern: string,
   texturePreference: string,
   scentPreference: string
-): RecommendationResult {
+): RecommendationResult => {
   try {
-    const result = skincareDb.SkinType[skinType]
-      ?.Condition[condition]
-      ?.Concern[concern]
-      ?.TexturePreference[texturePreference]
-      ?.ScentPreference[scentPreference];
-
-    if (!result) {
-      return {
-        products: [],
-        routine: {
-          Matin: [],
-          Soir: [],
-          Résultat: "Aucun résultat disponible pour cette combinaison."
-        },
-        error: "No matching recommendation found."
-      };
-    }
-
-    return {
-      products: result.Products,
-      routine: result.Routine
-    };
+    const result = skincareDB?.SkinType?.[skinType]?.Condition?.[condition]?.Concern?.[concern]?.TexturePreference?.[texturePreference]?.ScentPreference?.[scentPreference];
+    return result
+      ? result
+      : {
+          error: "No matching recommendation found.",
+          Products: [],
+          Routine: {
+            Matin: [],
+            Soir: [],
+            Résultat: "Aucune recommandation disponible pour cette combinaison."
+          }
+        };
   } catch (error) {
-    console.error('Error getting recommendations:', error);
+    console.error("Error fetching recommendations:", error);
     return {
-      products: [],
-      routine: {
+      error: "An error occurred while fetching recommendations.",
+      Products: [],
+      Routine: {
         Matin: [],
         Soir: [],
-        Résultat: "Veuillez réessayer."
-      },
-      error: "An error occurred while fetching recommendations."
+        Résultat: "Erreur lors du traitement des données."
+      }
     };
   }
-}
+};
