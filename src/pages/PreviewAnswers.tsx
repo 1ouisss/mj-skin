@@ -17,6 +17,10 @@ interface PreviewAnswersProps {
 const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
   const navigate = useNavigate();
 
+  const handleConfirm = () => {
+    navigate('/recommendations', { state: { selectedAnswers } });
+  };
+
   const translateKey = (key: string): string => {
     const translations: { [key: string]: string } = {
       skinType: 'Type de peau',
@@ -69,7 +73,7 @@ const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
                 Modifier
               </button>
               <button
-                onClick={() => navigate('/recommendations')}
+                onClick={handleConfirm}
                 className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
               >
                 Voir les recommandations
