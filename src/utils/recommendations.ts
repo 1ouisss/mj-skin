@@ -1,5 +1,5 @@
 
-import skincareDB from "../data/skincare-db.json";
+import skincareDb from "../data/skincare-db.json";
 
 interface Routine {
   Matin: string[];
@@ -21,18 +21,27 @@ export const getRecommendations = (
   scentPreference: string
 ): RecommendationResult => {
   try {
-    const result = skincareDB?.SkinType?.[skinType]?.Condition?.[condition]?.Concern?.[concern]?.TexturePreference?.[texturePreference]?.ScentPreference?.[scentPreference];
-    return result
-      ? result
-      : {
-          error: "No matching recommendation found.",
-          Products: [],
-          Routine: {
-            Matin: [],
-            Soir: [],
-            Résultat: "Aucune recommandation disponible pour cette combinaison."
-          }
-        };
+    // Validate inputs
+    if (!skinType || !condition || !concern || !texturePreference || !scentPreference) {
+      throw new Error("Missing required parameters");
+    }
+
+    const result = skincareDb?.SkinType?.[skinType]?.Condition?.[condition]?.Concern?.[concern]
+      ?.TexturePreference?.[texturePreference]?.ScentPreference?.[scentPreference];
+
+    if (!result) {
+      return {
+        error: "No matching recommendation found.",
+        Products: [],
+        Routine: {
+          Matin: [],
+          Soir: [],
+          Résultat: "Aucune recommandation disponible pour cette combinaison."
+        }
+      };
+    }
+
+    return result;
   } catch (error) {
     console.error("Error fetching recommendations:", error);
     return {

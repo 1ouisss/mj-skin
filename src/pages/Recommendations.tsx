@@ -2,22 +2,40 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
-import skincareDb from '../data/skincare-db.json';
+import { getRecommendations } from '../utils/recommendations';
 
-const Recommendations = ({ selectedAnswers }) => {
-  const [recommendation, setRecommendation] = useState(null);
+interface RecommendationsProps {
+  selectedAnswers: {
+    skinType: string;
+    condition: string;
+    concern: string;
+    texturePreference: string;
+    scentPreference: string;
+  };
+}
+
+const Recommendations: React.FC<RecommendationsProps> = ({ selectedAnswers }) => {
+  const [recommendation, setRecommendation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      const { skinType, condition, concern, texturePreference, scentPreference } = selectedAnswers || {};
-      const result = skincareDb?.SkinType?.[skinType]?.Condition?.[condition]?.Concern?.[concern]
-        ?.TexturePreference?.[texturePreference]?.ScentPreference?.[scentPreference];
+      const result = getRecommendations(
+        selectedAnswers.skinType,
+        selectedAnswers.condition,
+        selectedAnswers.concern,
+        selectedAnswers.texturePreference,
+        selectedAnswers.scentPreference
+      );
 
-      setRecommendation(result || null);
-    } catch (error) {
-      console.error('Error fetching recommendations:', error);
-      setRecommendation(null);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setRecommendation(result);
+      }
+    } catch (err) {
+      setError('Une erreur est survenue lors du chargement des recommandations.');
     } finally {
       setLoading(false);
     }
@@ -31,10 +49,10 @@ const Recommendations = ({ selectedAnswers }) => {
     );
   }
 
-  if (!recommendation) {
+  if (error || !recommendation) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-2xl font-playfair text-[#4A4A4A]">Aucune recommandation trouvée.</p>
+        <p className="text-2xl font-playfair text-[#4A4A4A]">{error || 'Aucune recommandation trouvée.'}</p>
       </div>
     );
   }
@@ -61,7 +79,7 @@ const Recommendations = ({ selectedAnswers }) => {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {recommendation.Products?.map((product, index) => (
+            {recommendation.Products?.map((product: string, index: number) => (
               <Card key={index} className="bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-6">
                   <p className="text-lg text-[#4A4A4A] text-center font-playfair">
@@ -88,7 +106,7 @@ const Recommendations = ({ selectedAnswers }) => {
                 <div>
                   <h3 className="text-2xl mb-4 font-playfair text-[#4A4A4A]">Matin</h3>
                   <ul className="space-y-2">
-                    {recommendation.Routine?.Matin?.map((step, index) => (
+                    {recommendation.Routine?.Matin?.map((step: string, index: number) => (
                       <li key={index} className="text-lg text-[#4A4A4A]">
                         {step}
                       </li>
@@ -99,7 +117,7 @@ const Recommendations = ({ selectedAnswers }) => {
                 <div>
                   <h3 className="text-2xl mb-4 font-playfair text-[#4A4A4A]">Soir</h3>
                   <ul className="space-y-2">
-                    {recommendation.Routine?.Soir?.map((step, index) => (
+                    {recommendation.Routine?.Soir?.map((step: string, index: number) => (
                       <li key={index} className="text-lg text-[#4A4A4A]">
                         {step}
                       </li>
