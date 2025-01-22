@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
@@ -9,21 +10,22 @@ import { QuizAnswers } from '../types/skincare';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState<QuizAnswers | null>(null);
+  const [answers, setAnswers] = React.useState<QuizAnswers | null>(null);
 
-  useEffect(() => {
-    const storedAnswers = localStorage.getItem('quizAnswers');
-    if (!storedAnswers) {
-      toast.error('Veuillez compléter le quiz');
-      navigate('/skintype', { replace: true });
-      return;
-    }
+  React.useEffect(() => {
     try {
+      const storedAnswers = localStorage.getItem('quizAnswers');
+      if (!storedAnswers) {
+        console.error('No answers found');
+        toast.error('Veuillez compléter le quiz');
+        navigate('/skintype', { replace: true });
+        return;
+      }
       const parsedAnswers = JSON.parse(storedAnswers);
-      setAnswers(parsedAnswers);
       console.log('Loaded answers:', parsedAnswers);
+      setAnswers(parsedAnswers);
     } catch (error) {
-      console.error('Error parsing answers:', error);
+      console.error('Error loading answers:', error);
       toast.error('Une erreur est survenue');
       navigate('/skintype', { replace: true });
     }
@@ -34,9 +36,8 @@ export default function PreviewAnswers() {
       toast.error('Veuillez compléter le quiz');
       return;
     }
-    console.log('Storing validated answers:', answers);
     localStorage.setItem('validatedAnswers', JSON.stringify(answers));
-    navigate('/recommendations', { replace: true });
+    navigate('/recommendations');
   };
 
   const handleBack = () => navigate(-1);

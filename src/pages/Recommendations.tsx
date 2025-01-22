@@ -12,12 +12,11 @@ export default function Recommendations() {
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const getRecommendations = async () => {
+    const fetchRecommendations = async () => {
       try {
         const storedAnswers = localStorage.getItem('validatedAnswers');
-        
         if (!storedAnswers) {
-          console.error('No answers found');
+          console.error('No validated answers found');
           toast.error('Veuillez compléter le quiz');
           navigate('/skintype', { replace: true });
           return;
@@ -41,14 +40,14 @@ export default function Recommendations() {
         setRecommendations(data);
       } catch (err) {
         console.error('Error:', err);
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
         toast.error('Une erreur est survenue');
       } finally {
         setLoading(false);
       }
     };
 
-    getRecommendations();
+    fetchRecommendations();
   }, [navigate]);
 
   if (loading) {
