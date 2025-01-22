@@ -42,9 +42,9 @@ const pages = {
   'treatmentquiz': lazy(() => import('./pages/TreatmentQuiz')),
   'fragrancequiz': lazy(() => import('./pages/FragranceQuiz')),
   'routinequiz': lazy(() => import('./pages/RoutineQuiz')),
-  NewsletterQuiz: lazy(() => import('./pages/NewsletterQuiz')),
-  Recommendations: lazy(() => import('./pages/Recommendations')),
-  PreviewAnswers: lazy(() => import('./pages/PreviewAnswers'))
+  'newsletterquiz': lazy(() => import('./pages/NewsletterQuiz')),
+  'recommendations': lazy(() => import('./pages/Recommendations')),
+  'previewanswers': lazy(() => import('./pages/PreviewAnswers'))
 };
 
 const queryClient = new QueryClient({

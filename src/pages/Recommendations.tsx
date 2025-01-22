@@ -13,7 +13,7 @@ const Recommendations = React.memo(() => {
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const validateAnswers = () => {
     return state.skinType && state.conditions && state.concerns;
   };
@@ -47,10 +47,19 @@ const Recommendations = React.memo(() => {
   }, []);
 
   useEffect(() => {
+    console.log('Recommendations component mounted with state:', state);
     const MAX_RETRIES = 3;
     let attempt = 0;
 
     const fetchRecommendations = async () => {
+      const answers = {
+        skinType: state.skinType,
+        conditions: state.conditions,
+        concerns: state.concerns,
+        texturePreference: state.texturePreference,
+        scentPreference: state.scentPreference
+      };
+      console.log('Fetching recommendations with:', answers);
       try {
         if (!validateAnswers()) {
           console.error('Invalid answers state');

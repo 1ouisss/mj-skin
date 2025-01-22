@@ -7,7 +7,7 @@ const RoutineQuiz = () => {
 
   const handleOptionClick = (duration: string) => {
     localStorage.setItem('routine', JSON.stringify(duration));
-    navigate("/newsletter-quiz");
+    navigate("/newsletterquiz");
   };
 
   return (
