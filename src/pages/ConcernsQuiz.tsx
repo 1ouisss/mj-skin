@@ -44,7 +44,7 @@ const ConcernsQuiz = () => {
         backgroundPosition: 'center',
       }}
     >      
-      <div className="w-full h-full flex items-center justify-center p-4">
+      <div className="w-full h-full flex items-center justify-center p-4 pt-20">
         <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-8">
           <div className="space-y-8">
             <motion.h1 
