@@ -1,3 +1,4 @@
+import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { TooltipProvider } from './components/ui/tooltip';
@@ -6,7 +7,9 @@ import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { Suspense, lazy } from 'react';
 import LoadingScreen from './components/LoadingScreen';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
+const queryClient = new QueryClient();
 const Index = lazy(() => import('./pages/Index'));
 const SkinTypeQuiz = lazy(() => import('./pages/SkinTypeQuiz'));
 const ConditionsQuiz = lazy(() => import('./pages/ConditionsQuiz'));

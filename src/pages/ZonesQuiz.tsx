@@ -1,6 +1,8 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, Sparkles, Flower, Target, Star, Sunrise } from "lucide-react";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 const ZonesQuiz = () => {
   const navigate = useNavigate();
