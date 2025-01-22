@@ -1,112 +1,55 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { ArrowLeft, Check } from 'lucide-react';
 import { toast } from 'sonner';
-import { SkinType, Condition, Concern, QuizAnswers } from '../types/skincare';
+import { QuizAnswers } from '../types/skincare';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
-  console.log('[PreviewAnswers] Component mounted');
-
-  const storedAnswers = localStorage.getItem('quizAnswers');
-  console.log('[PreviewAnswers] Raw stored answers:', storedAnswers);
-
-  const answers = storedAnswers ? JSON.parse(storedAnswers) as QuizAnswers : null;
-  console.log('[PreviewAnswers] Parsed answers:', answers);
+  const [answers, setAnswers] = useState<QuizAnswers | null>(null);
 
   React.useEffect(() => {
-    if (!answers) {
+    const storedAnswers = localStorage.getItem('quizAnswers');
+    if (!storedAnswers) {
       toast.error('Veuillez compléter le quiz');
       navigate('/skintype');
+      return;
     }
-  }, [answers, navigate]);
-
-  const questionsMap = React.useMemo(() => {
-    console.log('[PreviewAnswers] Building questionsMap with answers:', answers);
-    if (!answers) return {};
-    return {
-      'Type de peau': answers.skinType || 'Non spécifié',
-      'Condition': answers.conditions || 'Non spécifié',
-      'Préoccupation': answers.concerns || 'Non spécifié',
-      'Texture préférée': answers.texturePreference || 'Non spécifié',
-      'Parfum préféré': answers.scentPreference || 'Non spécifié'
-    };
-  }, [answers]);
-
-  const handleSeeRecommendations = () => {
-    console.group('=== PreviewAnswers Debug ===');
-    console.log('[PreviewAnswers] Current answers:', answers);
-    console.log('[PreviewAnswers] Navigation state:', window.location);
     try {
-      if (!answers) {
-        console.error('[PreviewAnswers] No answers found, redirecting to quiz');
-        toast.error('Veuillez compléter le quiz');
-        navigate('/skintype');
-        return;
-      }
-
-      // Validate required fields
-      if (!answers.skinType || !answers.conditions || !answers.concerns) {
-        console.error('[PreviewAnswers] Missing required answers');
-        toast.error('Veuillez répondre à toutes les questions requises');
-        navigate('/skintype');
-        return;
-      }
-
-      const payload = {
-        skinType: answers.skinType as SkinType,
-        conditions: answers.conditions as Condition,
-        concerns: answers.concerns as Concern,
-        texturePreference: answers.texturePreference || '',
-        scentPreference: answers.scentPreference || ''
-      };
-
-      // Validate type safety
-      if (!Object.values(SkinType).includes(payload.skinType as any) ||
-          !Object.values(Condition).includes(payload.conditions as any) ||
-          !Object.values(Concern).includes(payload.concerns as any)) {
-        console.error('[PreviewAnswers] Invalid answer types');
-        toast.error('Données invalides. Veuillez refaire le quiz.');
-        navigate('/skintype');
-        return;
-      }
-
-      console.log('[PreviewAnswers] Setting validated answers:', payload);
-      localStorage.setItem('validatedAnswers', JSON.stringify(payload));
-
-      console.log('[PreviewAnswers] Navigating to recommendations with payload');
-      navigate('/recommendations', { 
-        state: { answers: payload },
-        replace: true
-      });
-
-      // Add validation check
-      const stateCheck = JSON.parse(localStorage.getItem('validatedAnswers') || '{}');
-      if (!stateCheck.skinType) {
-        console.error('[PreviewAnswers] State validation failed');
-        toast.error('Une erreur est survenue. Veuillez réessayer.');
-        return;
-      }
+      const parsedAnswers = JSON.parse(storedAnswers);
+      setAnswers(parsedAnswers);
     } catch (error) {
-      console.error('[PreviewAnswers] Error:', error);
+      console.error('Error parsing answers:', error);
       toast.error('Une erreur est survenue');
       navigate('/skintype');
     }
+  }, [navigate]);
+
+  const handleSeeRecommendations = () => {
+    if (!answers) {
+      toast.error('Veuillez compléter le quiz');
+      navigate('/skintype');
+      return;
+    }
+
+    localStorage.setItem('validatedAnswers', JSON.stringify(answers));
+    navigate('/recommendations', { replace: true, state: { answers } });
   };
 
-  const handleBack = () => {
-    console.log('[PreviewAnswers] Navigating back');
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
 
-  if (!answers) {
-    console.log('[PreviewAnswers] No answers found, redirecting to initial quiz');
-    navigate('/skintype');
-    return null;
-  }
+  if (!answers) return null;
+
+  const questionsMap = {
+    'Type de peau': answers.skinType || 'Non spécifié',
+    'Condition': answers.conditions || 'Non spécifié',
+    'Préoccupation': answers.concerns || 'Non spécifié',
+    'Texture préférée': answers.texturePreference || 'Non spécifié',
+    'Parfum préféré': answers.scentPreference || 'Non spécifié'
+  };
 
   return (
     <div 
