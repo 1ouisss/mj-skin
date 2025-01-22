@@ -24,27 +24,43 @@ const Recommendations = React.memo(() => {
     console.log('Component mounted');
     console.log('Initial state:', state);
 
-    const validateState = () => {
-      if (!state.skinType || !state.conditions || !state.concerns) {
-        if (!restoreState()) {
-          toast.error('Données du quiz introuvables');
-          navigate('/skintype', { replace: true });
-          return false;
+    const validateAndInitialize = async () => {
+      try {
+        // Check context state first
+        if (!state.skinType || !state.conditions || !state.concerns) {
+          // Try to restore from context
+          if (!restoreState()) {
+            // Try to get from localStorage as fallback
+            const stored = localStorage.getItem('validatedAnswers');
+            if (!stored) {
+              throw new Error('No valid quiz data found');
+            }
+            const parsedState = JSON.parse(stored);
+            if (!parsedState.skinType || !parsedState.conditions || !parsedState.concerns) {
+              throw new Error('Incomplete quiz data');
+            }
+          }
         }
+        
+        setError(null);
+      } catch (error) {
+        console.error('[Recommendations] State validation failed:', error);
+        toast.error('Veuillez compléter le quiz');
+        navigate('/skintypequiz', { replace: true });
+        return false;
+      } finally {
+        setLoading(false);
       }
       return true;
     };
 
-    if (!validateState()) {
-      setLoading(false);
-      return;
-    }
+    validateAndInitialize();
 
     return () => {
       console.log('Component unmounting');
       console.groupEnd();
     };
-  }, []);
+  }, [state, restoreState, navigate]);
 
   useEffect(() => {
     console.log('Recommendations component mounted with state:', state);

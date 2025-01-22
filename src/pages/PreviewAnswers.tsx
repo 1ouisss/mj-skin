@@ -1,55 +1,68 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { ArrowLeft, Check } from 'lucide-react';
 import { toast } from 'sonner';
-import { QuizAnswers } from '../types/skincare';
 import { useQuiz } from '../context/QuizContext';
 
 export default function PreviewAnswers() {
   const navigate = useNavigate();
   const { state, restoreState } = useQuiz();
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
+  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
-    console.log('Component mounted, current state:', state);
-
-    const validateAndRestoreState = () => {
+    console.log('[PreviewAnswers] Component mounted, validating state:', state);
+    
+    const validateState = () => {
       if (!state.skinType || !state.conditions || !state.concerns) {
-        console.log('[PreviewAnswers] Incomplete state, attempting restoration');
-        if (!restoreState()) {
-          console.warn('[PreviewAnswers] State restoration failed');
-          toast.error('Veuillez compléter le quiz');
-          navigate('/skintypequiz', { replace: true });
-          return false;
-        }
-        console.log('[PreviewAnswers] State restored successfully');
+        console.warn('[PreviewAnswers] Invalid state detected:', state);
+        return false;
       }
       return true;
     };
 
-    if (!validateAndRestoreState()) {
-      setLoading(false);
-      return;
-    }
+    const initializeComponent = async () => {
+      try {
+        if (!validateState()) {
+          const restored = await restoreState();
+          if (!restored || !validateState()) {
+            toast.error('Veuillez compléter toutes les questions requises');
+            navigate('/skintypequiz', { replace: true });
+            return;
+          }
+        }
+        setIsValid(true);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setLoading(false);
+    initializeComponent();
   }, [state, navigate, restoreState]);
 
   const navigateToRecommendations = () => {
-    if (!state || !state.skinType || !state.conditions || !state.concerns) {
+    if (!isValid) {
       toast.error('Veuillez compléter le quiz');
       return;
     }
 
     try {
-      localStorage.setItem('validatedAnswers', JSON.stringify(state));
-      navigate('/recommendations');
+      const validatedAnswers = {
+        skinType: state.skinType,
+        conditions: state.conditions,
+        concerns: state.concerns,
+        texturePreference: state.texturePreference || '',
+        scentPreference: state.scentPreference || ''
+      };
+      
+      localStorage.setItem('validatedAnswers', JSON.stringify(validatedAnswers));
+      navigate('/recommendations', { state: validatedAnswers });
     } catch (error) {
-      console.error('Error storing answers:', error);
+      console.error('[PreviewAnswers] Error storing answers:', error);
       toast.error('Une erreur est survenue');
     }
   };
@@ -62,7 +75,7 @@ export default function PreviewAnswers() {
     );
   }
 
-  if (!state || !state.skinType || !state.conditions || !state.concerns) {
+  if (!isValid) {
     return <Navigate to="/skintypequiz" replace />;
   }
 
