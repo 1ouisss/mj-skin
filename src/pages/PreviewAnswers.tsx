@@ -10,8 +10,8 @@ const PreviewAnswers = () => {
     skinType: JSON.parse(localStorage.getItem('skinType') || '""'),
     conditions: JSON.parse(localStorage.getItem('conditions') || '""'),
     concerns: JSON.parse(localStorage.getItem('concerns') || '""'),
-    texture: JSON.parse(localStorage.getItem('texture') || '""'),
-    fragrance: JSON.parse(localStorage.getItem('fragrance') || '""'),
+    texturePreference: JSON.parse(localStorage.getItem('texture') || '""'),
+    scentPreference: JSON.parse(localStorage.getItem('fragrance') || '""'),
     newsletter: localStorage.getItem('newsletter') || ''
   };
 
@@ -35,8 +35,8 @@ const PreviewAnswers = () => {
         skinType: answers.skinType,
         conditions: answers.conditions,
         concerns: answers.concerns,
-        texturePreference: answers.texture || '',
-        scentPreference: answers.fragrance || ''
+        texturePreference: answers.texturePreference || '',
+        scentPreference: answers.scentPreference || ''
       };
 
       console.log('Sending payload:', payload);
