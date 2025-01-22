@@ -1,3 +1,4 @@
+
 import { 
   RecommendationResult, 
   SkinType, 
@@ -8,6 +9,8 @@ import {
 } from '../types/skincare';
 import skincareDb from '../data/skincare-db.json';
 
+const memoizedResults = new Map();
+
 export const getRecommendations = (
   skinType: SkinType,
   condition: Condition,
@@ -16,11 +19,17 @@ export const getRecommendations = (
   scentPreference: ScentPreference
 ): RecommendationResult => {
   try {
+    const cacheKey = `${skinType}-${condition}-${concern}-${texturePreference}-${scentPreference}`;
+    
+    if (memoizedResults.has(cacheKey)) {
+      return memoizedResults.get(cacheKey);
+    }
+
     const result = skincareDb?.SkinType?.[skinType]?.Condition?.[condition]?.Concern?.[concern]
       ?.TexturePreference?.[texturePreference]?.ScentPreference?.[scentPreference];
 
     if (!result) {
-      return {
+      const defaultResult = {
         Products: [],
         Routine: {
           Matin: [],
@@ -29,8 +38,11 @@ export const getRecommendations = (
         },
         error: "No matching recommendation found."
       };
+      memoizedResults.set(cacheKey, defaultResult);
+      return defaultResult;
     }
 
+    memoizedResults.set(cacheKey, result);
     return result;
   } catch (error) {
     console.error("Error getting recommendations:", error);
