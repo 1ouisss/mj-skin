@@ -19,11 +19,6 @@ const PreviewAnswers = () => {
     return <div>Loading...</div>;
   }
 
-  // Filter out newsletter-related answers
-  const relevantAnswers = Object.entries(answers).filter(
-    ([key]) => !key.toLowerCase().includes('newsletter')
-  );
-
   const handleSeeRecommendations = () => {
     const payload = {
       skinType: answers.SkinType,
@@ -46,14 +41,18 @@ const PreviewAnswers = () => {
     })
     .then(data => {
       navigate('/recommendations', { 
+        replace: true,
         state: { recommendations: data.recommendations }
       });
     })
     .catch(error => {
       console.error('Error getting recommendations:', error);
-      navigate('/skin-type-quiz');
     });
   };
+
+  const relevantAnswers = Object.entries(answers).filter(
+    ([key]) => !key.toLowerCase().includes('newsletter')
+  );
 
   return (
     <div 
