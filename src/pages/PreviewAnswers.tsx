@@ -48,10 +48,17 @@ const PreviewAnswers = () => {
     "Vos préférences de parfum": answers.scentPreference || '---'
   };
 
+  const validateAnswers = () => {
+    if (!answers.skinType || !answers.conditions || !answers.concerns) {
+      toast.error('Veuillez compléter toutes les questions requises');
+      return false;
+    }
+    return true;
+  };
+
   const handleSeeRecommendations = () => {
     try {
-      if (!answers.skinType || !answers.conditions || !answers.concerns) {
-        toast.error('Veuillez compléter toutes les questions requises');
+      if (!validateAnswers()) {
         return;
       }
 
@@ -64,11 +71,7 @@ const PreviewAnswers = () => {
       };
 
       console.log('Processing payload:', payload);
-
-      // Navigate directly with the answers
-      navigate('/recommendations', {
-        state: { answers: payload }
-      });
+      navigate('/recommendations', { state: { answers: payload } });
     } catch (error) {
       console.error('Error getting recommendations:', error);
       toast.error('Impossible d\'obtenir les recommandations. Veuillez réessayer.');
