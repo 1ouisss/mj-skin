@@ -125,23 +125,50 @@ app.post("/api/recommendations", async (req, res) => {
     // Prepare data for OpenAI
     const airtableData = records.map((record) => record.fields);
 
-    const prompt = `
-      Based on the following user responses and product recommendations, provide personalized skincare advice:
+    const prompt = `As a skincare expert, analyze the following profile and provide detailed recommendations:
 
-      User Responses:
-      Skin Type: ${skinType}
-      Conditions: ${conditions}
-      Concerns: ${concerns}
+USER PROFILE
+-----------
+Skin Type: ${skinType}
+Conditions: ${conditions}
+Concerns: ${concerns}
 
-      Recommendations from Airtable:
-      ${JSON.stringify(airtableData, null, 2)}
+AVAILABLE PRODUCTS (from verified database)
+----------------------------------------
+${airtableData.map(record => `- ${record.Products || []}`).join('\n')}
 
-      Please format your response as follows:
-      1. Skin Type Analysis
-      2. Main Concerns
-      3. Recommended Products
-      4. Daily Routine
-    `;
+INSTRUCTIONS
+-----------
+Provide a detailed analysis and recommendations in the following format:
+
+1. SKIN TYPE ANALYSIS
+- Current skin condition
+- Specific characteristics
+- Key challenges
+
+2. MAIN CONCERNS
+- Primary issues analysis
+- Contributing factors
+- Treatment priorities
+
+3. RECOMMENDED PRODUCTS
+- Cleanser: [specific product] - [reason for recommendation]
+- Treatment: [specific product] - [reason for recommendation]
+- Moisturizer: [specific product] - [reason for recommendation]
+- Additional products if needed
+
+4. DAILY ROUTINE
+Morning:
+1. [step-by-step instructions]
+2. [product application methods]
+3. [timing and frequency]
+
+Evening:
+1. [step-by-step instructions]
+2. [product application methods]
+3. [special considerations]
+
+Important: Focus on gentle, effective solutions that address the specific combination of ${skinType} skin type with ${conditions} and ${concerns}.`;
 
     console.log('🤖 Sending prompt to OpenAI:', {
       promptLength: prompt.length,
