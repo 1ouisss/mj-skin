@@ -13,7 +13,11 @@ export default function Recommendations() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (!state.skinType || !state.conditions || !state.concerns) {
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    const isMissingFields = requiredFields.some(field => !state[field]);
+    
+    if (isMissingFields) {
+      console.warn('Incomplete quiz state detected. Redirecting to quiz...');
       navigate('/skintypequiz');
       return;
     }
@@ -51,44 +55,44 @@ export default function Recommendations() {
           Vos Recommandations Personnalisées
         </h1>
 
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              {recommendations.Products.map((product, index) => (
-                <li key={index} className="text-gray-700">{product}</li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        {recommendations.Products && recommendations.Products.length > 0 && (
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
+              <ul className="list-disc pl-6 space-y-2">
+                {recommendations.Products.map((product, index) => (
+                  <li key={index} className="text-gray-700">{product}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
 
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
-            <div className="space-y-4">
-              {recommendations.Routine && (
-                <>
-                  <div>
-                    <h3 className="font-medium mb-2">Matin ☀️</h3>
-                    <ul className="list-disc pl-6">
-                      {recommendations.Routine.Matin.map((step, index) => (
-                        <li key={index} className="text-gray-700">{step}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-2">Soir 🌙</h3>
-                    <ul className="list-disc pl-6">
-                      {recommendations.Routine.Soir.map((step, index) => (
-                        <li key={index} className="text-gray-700">{step}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {recommendations.Routine && (
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium mb-2">Matin ☀️</h3>
+                  <ul className="list-disc pl-6">
+                    {recommendations.Routine.Matin.map((step, index) => (
+                      <li key={index} className="text-gray-700">{step}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-medium mb-2">Soir 🌙</h3>
+                  <ul className="list-disc pl-6">
+                    {recommendations.Routine.Soir.map((step, index) => (
+                      <li key={index} className="text-gray-700">{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex justify-center">
           <Button onClick={() => navigate('/')} className="flex items-center gap-2">
