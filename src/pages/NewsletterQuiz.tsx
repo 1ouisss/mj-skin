@@ -45,11 +45,15 @@ const NewsletterQuiz = () => {
       </div>
 
       {/* Right image section */}
-      <div className="hidden lg:block w-1/2 relative">
+      <div className="hidden lg:block w-1/2 relative bg-gray-100">
         <img
           src="/lovable-uploads/IMG_3219 2.jpg"
           alt="Portrait élégant en noir et blanc"
           className="object-cover w-full h-full"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = '/placeholder.svg';
+          }}
         />
       </div>
     </div>
