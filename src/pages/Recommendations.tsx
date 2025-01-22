@@ -12,12 +12,19 @@ const Recommendations = () => {
   useEffect(() => {
     try {
       const { skinType } = state;
+      if (!skinType) {
+        throw new Error("Type de peau non défini");
+      }
       if (!data.skinTypes[skinType]) {
         throw new Error("Aucune recommandation trouvée pour ce type de peau");
       }
+      console.log('[Recommendations] Loading data for skin type:', skinType);
       setRecommendations(data.skinTypes[skinType]);
+      setError(null);
     } catch (err) {
+      console.error('[Recommendations] Error:', err);
       setError(err.message);
+      setRecommendations(null);
     }
   }, [state]);
 

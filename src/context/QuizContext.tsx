@@ -116,10 +116,12 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
 
   const restoreState = (): boolean => {
     const persistedState = loadPersistedState();
-    if (persistedState) {
+    if (persistedState && validateState(persistedState)) {
       dispatch({ type: 'RESTORE_STATE', state: persistedState });
+      console.log('[QuizContext] State restored successfully:', persistedState);
       return true;
     }
+    console.warn('[QuizContext] No valid state to restore');
     return false;
   };
 
