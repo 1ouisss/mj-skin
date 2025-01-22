@@ -35,13 +35,13 @@ const DebugRouter = () => {
 
 const pages = {
   Index: lazy(() => import('./pages/Index')),
-  SkinTypeQuiz: lazy(() => import('./pages/SkinTypeQuiz')),
-  ConditionsQuiz: lazy(() => import('./pages/ConditionsQuiz')),
-  ConcernsQuiz: lazy(() => import('./pages/ConcernsQuiz')),
+  'skintypequiz': lazy(() => import('./pages/SkinTypeQuiz')),
+  'conditionsquiz': lazy(() => import('./pages/ConditionsQuiz')),
+  'concernsquiz': lazy(() => import('./pages/ConcernsQuiz')),
   'zonesquiz': lazy(() => import('./pages/ZonesQuiz')),
-  TreatmentQuiz: lazy(() => import('./pages/TreatmentQuiz')),
-  FragranceQuiz: lazy(() => import('./pages/FragranceQuiz')),
-  RoutineQuiz: lazy(() => import('./pages/RoutineQuiz')),
+  'treatmentquiz': lazy(() => import('./pages/TreatmentQuiz')),
+  'fragrancequiz': lazy(() => import('./pages/FragranceQuiz')),
+  'routinequiz': lazy(() => import('./pages/RoutineQuiz')),
   NewsletterQuiz: lazy(() => import('./pages/NewsletterQuiz')),
   Recommendations: lazy(() => import('./pages/Recommendations')),
   PreviewAnswers: lazy(() => import('./pages/PreviewAnswers'))

@@ -9,7 +9,7 @@ const ZonesQuiz = () => {
 
   const handleOptionClick = (zone: string) => {
     localStorage.setItem('zones', JSON.stringify(zone));
-    navigate("/treatment-quiz");
+    navigate("/treatmentquiz");
   };
 
   return (
