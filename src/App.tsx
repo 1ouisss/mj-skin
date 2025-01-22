@@ -46,7 +46,11 @@ const App = () => (
           <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
           <Route path="/routine-quiz" element={<RoutineQuiz />} />
           <Route path="/newsletter-quiz" element={<NewsletterQuiz />} />
-          <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/recommendations" element={
+  <ErrorBoundary>
+    <Recommendations />
+  </ErrorBoundary>
+} />
           <Route path="/preview" element={<PreviewAnswers />} />
         </Routes>
       </BrowserRouter>
