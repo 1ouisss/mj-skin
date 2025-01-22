@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import SkinTypeQuiz from "./pages/SkinTypeQuiz";
+import PreviewAnswers from "./pages/PreviewAnswers";
 import ConditionsQuiz from "./pages/ConditionsQuiz";
 import ConcernsQuiz from "./pages/ConcernsQuiz";
 import ZonesQuiz from "./pages/ZonesQuiz";

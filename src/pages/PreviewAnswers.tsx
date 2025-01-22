@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
+import { motion } from 'framer-motion';
 
 interface PreviewAnswersProps {
-  selectedAnswers: {
+  selectedAnswers?: {
     skinType: string;
     condition: string;
     concern: string;
@@ -16,21 +16,13 @@ interface PreviewAnswersProps {
 
 const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const answers = selectedAnswers || location.state?.selectedAnswers;
 
-  const handleConfirm = () => {
-    navigate('/recommendations', { state: { selectedAnswers } });
-  };
-
-  const translateKey = (key: string): string => {
-    const translations: { [key: string]: string } = {
-      skinType: 'Type de peau',
-      condition: 'Condition',
-      concern: 'Préoccupation',
-      texturePreference: 'Préférence de texture',
-      scentPreference: 'Préférence de parfum'
-    };
-    return translations[key] || key;
-  };
+  if (!answers) {
+    navigate('/');
+    return null;
+  }
 
   return (
     <div 
@@ -57,9 +49,9 @@ const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
             </h2>
             
             <div className="space-y-4 mb-8">
-              {Object.entries(selectedAnswers).map(([key, value]) => (
+              {Object.entries(answers).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center p-3 border-b border-gray-200">
-                  <span className="font-medium text-[#4A4A4A]">{translateKey(key)}</span>
+                  <span className="font-medium text-[#4A4A4A]">{key}</span>
                   <span className="text-[#666]">{value}</span>
                 </div>
               ))}
@@ -73,7 +65,7 @@ const PreviewAnswers = ({ selectedAnswers }: PreviewAnswersProps) => {
                 Modifier
               </button>
               <button
-                onClick={handleConfirm}
+                onClick={() => navigate('/recommendations', { state: { selectedAnswers: answers }})}
                 className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
               >
                 Voir les recommandations

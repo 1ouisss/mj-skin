@@ -17,10 +17,18 @@ interface RecommendationsProps {
   };
 }
 
-const Recommendations: React.FC<RecommendationsProps> = ({ selectedAnswers }) => {
+const Recommendations: React.FC<RecommendationsProps> = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const selectedAnswers = location.state?.selectedAnswers;
   const [recommendation, setRecommendation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  if (!selectedAnswers) {
+    navigate('/');
+    return null;
+  }
 
   useEffect(() => {
     try {
