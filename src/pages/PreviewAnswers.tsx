@@ -73,6 +73,14 @@ export default function PreviewAnswers() {
         state: { answers: payload },
         replace: true
       });
+
+      // Add validation check
+      const stateCheck = JSON.parse(localStorage.getItem('validatedAnswers') || '{}');
+      if (!stateCheck.skinType) {
+        console.error('[PreviewAnswers] State validation failed');
+        toast.error('Une erreur est survenue. Veuillez réessayer.');
+        return;
+      }
     } catch (error) {
       console.error('[PreviewAnswers] Error:', error);
       toast.error('Une erreur est survenue');

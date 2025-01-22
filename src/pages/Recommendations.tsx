@@ -12,14 +12,20 @@ export default function Recommendations() {
   const location = useLocation();
   const navigate = useNavigate();
   const [hasRedirected, setHasRedirected] = React.useState(false);
+  const [localAnswers, setLocalAnswers] = React.useState<QuizAnswers | null>(null);
   
   console.log('[Recommendations] Location state:', location.state);
   const answers = location.state?.answers as QuizAnswers | undefined;
   console.log('[Recommendations] Initial answers from location:', answers);
 
   React.useEffect(() => {
+    if (answers) {
+      setLocalAnswers(answers);
+      return;
+    }
+
     console.log('[Recommendations] useEffect running, hasRedirected:', hasRedirected);
-    if (!hasRedirected && !answers) {
+    if (!hasRedirected) {
       setHasRedirected(true);
       console.log('[Recommendations] No answers in location state, checking localStorage');
       const savedAnswers = localStorage.getItem('validatedAnswers');
@@ -75,11 +81,11 @@ export default function Recommendations() {
   }, []);
 
   const recommendations = React.useMemo(() => 
-    answers ? getRecommendations(answers) : null, 
-    [answers, getRecommendations]
+    localAnswers ? getRecommendations(localAnswers) : null, 
+    [localAnswers, getRecommendations]
   );
 
-  if (!answers || !recommendations) {
+  if (!localAnswers || !recommendations) {
     return <LoadingScreen />;
   }
 
