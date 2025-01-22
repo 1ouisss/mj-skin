@@ -32,7 +32,12 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
+const App = () => {
+  console.group('=== App Route Debug ===');
+  console.log('[App] Initial render');
+  React.useEffect(() => {
+    return () => console.groupEnd();
+  }, []);
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />

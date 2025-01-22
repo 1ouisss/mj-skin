@@ -30,7 +30,9 @@ export default function PreviewAnswers() {
   }, [answers]);
 
   const handleSeeRecommendations = () => {
-    console.log('[PreviewAnswers] Handling see recommendations');
+    console.group('=== PreviewAnswers Debug ===');
+    console.log('[PreviewAnswers] Current answers:', answers);
+    console.log('[PreviewAnswers] Navigation state:', window.location);
     try {
       if (!answers) {
         console.error('[PreviewAnswers] No answers found, redirecting to quiz');

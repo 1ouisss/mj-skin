@@ -20,6 +20,10 @@ export default function Recommendations() {
   console.log('[Recommendations] Initial answers from location:', answers);
 
   React.useEffect(() => {
+    console.group('=== Recommendations Debug ===');
+    console.log('[Recommendations] Location state:', location);
+    console.log('[Recommendations] Current answers:', answers);
+    
     const initializeAnswers = async () => {
       try {
         if (answers) {
