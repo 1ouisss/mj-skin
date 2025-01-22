@@ -20,41 +20,36 @@ export default function PreviewAnswers() {
     console.log('Component mounted');
     console.log('QuizContext state:', state);
 
-    try {
-      const storedAnswers = localStorage.getItem('quizAnswers');
-      console.log('Raw stored answers:', storedAnswers);
+    const loadAnswers = () => {
+      try {
+        const storedAnswers = localStorage.getItem('quizAnswers');
+        console.log('Raw stored answers:', storedAnswers);
 
-      if (!storedAnswers) {
-        console.error('No answers found in localStorage');
-        toast.error('Veuillez compléter le quiz');
-        navigate('/skintype', { replace: true });
-        return;
+        if (!storedAnswers) {
+          throw new Error('No answers found');
+        }
+
+        const parsedAnswers = JSON.parse(storedAnswers);
+        if (!parsedAnswers.skinType || !parsedAnswers.conditions || !parsedAnswers.concerns) {
+          throw new Error('Incomplete answers');
+        }
+
+        setAnswers(parsedAnswers);
+        return true;
+      } catch (error) {
+        console.error('Error processing answers:', error);
+        return false;
       }
+    };
 
-      const parsedAnswers = JSON.parse(storedAnswers);
-      console.log('Parsed answers:', parsedAnswers);
-
-      if (!parsedAnswers.skinType || !parsedAnswers.conditions || !parsedAnswers.concerns) {
-        console.error('Missing required fields:', {
-          skinType: parsedAnswers.skinType,
-          conditions: parsedAnswers.conditions,
-          concerns: parsedAnswers.concerns
-        });
-        toast.error('Réponses incomplètes');
-        navigate('/skintype', { replace: true });
-        return;
-      }
-
-      setAnswers(parsedAnswers);
-    } catch (error) {
-      console.error('Error processing answers:', error);
-      toast.error('Une erreur est survenue');
+    if (!loadAnswers()) {
+      toast.error('Veuillez compléter le quiz');
       navigate('/skintype', { replace: true });
-    } finally {
-      setLoading(false);
-      console.groupEnd();
     }
-  }, [navigate, state]);
+    
+    setLoading(false);
+    console.groupEnd();
+  }, [state]);
 
   const navigateToRecommendations = () => {
     console.log('Attempting to navigate to recommendations');
