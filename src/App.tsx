@@ -51,7 +51,11 @@ const App = () => (
               <ConditionsQuiz />
             </Suspense>
           } />
-          <Route path="/concerns-quiz" element={<ConcernsQuiz />} />
+          <Route path="/concerns-quiz" element={
+            <Suspense fallback={<LoadingScreen />}>
+              <ConcernsQuiz />
+            </Suspense>
+          } />
           <Route path="/zones-quiz" element={<ZonesQuiz />} />
           <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
           <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
