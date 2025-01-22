@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -19,12 +18,15 @@ export default function PreviewAnswers() {
     console.log('Component mounted, current state:', state);
 
     const validateAndRestoreState = () => {
+      console.log('[PreviewAnswers] Current state:', state);
       if (!state.skinType || !state.conditions || !state.concerns) {
         console.log('[PreviewAnswers] Incomplete state, attempting restoration');
-        if (!restoreState()) {
+        const restoredState = restoreState();
+        console.log('[PreviewAnswers] Restored state:', restoredState);
+        if (!restoredState) {
           console.warn('[PreviewAnswers] State restoration failed');
           toast.error('Veuillez compléter le quiz');
-          navigate('/skintype', { replace: true });
+          navigate('/skintypequiz', { replace: true });
           return false;
         }
         console.log('[PreviewAnswers] State restored successfully');

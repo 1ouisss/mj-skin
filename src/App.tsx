@@ -43,8 +43,8 @@ const pages = {
   'fragrancequiz': lazy(() => import('./pages/FragranceQuiz')),
   'routinequiz': lazy(() => import('./pages/RoutineQuiz')),
   'newsletterquiz': lazy(() => import('./pages/NewsletterQuiz')),
-  'recommendations': lazy(() => import('./pages/Recommendations')),
-  'previewanswers': lazy(() => import('./pages/PreviewAnswers'))
+  'preview': lazy(() => import('./pages/PreviewAnswers')),
+  'recommendations': lazy(() => import('./pages/Recommendations'))
 };
 
 const queryClient = new QueryClient({
