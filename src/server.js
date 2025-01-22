@@ -1,15 +1,15 @@
+
 const express = require("express");
 const path = require('path');
-const fs = require('fs');
 const cors = require('cors');
 
 const app = express();
 
-// Enable CORS
+// Enable CORS and JSON parsing
 app.use(cors());
-
-// Middleware
 app.use(express.json());
+
+// Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // API Routes
@@ -22,13 +22,6 @@ app.get("/api/health", (req, res) => {
 });
 
 // Recommendations Route
-const sanitizeInput = (input) => {
-  if (typeof input === 'string') {
-    return input.trim().replace(/[<>]/g, '');
-  }
-  return input;
-};
-
 app.post("/api/recommendations", async (req, res) => {
   const requestId = Math.random().toString(36).substring(7);
   console.group(`=== /api/recommendations Request (ID: ${requestId}) ===`);
@@ -42,7 +35,7 @@ app.post("/api/recommendations", async (req, res) => {
       });
     }
 
-    const { skinType, conditions, concerns, texturePreference, scentPreference } = req.body;
+    const { skinType } = req.body;
 
     // Load recommendations from JSON file
     const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
