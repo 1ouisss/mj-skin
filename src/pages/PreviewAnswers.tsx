@@ -22,14 +22,12 @@ const PreviewAnswers = () => {
 
   const handleSeeRecommendations = async () => {
     try {
-      if (!answers?.SkinType || !answers?.Condition || !answers?.Concern) {
-        toast.error('Missing required answers. Please complete the quiz.');
-        return;
-      }
-
+      console.log('Quiz answers:', answers);
+      
       const payload = {
-        skinType: answers.SkinType,
-        conditions: answers.Condition,
+        skinType: answers?.['SkinType'] || answers?.['skinType'],
+        conditions: answers?.['Condition'] || answers?.['conditions'],
+        concerns: answers?.['Concern'] || answers?.['concerns'],
         concerns: answers.Concern,
         texturePreference: answers.TexturePreference || '',
         scentPreference: answers.ScentPreference || ''
@@ -64,7 +62,7 @@ const PreviewAnswers = () => {
       });
     } catch (error) {
       console.error('Error getting recommendations:', error);
-      toast.error('Unable to get recommendations. Please try again.');
+      toast.error(error.response?.data?.message || 'Unable to get recommendations. Please try again.');
     }
   };
 
