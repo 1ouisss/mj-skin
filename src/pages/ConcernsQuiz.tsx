@@ -19,7 +19,7 @@ const ConcernsQuiz = () => {
 
   const handleOptionClick = (concern: string) => {
     localStorage.setItem('concerns', JSON.stringify(concern));
-    navigate("/zones-quiz");
+    navigate("/zonesquiz");
   };
 
   const concerns = [
