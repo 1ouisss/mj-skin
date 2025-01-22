@@ -20,7 +20,6 @@ const RoutineQuiz = lazy(() => import('./pages/RoutineQuiz'));
 const NewsletterQuiz = lazy(() => import('./pages/NewsletterQuiz'));
 const Recommendations = lazy(() => import('./pages/Recommendations'));
 const PreviewAnswers = lazy(() => import('./pages/PreviewAnswers'));
-const ErrorBoundary = lazy(() => import('./components/ErrorBoundary'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
