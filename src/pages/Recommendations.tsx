@@ -1,11 +1,11 @@
 
 import React from 'react';
+import { useQuiz } from '../context/QuizContext';
 import { useNavigate } from 'react-router-dom';
-import { useQuiz } from '@/context/QuizContext';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { getRecommendations } from '@/utils/recommendations';
 
 export default function Recommendations() {
@@ -13,7 +13,7 @@ export default function Recommendations() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (!state.skinType) {
+    if (!state.skinType || !state.conditions || !state.concerns) {
       navigate('/skintypequiz');
       return;
     }
