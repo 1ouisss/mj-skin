@@ -26,21 +26,65 @@ const initialState: QuizState = {
   scentPreference: ''
 };
 
+const STORAGE_KEY = 'quizAnswers';
+
+const validateState = (state: any): state is QuizState => {
+  if (!state || typeof state !== 'object') return false;
+  const requiredFields = ['skinType', 'conditions', 'concerns'];
+  return requiredFields.every(field => typeof state[field] === 'string');
+};
+
+const persistState = (state: QuizState) => {
+  try {
+    if (DEBUG) console.log('[QuizContext] Persisting state:', state);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
+  } catch (error) {
+    console.error('[QuizContext] Failed to persist state:', error);
+    return false;
+  }
+};
+
+const loadPersistedState = (): QuizState | null => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return null;
+    
+    const parsedState = JSON.parse(stored);
+    if (!validateState(parsedState)) {
+      console.warn('[QuizContext] Invalid persisted state, resetting');
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    
+    if (DEBUG) console.log('[QuizContext] Loaded persisted state:', parsedState);
+    return parsedState;
+  } catch (error) {
+    console.error('[QuizContext] Failed to load persisted state:', error);
+    return null;
+  }
+};
+
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
+  if (DEBUG) console.log('[QuizContext] Reducer action:', action.type, action);
+  
   switch (action.type) {
-    case 'SET_ANSWER':
+    case 'SET_ANSWER': {
       const newState = { ...state, [action.field]: action.value };
-      try {
-        localStorage.setItem('quizAnswers', JSON.stringify(newState));
-      } catch (error) {
-        console.error('Failed to save to localStorage:', error);
-      }
+      persistState(newState);
       return newState;
-    case 'CLEAR_ANSWERS':
-      localStorage.removeItem('quizAnswers');
+    }
+    case 'CLEAR_ANSWERS': {
+      localStorage.removeItem(STORAGE_KEY);
       return initialState;
-    case 'RESTORE_STATE':
+    }
+    case 'RESTORE_STATE': {
+      if (!validateState(action.state)) {
+        console.error('[QuizContext] Invalid state restoration attempt');
+        return state;
+      }
       return action.state;
+    }
     default:
       return state;
   }
@@ -61,30 +105,27 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('[QuizContext] Provider mounted, attempting state restoration');
     restoreState();
   }, []);
 
   const restoreState = (): boolean => {
-    try {
-      const stored = localStorage.getItem('quizAnswers');
-      if (!stored) return false;
-
-      const parsedState = JSON.parse(stored) as QuizState;
-      dispatch({ type: 'RESTORE_STATE', state: parsedState });
+    const persistedState = loadPersistedState();
+    if (persistedState) {
+      dispatch({ type: 'RESTORE_STATE', state: persistedState });
       return true;
-    } catch (error) {
-      console.error('Failed to restore state:', error);
-      return false;
     }
+    return false;
   };
 
   const setAnswer = (field: keyof QuizState, value: string) => {
+    if (DEBUG) console.log('[QuizContext] Setting answer:', field, value);
     dispatch({ type: 'SET_ANSWER', field, value });
   };
 
   const validateAndProceed = (currentStep: string, nextStep: string) => {
     if (DEBUG) {
-      console.group('QuizContext - validateAndProceed');
+      console.group('[QuizContext] validateAndProceed');
       console.log('Current step:', currentStep);
       console.log('Next step:', nextStep);
       console.log('Current state:', state);
@@ -107,6 +148,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   };
 
   const clearAnswers = () => {
+    if (DEBUG) console.log('[QuizContext] Clearing answers');
     dispatch({ type: 'CLEAR_ANSWERS' });
   };
 

@@ -15,34 +15,35 @@ export default function PreviewAnswers() {
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
-    console.group('PreviewAnswers Debug');
-    console.log('Component mounted');
-    console.log('QuizContext state:', state);
+    console.group('[PreviewAnswers] Component Lifecycle');
+    console.log('Component mounted, current state:', state);
 
-    const validateAnswers = () => {
+    const validateAndRestoreState = () => {
       if (!state.skinType || !state.conditions || !state.concerns) {
+        console.log('[PreviewAnswers] Incomplete state, attempting restoration');
         if (!restoreState()) {
+          console.warn('[PreviewAnswers] State restoration failed');
           toast.error('Veuillez compléter le quiz');
           navigate('/skintype', { replace: true });
           return false;
         }
+        console.log('[PreviewAnswers] State restored successfully');
       }
       return true;
     };
 
-    if (!validateAnswers()) {
+    if (!validateAndRestoreState()) {
       setLoading(false);
       return;
     }
 
-    if (!loadAnswers()) {
-      toast.error('Veuillez compléter le quiz');
-      navigate('/skintype', { replace: true });
-    }
-    
     setLoading(false);
     console.groupEnd();
-  }, [state]);
+
+    return () => {
+      console.log('[PreviewAnswers] Component unmounting');
+    };
+  }, [state, navigate, restoreState]);
 
   const navigateToRecommendations = () => {
     console.log('Attempting to navigate to recommendations');
