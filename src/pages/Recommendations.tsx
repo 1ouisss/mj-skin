@@ -10,22 +10,30 @@ const Recommendations = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    try {
-      const { skinType } = state;
-      if (!skinType) {
-        throw new Error("Type de peau non défini");
+    const loadRecommendations = async () => {
+      try {
+        const { skinType, conditions, concerns } = state;
+        
+        if (!skinType || !conditions || !concerns) {
+          throw new Error("Informations manquantes");
+        }
+
+        const recommendationKey = `${skinType.toLowerCase()}`;
+        if (!data.skinTypes?.[recommendationKey]) {
+          throw new Error("Aucune recommandation trouvée");
+        }
+
+        console.log('[Recommendations] Loading data:', { skinType, conditions, concerns });
+        setRecommendations(data.skinTypes[recommendationKey]);
+        setError(null);
+      } catch (err) {
+        console.error('[Recommendations] Error:', err);
+        setError(err.message);
+        setRecommendations(null);
       }
-      if (!data.skinTypes[skinType]) {
-        throw new Error("Aucune recommandation trouvée pour ce type de peau");
-      }
-      console.log('[Recommendations] Loading data for skin type:', skinType);
-      setRecommendations(data.skinTypes[skinType]);
-      setError(null);
-    } catch (err) {
-      console.error('[Recommendations] Error:', err);
-      setError(err.message);
-      setRecommendations(null);
-    }
+    };
+
+    loadRecommendations();
   }, [state]);
 
   if (error) {

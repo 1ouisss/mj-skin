@@ -29,9 +29,22 @@ const initialState: QuizState = {
 const STORAGE_KEY = 'quizAnswers';
 
 const validateState = (state: any): state is QuizState => {
-  if (!state || typeof state !== 'object') return false;
-  const requiredFields = ['skinType', 'conditions', 'concerns'];
-  return requiredFields.every(field => typeof state[field] === 'string');
+  try {
+    if (!state || typeof state !== 'object') return false;
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    const hasRequiredFields = requiredFields.every(field => typeof state[field] === 'string');
+    if (!hasRequiredFields) return false;
+    
+    // Validate field values
+    if (state.skinType && !['dry', 'oily', 'combination', 'normal', 'sensitive'].includes(state.skinType)) {
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('State validation error:', error);
+    return false;
+  }
 };
 
 const persistState = (state: QuizState) => {
