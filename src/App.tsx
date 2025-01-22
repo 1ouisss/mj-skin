@@ -123,7 +123,13 @@ const App = () => {
                         element={
                           <Suspense fallback={<LoadingScreen />}>
                             <ErrorBoundary>
-                              <Component />
+                              {({ hasError }) => 
+                                hasError ? (
+                                  <Navigate to="/" replace />
+                                ) : (
+                                  <Component />
+                                )
+                              }
                             </ErrorBoundary>
                           </Suspense>
                         }

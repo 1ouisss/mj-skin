@@ -1,44 +1,44 @@
 
-import React, { createContext, useContext, useState } from 'react';
-import { QuizAnswers } from '../types/skincare';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface QuizContextType {
-  answers: QuizAnswers | null;
-  setAnswers: (answers: QuizAnswers | null) => void;
-  validateAnswers: () => boolean;
+  answers: any;
+  setAnswers: (answers: any) => void;
+  validateAndProceed: (currentStep: string, nextStep: string) => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export function QuizProvider({ children }: { children: React.ReactNode }) {
-  const [answers, setAnswers] = useState<QuizAnswers | null>(null);
+  const [answers, setAnswers] = useState({});
+  const navigate = useNavigate();
 
-  const validateAnswers = (): boolean => {
-    console.group('QuizContext - Validating Answers');
-    console.log('Current answers:', answers);
-
-    if (!answers) {
-      console.error('No answers found');
-      console.groupEnd();
-      return false;
+  useEffect(() => {
+    const storedAnswers = localStorage.getItem('quizAnswers');
+    if (storedAnswers) {
+      try {
+        setAnswers(JSON.parse(storedAnswers));
+      } catch (e) {
+        console.error('Error parsing stored answers:', e);
+        localStorage.removeItem('quizAnswers');
+      }
     }
+  }, []);
 
-    const requiredFields: (keyof QuizAnswers)[] = ['skinType', 'conditions', 'concerns'];
-    const missingFields = requiredFields.filter(field => !answers[field]);
-
-    if (missingFields.length > 0) {
-      console.error('Missing required fields:', missingFields);
-      console.groupEnd();
-      return false;
+  const validateAndProceed = (currentStep: string, nextStep: string) => {
+    const stored = localStorage.getItem('quizAnswers');
+    if (!stored) {
+      console.error('No quiz answers found');
+      navigate('/');
+      return;
     }
-
-    console.log('All required fields present');
-    console.groupEnd();
-    return true;
+    
+    navigate(`/${nextStep.toLowerCase()}`);
   };
 
   return (
-    <QuizContext.Provider value={{ answers, setAnswers, validateAnswers }}>
+    <QuizContext.Provider value={{ answers, setAnswers, validateAndProceed }}>
       {children}
     </QuizContext.Provider>
   );
@@ -46,8 +46,8 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
 
 export function useQuiz() {
   const context = useContext(QuizContext);
-  if (!context) {
-    throw new Error('useQuiz must be used within QuizProvider');
+  if (context === undefined) {
+    throw new Error('useQuiz must be used within a QuizProvider');
   }
   return context;
 }

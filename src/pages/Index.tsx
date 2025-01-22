@@ -54,7 +54,11 @@ const Index = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => navigate("/skintype")}
+          onClick={() => {
+            // Initialize quiz state
+            localStorage.setItem('quizAnswers', JSON.stringify({}));
+            navigate("/skintypequiz");
+          }}
           className="index-button px-8 py-3 text-gray-800 border border-gray-400 hover:border-gray-600 transition-colors duration-300 tracking-[0.2em] text-sm backdrop-blur-sm"
         >
           COMMENCER LE DIAGNOSTIC
