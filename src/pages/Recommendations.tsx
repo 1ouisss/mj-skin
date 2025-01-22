@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { toast } from 'sonner';
 
 const Recommendations = () => {
   const location = useLocation();

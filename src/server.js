@@ -37,6 +37,13 @@ app.post("/api/recommendations", async (req, res) => {
       });
     }
 
+    if (typeof skinType !== 'string' || typeof conditions !== 'string' || typeof concerns !== 'string') {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "Format des données invalide."
+      });
+    }
+
     // Normalize the data
     const normalizedPayload = {
       skinType: String(skinType).trim(),

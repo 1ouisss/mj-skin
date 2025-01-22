@@ -50,6 +50,11 @@ const PreviewAnswers = () => {
 
   const handleSeeRecommendations = async () => {
     try {
+      if (!answers.skinType || !answers.conditions || !answers.concerns) {
+        toast.error('Veuillez compléter toutes les questions requises');
+        return;
+      }
+
       const payload = {
         skinType: answers.skinType,
         conditions: answers.conditions,
@@ -68,15 +73,14 @@ const PreviewAnswers = () => {
         body: JSON.stringify(payload),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to get recommendations');
+        throw new Error(data.message || 'Failed to get recommendations');
       }
 
-      const data = await response.json();
-      
       if (!data.recommendations) {
-        throw new Error('No recommendations found');
+        throw new Error('Aucune recommandation trouvée pour ces critères');
       }
 
       navigate('/recommendations', {
