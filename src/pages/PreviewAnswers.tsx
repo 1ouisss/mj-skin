@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
@@ -11,32 +11,32 @@ export default function PreviewAnswers() {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState<QuizAnswers | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const storedAnswers = localStorage.getItem('quizAnswers');
     if (!storedAnswers) {
       toast.error('Veuillez compléter le quiz');
-      navigate('/skintype');
+      navigate('/skintype', { replace: true });
       return;
     }
     try {
       const parsedAnswers = JSON.parse(storedAnswers);
       setAnswers(parsedAnswers);
+      console.log('Loaded answers:', parsedAnswers);
     } catch (error) {
       console.error('Error parsing answers:', error);
       toast.error('Une erreur est survenue');
-      navigate('/skintype');
+      navigate('/skintype', { replace: true });
     }
   }, [navigate]);
 
   const handleSeeRecommendations = () => {
     if (!answers) {
       toast.error('Veuillez compléter le quiz');
-      navigate('/skintype');
       return;
     }
-
+    console.log('Storing validated answers:', answers);
     localStorage.setItem('validatedAnswers', JSON.stringify(answers));
-    navigate('/recommendations', { replace: true, state: { answers } });
+    navigate('/recommendations', { replace: true });
   };
 
   const handleBack = () => navigate(-1);
@@ -52,25 +52,11 @@ export default function PreviewAnswers() {
   };
 
   return (
-    <div 
-      className="min-h-screen w-full flex items-center justify-center px-4 py-12"
-      style={{
-        backgroundImage: `url('/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png')`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
-      <motion.div 
-        className="w-full max-w-2xl relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <Card className="bg-white/90 backdrop-blur-sm">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
+      <motion.div className="w-full max-w-2xl">
+        <Card>
           <CardContent className="p-8">
-            <h2 className="text-4xl font-playfair text-center mb-8 text-[#4A4A4A]">
+            <h2 className="text-4xl font-playfair text-center mb-8">
               Confirmez vos réponses
             </h2>
             <div className="space-y-4 mb-8">
@@ -80,10 +66,10 @@ export default function PreviewAnswers() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex justify-between items-center p-4 rounded-lg bg-white/80 border border-gray-100"
+                  className="flex justify-between items-center p-4 rounded-lg bg-gray-50"
                 >
-                  <span className="font-medium text-[#4A4A4A]">{question}</span>
-                  <span className="text-[#666] font-light">{answer}</span>
+                  <span className="font-medium">{question}</span>
+                  <span className="text-gray-600">{answer}</span>
                 </motion.div>
               ))}
             </div>
@@ -98,7 +84,7 @@ export default function PreviewAnswers() {
               </Button>
               <Button
                 onClick={handleSeeRecommendations}
-                className="flex items-center gap-2 bg-[#4A4A4A] hover:bg-[#3A3A3A]"
+                className="flex items-center gap-2"
               >
                 <Check className="w-4 h-4" />
                 Voir les recommandations

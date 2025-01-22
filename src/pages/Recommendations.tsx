@@ -1,27 +1,30 @@
+
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { LoadingScreen } from '../components/LoadingScreen';
 import { QuizAnswers } from '../types/skincare';
 
 export default function Recommendations() {
-  const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(true);
-  const [hasRedirected, setHasRedirected] = React.useState(false);
+  const [recommendations, setRecommendations] = React.useState(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const validateAndInitialize = async () => {
+    const getRecommendations = async () => {
       try {
         const storedAnswers = localStorage.getItem('validatedAnswers');
-        if (!storedAnswers && !location.state?.answers && !hasRedirected) {
-          setHasRedirected(true);
+        
+        if (!storedAnswers) {
+          console.error('No answers found');
           toast.error('Veuillez compléter le quiz');
           navigate('/skintype', { replace: true });
           return;
         }
 
-        const answers = location.state?.answers || JSON.parse(storedAnswers as string);
+        const answers = JSON.parse(storedAnswers) as QuizAnswers;
+        console.log('Using answers:', answers);
 
         const response = await fetch('/api/recommendations', {
           method: 'POST',
@@ -34,30 +37,40 @@ export default function Recommendations() {
         }
 
         const data = await response.json();
-        console.log('Recommendations:', data);
-
-        setLoading(false);
-      } catch (error) {
-        console.error('Error:', error);
+        console.log('Received recommendations:', data);
+        setRecommendations(data);
+      } catch (err) {
+        console.error('Error:', err);
+        setError(err.message);
         toast.error('Une erreur est survenue');
-        if (!hasRedirected) {
-          setHasRedirected(true);
-          navigate('/skintype', { replace: true });
-        }
+      } finally {
+        setLoading(false);
       }
     };
 
-    validateAndInitialize();
-  }, [location.state, navigate, hasRedirected]);
+    getRecommendations();
+  }, [navigate]);
 
   if (loading) {
     return <LoadingScreen />;
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">Une erreur est survenue</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white">
-      <h1>Recommendations</h1>
-      {/* Add your recommendations UI here */}
+    <div className="min-h-screen bg-white p-8">
+      <h1 className="text-3xl font-playfair mb-6">Vos Recommandations</h1>
+      {recommendations && (
+        <pre className="whitespace-pre-wrap">
+          {JSON.stringify(recommendations, null, 2)}
+        </pre>
+      )}
     </div>
   );
 }
