@@ -26,8 +26,6 @@ app.post("/api/recommendations", async (req, res) => {
   console.time(`request-${requestId}-duration`);
 
   try {
-    const { skinType, conditions, concerns } = req.body;
-
     // Log incoming request details
     console.log('📥 Incoming Request:', {
       id: requestId,
@@ -36,6 +34,34 @@ app.post("/api/recommendations", async (req, res) => {
       headers: req.headers,
       ip: req.ip
     });
+
+    // Validate required fields
+    const requiredFields = ['skinType', 'conditions', 'concerns'];
+    const missingFields = requiredFields.filter(field => !req.body[field] || req.body[field].trim() === '');
+
+    if (missingFields.length > 0) {
+      console.warn('❌ Validation Error:', {
+        missingFields,
+        receivedPayload: req.body
+      });
+      return res.status(400).json({
+        error: 'Validation Error',
+        message: `Missing required fields: ${missingFields.join(', ')}`,
+        receivedFields: Object.keys(req.body)
+      });
+    }
+
+    const { skinType, conditions, concerns } = req.body;
+
+    // Validate field values are strings
+    for (const [field, value] of Object.entries({ skinType, conditions, concerns })) {
+      if (typeof value !== 'string') {
+        return res.status(400).json({
+          error: 'Invalid Data Type',
+          message: `Field '${field}' must be a string, received ${typeof value}`
+        });
+      }
+    }
 
     // Validate payload
     const requiredFields = ['skinType', 'conditions', 'concerns'];
@@ -81,10 +107,15 @@ app.post("/api/recommendations", async (req, res) => {
     });
 
     if (!records.length) {
-      console.warn('❌ No matching recommendations found in Airtable');
-      return res
-        .status(404)
-        .json({ error: "No matching recommendations found." });
+      console.warn('❌ No matching recommendations found in Airtable:', {
+        searchCriteria: { skinType, conditions, concerns },
+        timestamp: new Date().toISOString()
+      });
+      return res.status(404).json({
+        error: "Not Found",
+        message: "No matching recommendations found for the provided criteria.",
+        searchCriteria: { skinType, conditions, concerns }
+      });
     }
 
     // Prepare data for OpenAI
