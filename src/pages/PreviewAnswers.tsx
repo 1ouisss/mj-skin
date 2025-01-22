@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -55,6 +56,24 @@ export default function PreviewAnswers() {
     }
   }, [navigate, state]);
 
+  const navigateToRecommendations = () => {
+    console.log('Attempting to navigate to recommendations');
+    if (!answers) {
+      console.error('Cannot navigate: answers are missing');
+      toast.error('Veuillez compléter le quiz');
+      return;
+    }
+
+    try {
+      localStorage.setItem('validatedAnswers', JSON.stringify(answers));
+      console.log('Validated answers stored, navigating to recommendations');
+      navigate('/recommendations', { state: { answers } });
+    } catch (error) {
+      console.error('Error storing validated answers:', error);
+      toast.error('Une erreur est survenue');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center">
@@ -68,14 +87,12 @@ export default function PreviewAnswers() {
   }
 
   const questionsMap = {
-    'Type de peau': answers.skinType || 'Non spécifié',
-    'Condition': answers.conditions || 'Non spécifié',
-    'Préoccupation': answers.concerns || 'Non spécifié',
+    'Type de peau': answers.skinType,
+    'Condition': answers.conditions,
+    'Préoccupation': answers.concerns,
     'Texture préférée': answers.texturePreference || 'Non spécifié',
     'Parfum préféré': answers.scentPreference || 'Non spécifié'
   };
-
-  console.log('Rendering preview with answers:', questionsMap);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
@@ -109,7 +126,7 @@ export default function PreviewAnswers() {
                 Modifier
               </Button>
               <Button
-                onClick={() => navigate('/recommendations')}
+                onClick={navigateToRecommendations}
                 className="flex items-center gap-2"
               >
                 <Check className="w-4 h-4" />
