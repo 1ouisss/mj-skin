@@ -40,14 +40,14 @@ app.use(limiter);
 
 app.use(express.json());
 
-// Serve static files
+// Serve static files from dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // API routes
 app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
-    
+
     // Input sanitization and validation
     const sanitizedSkinType = String(skinType).trim().replace(/[^a-zA-Z\s]/g, '');
     const sanitizedCondition = condition ? String(condition).trim().replace(/[^a-zA-Z\s]/g, '') : '';
@@ -91,7 +91,7 @@ app.get('/api/recommendations', (req, res) => {
       count: recommendations.length,
       timestamp: new Date().toISOString()
     });
-    
+
     res.json(recommendations);
   } catch (error) {
     console.error('Recommendation error:', {
@@ -99,7 +99,7 @@ app.get('/api/recommendations', (req, res) => {
       stack: error.stack,
       timestamp: new Date().toISOString()
     });
-    
+
     res.status(500).json({ 
       error: 'Internal server error',
       details: 'Une erreur interne est survenue'
