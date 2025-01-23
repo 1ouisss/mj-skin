@@ -1,11 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
+
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const skincareData = require('./data/skincare-db.json');
+// Import skincare data
+const skincareData = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
+);
 
 // Configure CORS for all origins
 app.use(cors({
