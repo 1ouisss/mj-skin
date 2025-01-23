@@ -40,18 +40,46 @@ const Recommendations = () => {
           concerns: answers.concerns || ''
         });
 
-        const response = await fetch(`/api/recommendations?${params}`);
+        const response = await fetch(`/api/recommendations?${params}`, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          signal: AbortSignal.timeout(10000) // 10 second timeout
+        });
         
         if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+          if (response.status === 404) {
+            throw new Error('Aucune recommandation trouvée pour ces critères');
+          } else if (response.status === 429) {
+            throw new Error('Trop de requêtes, veuillez réessayer plus tard');
+          } else {
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+          }
         }
 
         const data = await response.json();
         const validatedData = validateRecommendationResponse(data);
+        
+        if (!validatedData) {
+          throw new Error('Format de données invalide');
+        }
+        
         setRecommendations(validatedData);
+        console.log('Recommendations fetched successfully:', validatedData);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue';
-        console.error('Recommendation fetch error:', error);
+        const errorMessage = error instanceof Error 
+          ? error.message 
+          : error instanceof DOMException && error.name === 'AbortError'
+            ? 'La requête a pris trop de temps'
+            : 'Une erreur inattendue est survenue';
+            
+        console.error('Recommendation fetch error:', {
+          error,
+          answers,
+          timestamp: new Date().toISOString()
+        });
+        
         setError(errorMessage);
         toast.error(errorMessage);
       } finally {

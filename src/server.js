@@ -29,19 +29,49 @@ app.use(express.static(path.join(__dirname, '../dist'), {
 app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
-    console.log('Received query:', { skinType, condition, concerns });
+    
+    if (!skinType) {
+      return res.status(400).json({ 
+        error: 'Missing required parameter: skinType',
+        details: 'Le type de peau est requis'
+      });
+    }
+
+    console.log('Processing recommendation request:', {
+      params: { skinType, condition, concerns },
+      timestamp: new Date().toISOString()
+    });
 
     const recommendations = skincareData.filter(item => 
       item.skinType === skinType &&
-      item.condition === condition &&
-      item.concerns.includes(concerns)
+      (!condition || item.condition === condition) &&
+      (!concerns || item.concerns.includes(concerns))
     );
 
-    console.log('Sending recommendations:', recommendations);
+    if (!recommendations.length) {
+      return res.status(404).json({ 
+        error: 'No recommendations found',
+        details: 'Aucune recommandation trouvée pour ces critères'
+      });
+    }
+
+    console.log('Sending recommendations:', {
+      count: recommendations.length,
+      timestamp: new Date().toISOString()
+    });
+    
     res.json(recommendations);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Recommendation error:', {
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+    
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: 'Une erreur interne est survenue'
+    });
   }
 });
 
