@@ -9,30 +9,26 @@ export class ValidationError extends Error {
 }
 
 export const validateRecommendationResponse = (data: any): RecommendationResult => {
-  console.group('[Validator] Validating recommendation response');
-  
   try {
     if (!data || typeof data !== 'object') {
-      throw new ValidationError('Invalid response format');
+      throw new ValidationError('Format de réponse invalide');
     }
 
     if (!Array.isArray(data.Products)) {
-      console.warn('Invalid Products array:', data.Products);
-      throw new ValidationError('Products must be an array');
+      throw new ValidationError('Les produits doivent être une liste');
     }
 
     if (!data.Routine || typeof data.Routine !== 'object') {
-      console.warn('Invalid Routine object:', data.Routine);
-      throw new ValidationError('Invalid routine format');
+      throw new ValidationError('Format de routine invalide');
     }
 
     const routine = data.Routine as Routine;
     if (!Array.isArray(routine.Matin) || !Array.isArray(routine.Soir)) {
-      throw new ValidationError('Routine must contain Matin and Soir arrays');
+      throw new ValidationError('La routine doit contenir les étapes du matin et du soir');
     }
 
     if (typeof routine.Résultat !== 'string') {
-      throw new ValidationError('Routine must contain a Résultat string');
+      throw new ValidationError('La routine doit contenir un résultat');
     }
 
     return {
@@ -40,9 +36,9 @@ export const validateRecommendationResponse = (data: any): RecommendationResult 
       Routine: routine
     };
   } catch (error) {
-    console.error('[Validator] Validation failed:', error);
-    throw error;
-  } finally {
-    console.groupEnd();
+    if (error instanceof ValidationError) {
+      throw error;
+    }
+    throw new ValidationError('Erreur de validation des recommandations');
   }
 };

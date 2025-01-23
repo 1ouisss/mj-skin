@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import type { RecommendationResult } from '../types/skincare';
+import { validateRecommendationResponse } from '../utils/recommendationValidator';
 
 const Recommendations = () => {
   const { state } = useQuiz();
@@ -19,7 +20,7 @@ const Recommendations = () => {
 
   useEffect(() => {
     if (!completed || !answers.skinType) {
-      toast.error('Please complete the quiz first');
+      toast.error('Veuillez compléter le questionnaire');
       navigate('/', { replace: true });
       return;
     }
@@ -27,27 +28,32 @@ const Recommendations = () => {
 
   useEffect(() => {
     const fetchRecommendations = async () => {
-      if (!completed || !answers.skinType) {
-        navigate('/');
-        return;
-      }
+      if (!completed || !answers.skinType) return;
 
       try {
+        setLoading(true);
+        setError(null);
+
         const params = new URLSearchParams({
           skinType: answers.skinType,
-          condition: answers.condition || '',
+          conditions: answers.conditions || '',
           concerns: answers.concerns || ''
         });
 
         const response = await fetch(`/api/recommendations?${params}`);
-        if (!response.ok) throw new Error('Failed to fetch recommendations');
+        
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
 
         const data = await response.json();
-        console.log('Received recommendations:', data);
-        setRecommendations(data);
+        const validatedData = validateRecommendationResponse(data);
+        setRecommendations(validatedData);
       } catch (error) {
-        console.error('Error:', error);
-        toast.error('Unable to load recommendations');
+        const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue';
+        console.error('Recommendation fetch error:', error);
+        setError(errorMessage);
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -60,6 +66,22 @@ const Recommendations = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg">
+          <CardContent className="p-6 text-center space-y-4">
+            <h2 className="text-xl font-semibold text-red-600">Erreur</h2>
+            <p className="text-gray-600">{error}</p>
+            <Button onClick={() => navigate('/')}>
+              Retour à l'accueil
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -83,7 +105,7 @@ const Recommendations = () => {
                 <h2 className="text-xl font-semibold mb-4">Résultats de l'Analyse</h2>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p>Type de peau: {answers.skinType}</p>
-                  {answers.condition && <p>Condition: {answers.condition}</p>}
+                  {answers.conditions && <p>Condition: {answers.conditions}</p>}
                   {answers.concerns && <p>Préoccupations: {answers.concerns}</p>}
                 </div>
               </section>
