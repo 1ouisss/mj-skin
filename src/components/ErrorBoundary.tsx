@@ -1,6 +1,8 @@
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface Props {
   children: React.ReactNode;
@@ -23,23 +25,24 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
+    toast.error('An unexpected error occurred');
   }
+
+  private handleReset = () => {
+    this.setState({ hasError: false });
+    window.location.href = '/';
+  };
 
   render() {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="text-center">
+          <div className="text-center space-y-4">
             <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-            <p className="mb-4 text-gray-600">
+            <p className="text-gray-600 mb-4">
               {this.state.error?.message || 'An unexpected error occurred'}
             </p>
-            <Button
-              onClick={() => {
-                this.setState({ hasError: false });
-                window.location.href = '/';
-              }}
-            >
+            <Button onClick={this.handleReset}>
               Return to Home
             </Button>
           </div>

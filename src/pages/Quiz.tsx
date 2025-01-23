@@ -17,6 +17,10 @@ const Quiz = () => {
     e.preventDefault();
     
     try {
+      if (!state || typeof state.currentStep !== 'number') {
+        throw new Error('Invalid quiz state');
+      }
+
       const currentStepConfig = quizSteps[state.currentStep];
       if (!currentStepConfig) {
         throw new Error('Invalid quiz step');
@@ -25,18 +29,35 @@ const Quiz = () => {
       if (state.currentStep === quizSteps.length - 1) {
         if (validateState()) {
           await markComplete();
-          navigate('/recommendations', { replace: true });
+          navigate('/recommendations');
         } else {
           toast.error('Please complete all required questions');
         }
       } else {
         const nextStep = state.currentStep + 1;
-        updateAnswers(nextStep, state.answers);
-        navigate(`/${quizSteps[nextStep].id}`, { replace: true });
+        if (nextStep < quizSteps.length) {
+          updateAnswers(nextStep, state.answers);
+          navigate(`/${quizSteps[nextStep].id}`);
+        }
       }
     } catch (error) {
       console.error('Navigation error:', error);
       toast.error('An error occurred. Please try again.');
+    }
+  };
+
+  const handleBack = () => {
+    try {
+      if (state.currentStep > 0) {
+        const prevStep = state.currentStep - 1;
+        updateAnswers(prevStep, state.answers);
+        navigate(`/${quizSteps[prevStep].id}`);
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+      toast.error('An error occurred while going back');
     }
   };
 
@@ -63,7 +84,7 @@ const Quiz = () => {
                 <Button 
                   type="button" 
                   variant="outline"
-                  onClick={() => navigate(-1)}
+                  onClick={handleBack}
                   disabled={state.currentStep === 0}
                 >
                   Back

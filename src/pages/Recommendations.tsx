@@ -15,6 +15,15 @@ const Recommendations = () => {
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!completed || !answers.skinType) {
+      toast.error('Please complete the quiz first');
+      navigate('/', { replace: true });
+      return;
+    }
+  }, [completed, answers, navigate]);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
