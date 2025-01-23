@@ -44,11 +44,23 @@ app.use(limiter);
 app.use(express.json());
 
 // Serve static files from dist directory
-app.use(express.static(path.join(__dirname, '../dist')));
+const distPath = path.join(__dirname, '../dist');
+const indexPath = path.join(distPath, 'index.html');
+
+// Ensure dist directory exists
+if (!fs.existsSync(distPath)) {
+  fs.mkdirSync(distPath, { recursive: true });
+}
+
+app.use(express.static(distPath));
 
 // SPA catch-all route (must be after API routes)
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Application is building. Please try again in a moment.');
+  }
 });
 
 // API routes
