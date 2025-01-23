@@ -41,7 +41,7 @@ const initialState: QuizState = {
   currentStep: 0
 };
 
-const QuizContext = createContext<QuizContextType | undefined>(undefined);
+export const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<QuizState>(initialState);
