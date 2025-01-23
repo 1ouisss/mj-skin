@@ -12,9 +12,28 @@ interface QuizContextType {
   state: QuizState;
   updateAnswers: (answers: Partial<QuizAnswers>) => void;
   setCompleted: (completed: boolean) => void;
-  setCurrentStep: (step: number) => void;
+  setCurrentStep: (step: number) => boolean;
   resetQuiz: () => void;
+  validateCurrentStep: () => { valid: boolean; message?: string };
 }
+
+const validateStep = (state: QuizState): { valid: boolean; message?: string } => {
+  if (!state || typeof state.currentStep !== 'number') {
+    return { valid: false, message: 'Invalid quiz state' };
+  }
+
+  const currentStep = quizSteps[state.currentStep];
+  if (!currentStep) {
+    return { valid: false, message: 'Invalid quiz step' };
+  }
+
+  const currentAnswer = state.answers[currentStep.field];
+  if (currentStep.required && !currentAnswer) {
+    return { valid: false, message: 'Please answer this question before continuing' };
+  }
+
+  return { valid: true };
+};
 
 const initialState: QuizState = {
   answers: {},

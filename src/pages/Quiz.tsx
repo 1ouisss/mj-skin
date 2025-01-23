@@ -10,29 +10,21 @@ import { quizSteps } from '../config/quizConfig';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
 const Quiz = () => {
-  const { state, updateAnswers, validateState, markComplete } = useQuiz();
+  const { state, updateAnswers, validateCurrentStep } = useQuiz();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      if (!state || typeof state.currentStep !== 'number') {
-        throw new Error('Invalid quiz state');
-      }
-
-      const currentStepConfig = quizSteps[state.currentStep];
-      if (!currentStepConfig) {
-        throw new Error('Invalid quiz step');
+      const validation = validateCurrentStep();
+      if (!validation.valid) {
+        toast.error(validation.message || 'Please complete this step');
+        return;
       }
 
       if (state.currentStep === quizSteps.length - 1) {
-        if (validateState()) {
-          await markComplete();
-          navigate('/recommendations');
-        } else {
-          toast.error('Please complete all required questions');
-        }
+        navigate('/recommendations');
       } else {
         const nextStep = state.currentStep + 1;
         if (nextStep < quizSteps.length) {
@@ -42,7 +34,7 @@ const Quiz = () => {
       }
     } catch (error) {
       console.error('Navigation error:', error);
-      toast.error('An error occurred. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
@@ -57,7 +49,7 @@ const Quiz = () => {
       }
     } catch (error) {
       console.error('Navigation error:', error);
-      toast.error('An error occurred while going back');
+      toast.error('Error going back. Please try again.');
     }
   };
 
