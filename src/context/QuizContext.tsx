@@ -1,5 +1,6 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { QuizAnswers, SkinType, Condition, Concern, TexturePreference, ScentPreference } from '../types/skincare';
+import type { QuizAnswers } from '../types/skincare';
 
 interface QuizState {
   answers: Partial<QuizAnswers>;
