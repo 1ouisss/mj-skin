@@ -3,6 +3,8 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,11 +12,28 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-// Configure CORS for all routes
+// Security headers
+app.use(helmet());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+
+// Configure CORS for specific origins
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://yourdomain.repl.co'] 
+    : 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Apply rate limiting to all routes
+app.use(limiter);
 
 app.use(express.json());
 
@@ -30,10 +49,24 @@ app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
     
-    if (!skinType) {
+    // Input sanitization and validation
+    const sanitizedSkinType = String(skinType).trim().replace(/[^a-zA-Z\s]/g, '');
+    const sanitizedCondition = condition ? String(condition).trim().replace(/[^a-zA-Z\s]/g, '') : '';
+    const sanitizedConcerns = concerns ? String(concerns).trim().replace(/[^a-zA-Z\s,]/g, '') : '';
+
+    if (!sanitizedSkinType) {
       return res.status(400).json({ 
-        error: 'Missing required parameter: skinType',
-        details: 'Le type de peau est requis'
+        error: 'Missing or invalid required parameter: skinType',
+        details: 'Le type de peau est requis et doit être valide'
+      });
+    }
+
+    // Validate against allowed values
+    const allowedSkinTypes = ['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Normale'];
+    if (!allowedSkinTypes.includes(sanitizedSkinType)) {
+      return res.status(400).json({
+        error: 'Invalid skin type',
+        details: 'Le type de peau spécifié n\'est pas valide'
       });
     }
 
