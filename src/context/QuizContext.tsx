@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from 'react';
 import type { QuizAnswers } from '../types/skincare';
 
@@ -39,7 +40,12 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <QuizContext.Provider value={{ state, updateAnswers, setCurrentStep, resetQuiz }}>
+    <QuizContext.Provider value={{
+      state,
+      updateAnswers,
+      setCurrentStep,
+      resetQuiz
+    }}>
       {children}
     </QuizContext.Provider>
   );
@@ -52,3 +58,5 @@ export const useQuiz = () => {
   }
   return context;
 };
+
+export default QuizContext;
