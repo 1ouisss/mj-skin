@@ -23,7 +23,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
-app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Ensure the dist directory exists
 const distPath = path.join(__dirname, '../dist');
@@ -33,7 +33,12 @@ if (!fs.existsSync(distPath)) {
 
 // Serve index.html for all routes to support client-side routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  const indexPath = path.join(__dirname, '../dist/index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Build the project first using npm run build');
+  }
 });
 
 // Request logging middleware
