@@ -15,49 +15,16 @@ const skincareData = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
 );
 
-// Configure CORS
-app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.use(express.json());
-// Serve static files
+
+// Serve static files from dist
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Ensure the dist directory exists
-const distPath = path.join(__dirname, '../dist');
-if (!fs.existsSync(distPath)) {
-  fs.mkdirSync(distPath, { recursive: true });
-}
-
-// Log all requests
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
-// Serve index.html for all routes to support client-side routing
-app.get('*', (req, res) => {
-  const indexPath = path.join(__dirname, '../dist/index.html');
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.status(404).send('Build the project first using npm run build');
-  }
-});
-
-// Request logging middleware
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
-
-app.get('/recommendations', (req, res) => {
+// API Routes
+app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
-    console.log('Query params:', { skinType, condition, concerns });
     const recommendations = skincareData.filter((item) => {
       return (
         item.skinType === skinType &&
@@ -72,15 +39,11 @@ app.get('/recommendations', (req, res) => {
   }
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+// Serve index.html for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
-});
-
-process.on('unhandledRejection', (error) => {
-  console.error('Unhandled promise rejection:', error);
 });
