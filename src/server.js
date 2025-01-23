@@ -17,18 +17,37 @@ app.use(cors({
 }));
 
 app.use(express.json());
-// Serve static files
 app.use(express.static(path.join(__dirname, '../dist')));
+
+// API routes should be defined before the catch-all route
+app.get('/api/recommendations', (req, res) => {
+  try {
+    const { skinType, condition, concerns } = req.query;
+    console.log('Received query:', { skinType, condition, concerns });
+
+    const recommendations = skincareData.filter(item => 
+      item.skinType === skinType &&
+      item.condition === condition &&
+      item.concerns.includes(concerns)
+    );
+
+    console.log('Sending recommendations:', recommendations);
+    res.json(recommendations);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Catch-all route for SPA
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
   res.status(500).json({ error: 'Internal Server Error' });
-});
-
-// Fallback route handler for SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 // Load skincare data
