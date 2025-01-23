@@ -22,7 +22,8 @@ const Recommendations = React.lazy(() => import('./pages/Recommendations'));
 function App() {
   return (
     <ErrorBoundary>
-      <TooltipProvider>
+      <QuizProvider>
+        <TooltipProvider>
         <Toaster /> {/* Toaster correctly placed within the App component */}
         <ProgressBar />
         <BackButton />
@@ -42,6 +43,7 @@ function App() {
           </Routes>
         </Suspense>
       </TooltipProvider>
+      </QuizProvider>
     </ErrorBoundary>
   );
 }
