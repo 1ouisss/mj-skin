@@ -1,14 +1,15 @@
+
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
-import { useQuiz } from './QuizContext'; // Assuming this context exists
+import { useQuiz } from '../context/QuizContext';
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
+  const { updateAnswers } = useQuiz();
 
   const handleOptionClick = (skinType: string) => {
     try {
-      const { updateAnswers } = useQuiz();
       updateAnswers({ skinType });
       localStorage.setItem('skinType', skinType);
       navigate("/conditionsquiz");
