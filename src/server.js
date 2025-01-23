@@ -23,20 +23,20 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
-app.use(express.static('dist'));
+// Serve static files
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Ensure the dist directory exists and is accessible
+// Ensure the dist directory exists
 const distPath = path.join(__dirname, '../dist');
 if (!fs.existsSync(distPath)) {
   fs.mkdirSync(distPath, { recursive: true });
 }
 
-// Create an empty index.html if it doesn't exist
-const indexPath = path.join(distPath, 'index.html');
-if (!fs.existsSync(indexPath)) {
-  fs.writeFileSync(indexPath, '<!DOCTYPE html><html><body>Loading...</body></html>');
-}
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 // Serve index.html for all routes to support client-side routing
 app.get('*', (req, res) => {
