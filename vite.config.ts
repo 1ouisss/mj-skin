@@ -7,8 +7,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: "0.0.0.0",
-    port: 8080,
+    port: 3000,
     strictPort: true,
+    hmr: {
+      clientPort: 443,
+      host: process.env.REPL_SLUG + '.' + process.env.REPL_OWNER + '.repl.co',
+    },
     proxy: {
       '/api': {
         target: 'http://0.0.0.0:3001',
