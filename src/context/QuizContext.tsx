@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { SkinType, Condition, Concern } from '../types/skincare';
 
@@ -16,13 +15,13 @@ interface QuizState {
   completed: boolean;
 }
 
-interface QuizContextType extends QuizState {
-  updateAnswers: (step: number, newAnswers: Partial<QuizState['answers']>) => void;
-  markComplete: () => boolean;
-  resetQuiz: () => void;
+const QuizContext = createContext<{
+  state: QuizState;
+  setState: React.Dispatch<React.SetStateAction<QuizState>>;
+  updateAnswers: (step: number, answers: any) => void;
   validateState: () => boolean;
-  getError: (field: keyof QuizState['answers']) => string | undefined;
-}
+  markComplete: () => Promise<void>;
+} | null>(null);
 
 const STORAGE_KEY = 'quiz_state';
 
@@ -30,113 +29,56 @@ const initialState: QuizState = {
   currentStep: 0,
   answers: {},
   errors: {},
-  completed: false,
+  completed: false
 };
 
-export const QuizContext = createContext<QuizContextType | undefined>(undefined);
-
-export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function QuizProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<QuizState>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       return saved ? JSON.parse(saved) : initialState;
     } catch (error) {
-      console.error('Error loading saved state:', error);
+      console.error('Failed to restore quiz state:', error);
       return initialState;
     }
   });
 
-  const validateField = (field: keyof QuizState['answers'], value: any): string | undefined => {
-    if (!value) return 'This field is required';
-    
-    switch (field) {
-      case 'skinType':
-        return ['Sèche', 'Grasse', 'Mixte', 'Sensible', 'Normale'].includes(value) 
-          ? undefined 
-          : 'Invalid skin type';
-      case 'concerns':
-        return Array.isArray(value) && value.length > 0 
-          ? undefined 
-          : 'At least one concern must be selected';
-      default:
-        return undefined;
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      console.error('Failed to save quiz state:', error);
     }
+  }, [state]);
+
+  const updateAnswers = (step: number, answers: any) => {
+    setState(prev => ({
+      ...prev,
+      currentStep: step,
+      answers: { ...prev.answers, ...answers }
+    }));
   };
 
   const validateState = () => {
-    const requiredFields: (keyof QuizState['answers'])[] = [
-      'skinType',
-      'condition',
-      'concerns',
-      'texturePreference',
-      'scentPreference',
-    ];
-
-    const newErrors: Record<string, string> = {};
-    let isValid = true;
-
-    requiredFields.forEach((field) => {
-      const error = validateField(field, state.answers[field]);
-      if (error) {
-        newErrors[field] = error;
-        isValid = false;
-      }
-    });
-
-    setState(prev => ({ ...prev, errors: newErrors }));
-    return isValid;
+    const { skinType, condition, concerns } = state.answers;
+    return Boolean(skinType && condition && concerns);
   };
 
-  const updateAnswers = (step: number, newAnswers: Partial<QuizState['answers']>) => {
-    setState((prev) => {
-      const updatedState = {
-        ...prev,
-        currentStep: step,
-        answers: { ...prev.answers, ...newAnswers },
-      };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
-      } catch (error) {
-        console.error('Error saving state:', error);
-      }
-      return updatedState;
-    });
+  const markComplete = async () => {
+    setState(prev => ({ ...prev, completed: true }));
   };
-
-  const markComplete = () => {
-    const isValid = validateState();
-    if (isValid) {
-      setState(prev => ({ ...prev, completed: true }));
-      return true;
-    }
-    return false;
-  };
-
-  const resetQuiz = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setState(initialState);
-  };
-
-  const getError = (field: keyof QuizState['answers']) => state.errors[field];
 
   return (
-    <QuizContext.Provider value={{
-      ...state,
-      updateAnswers,
-      markComplete,
-      resetQuiz,
-      validateState,
-      getError
-    }}>
+    <QuizContext.Provider value={{ state, setState, updateAnswers, validateState, markComplete }}>
       {children}
     </QuizContext.Provider>
   );
-};
+}
 
 export const useQuiz = () => {
   const context = useContext(QuizContext);
-  if (context === undefined) {
-    throw new Error('useQuiz must be used within a QuizProvider');
+  if (!context) {
+    throw new Error('useQuiz must be used within QuizProvider');
   }
   return context;
 };

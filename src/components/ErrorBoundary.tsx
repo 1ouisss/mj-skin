@@ -1,6 +1,6 @@
-
-import React, { Component, ErrorInfo } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
 
 interface Props {
   children: React.ReactNode;
@@ -9,70 +9,41 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
-  errorInfo?: ErrorInfo;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
+export class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
-  public static getDerivedStateFromError(error: Error): State {
-    console.group('ErrorBoundary - Error Detected');
-    console.error('Error:', error);
-    console.groupEnd();
+  static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.group('ErrorBoundary - Detailed Error Info');
-    console.error('Error details:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack
-    });
-    console.groupEnd();
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
   }
 
-  public render() {
+  render() {
     if (this.state.hasError) {
       return (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="min-h-screen flex items-center justify-center bg-white"
-        >
-          <div className="text-center max-w-md mx-auto p-8">
-            <motion.img
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              src="/lovable-uploads/287dc8a7-9ecf-4ef0-8110-df01a2c2be2d.png"
-              alt="MJ Skin Logo"
-              className="w-32 h-32 object-contain mx-auto mb-8"
-              loading="lazy"
-            />
-            <h2 className="text-2xl font-playfair text-[#4A4A4A] mb-4">
-              Une erreur est survenue
-            </h2>
-            <p className="text-[#666] mb-6">
-              {this.state.error?.message || "Veuillez réessayer plus tard."}
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
+            <p className="mb-4 text-gray-600">
+              {this.state.error?.message || 'An unexpected error occurred'}
             </p>
-            <details className="mb-4 text-left text-sm">
-              <summary className="cursor-pointer">Technical Details</summary>
-              <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
-                {this.state.error?.stack}
-              </pre>
-            </details>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-2 bg-[#4A4A4A] text-white rounded-md hover:bg-[#3A3A3A] transition-colors"
+            <Button
+              onClick={() => {
+                this.setState({ hasError: false });
+                window.location.href = '/';
+              }}
             >
-              Rafraîchir la page
-            </button>
+              Return to Home
+            </Button>
           </div>
-        </motion.div>
+        </div>
       );
     }
 
