@@ -1,11 +1,21 @@
-const express = require("express");
-const path = require('path');
+const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const fs = require('fs');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Enable CORS and JSON parsing
+const skincareDataPath = path.join(__dirname, 'data', 'skincare-db.json');
+let skincareData;
+
+try {
+  skincareData = JSON.parse(fs.readFileSync(skincareDataPath, 'utf8'));
+} catch (error) {
+  console.error('Failed to load skincare database:', error);
+  process.exit(1);
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -15,52 +25,32 @@ app.use((req, res, next) => {
   next();
 });
 
-// Load recommendations data
-const recommendationsPath = path.join(__dirname, 'data', 'skincare-db.json');
-let data;
-
-try {
-  data = JSON.parse(fs.readFileSync(recommendationsPath, 'utf8'));
-} catch (error) {
-  console.error('Failed to load skincare database:', error);
-  process.exit(1);
-}
-
-// GET endpoint for recommendations with query parameters
-app.get("/recommendations", (req, res) => {
+// Recommendations endpoint
+app.get('/recommendations', (req, res) => {
   try {
-    const { skinType, conditions, concerns } = req.query;
+    const { skinType, condition, concerns } = req.query;
 
-    let result = null;
-    if (skinType && data.skinTypes?.[skinType]) {
-      result = data.skinTypes[skinType];
-    } else if (conditions && data.conditions?.[conditions]) {
-      result = data.conditions[conditions];
-    } else if (concerns && data.concerns?.[concerns]) {
-      result = data.concerns[concerns];
-    }
+    // Logic to filter recommendations based on query parameters
+    const recommendations = skincareData.filter(item =>
+      (skinType ? item.skinType === skinType : true) &&
+      (condition ? item.condition === condition : true) &&
+      (concerns ? item.concerns.includes(concerns) : true)
+    );
 
-    if (!result) {
+    if (recommendations.length === 0) {
       return res.status(404).json({
         error: "Not Found",
         message: "No matching recommendations found."
       });
     }
 
-    res.json({
-      success: true,
-      recommendations: result
-    });
+    res.json(recommendations);
   } catch (error) {
-    console.error('Error serving recommendations:', error);
-    res.status(500).json({
-      error: "Internal Server Error",
-      message: error.message
-    });
+    console.error('Recommendation fetch error:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
 
-const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
