@@ -5,8 +5,9 @@ import { Sparkles, Flower2, Check } from "lucide-react";
 const ConditionsQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = () => {
-    navigate("/concerns-quiz");
+  const handleOptionClick = (condition: string) => {
+    localStorage.setItem('conditions', JSON.stringify(condition));
+    navigate("/concernsquiz");
   };
 
   return (
@@ -43,7 +44,7 @@ const ConditionsQuiz = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
-                onClick={handleOptionClick}
+                onClick={() => handleOptionClick(option.text)}
                 className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 shadow-lg transition-colors"
               >
                 <option.icon className="w-6 h-6 stroke-[1.5]" />

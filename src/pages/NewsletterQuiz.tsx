@@ -6,14 +6,22 @@ const NewsletterQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (choice: string) => {
-    console.log("Newsletter choice:", choice);
-    navigate("/recommendations");
+    const answers = {
+      "Newsletter": choice,
+      "Choix Newsletter": choice === "yes" ? "Je souhaite recevoir la newsletter" : "Je ne souhaite pas recevoir la newsletter"
+    };
+    navigate("/recommendations", { 
+      state: { 
+        selectedAnswers: answers
+      },
+      replace: true
+    });
   };
 
   return (
     <div className="min-h-screen w-full flex">
       {/* Left content section */}
-      <div className="w-full lg:w-1/2 p-8 flex items-center justify-center">
+      <div className="w-full lg:w-1/2 p-8 flex items-center justify-center" style={{ paddingTop: '15vh' }}>
         <div className="max-w-xl w-full">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
@@ -45,11 +53,18 @@ const NewsletterQuiz = () => {
       </div>
 
       {/* Right image section */}
-      <div className="hidden lg:block w-1/2 relative">
+      <div className="hidden lg:block w-1/2 relative bg-gray-100">
         <img
-          src="/lovable-uploads/58c8f277-7b88-4ca7-b0b1-ebf83f82f290.png"
-          alt="Portrait élégant"
+          src="/lovable-uploads/IMG_3219 2.jpg"
+          alt="Portrait élégant en noir et blanc"
           className="object-cover w-full h-full"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = "/placeholder.svg";
+            console.error('Failed to load image');
+          }}
+          loading="eager"
         />
       </div>
     </div>
