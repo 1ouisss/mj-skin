@@ -30,9 +30,9 @@ const limiter = rateLimit({
 
 // Configure CORS for specific origins
 app.use(cors({
-  origin: '*',
+  origin: true,
   credentials: true,
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -140,4 +140,5 @@ const skincareData = JSON.parse(
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
+  console.log('CORS enabled for all origins');
 });
