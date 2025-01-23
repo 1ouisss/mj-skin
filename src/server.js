@@ -19,7 +19,13 @@ const skincareData = JSON.parse(
 // Configure CORS for all origins
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static('dist'));
+
+// Ensure the dist directory exists
+const distPath = path.join(__dirname, '../dist');
+if (!fs.existsSync(distPath)) {
+  fs.mkdirSync(distPath, { recursive: true });
+}
 
 // Serve index.html for all routes to support client-side routing
 app.get('*', (req, res) => {
