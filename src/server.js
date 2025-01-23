@@ -28,13 +28,8 @@ const limiter = rateLimit({
   trustProxy: false
 });
 
-// Configure CORS for specific origins
-app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Configure CORS for all origins
+app.use(cors());
 
 // Apply rate limiting to all routes
 app.use(limiter);
