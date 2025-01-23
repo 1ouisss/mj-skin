@@ -9,17 +9,17 @@ import { ProgressBar } from './components/ProgressBar';
 import { BackButton } from './components/BackButton';
 import { QuizProvider } from './context/QuizContext';
 
-const Index = React.lazy(() => import('./pages/Index'));
-const SkinTypeQuiz = React.lazy(() => import('./pages/SkinTypeQuiz'));
-const ConditionsQuiz = React.lazy(() => import('./pages/ConditionsQuiz'));
-const ConcernsQuiz = React.lazy(() => import('./pages/ConcernsQuiz'));
-const ZonesQuiz = React.lazy(() => import('./pages/ZonesQuiz'));
-const TreatmentQuiz = React.lazy(() => import('./pages/TreatmentQuiz'));
-const FragranceQuiz = React.lazy(() => import('./pages/FragranceQuiz'));
-const RoutineQuiz = React.lazy(() => import('./pages/RoutineQuiz'));
-const NewsletterQuiz = React.lazy(() => import('./pages/NewsletterQuiz'));
-const PreviewAnswers = React.lazy(() => import('./pages/PreviewAnswers'));
-const Recommendations = React.lazy(() => import('./pages/Recommendations'));
+const Index = React.lazy(() => import(/* webpackChunkName: "index" */ './pages/Index'));
+const SkinTypeQuiz = React.lazy(() => import(/* webpackChunkName: "skintype" */ './pages/SkinTypeQuiz'));
+const ConditionsQuiz = React.lazy(() => import(/* webpackChunkName: "conditions" */ './pages/ConditionsQuiz'));
+const ConcernsQuiz = React.lazy(() => import(/* webpackChunkName: "concerns" */ './pages/ConcernsQuiz'));
+const ZonesQuiz = React.lazy(() => import(/* webpackChunkName: "zones" */ './pages/ZonesQuiz'));
+const TreatmentQuiz = React.lazy(() => import(/* webpackChunkName: "treatment" */ './pages/TreatmentQuiz'));
+const FragranceQuiz = React.lazy(() => import(/* webpackChunkName: "fragrance" */ './pages/FragranceQuiz'));
+const RoutineQuiz = React.lazy(() => import(/* webpackChunkName: "routine" */ './pages/RoutineQuiz'));
+const NewsletterQuiz = React.lazy(() => import(/* webpackChunkName: "newsletter" */ './pages/NewsletterQuiz'));
+const PreviewAnswers = React.lazy(() => import(/* webpackChunkName: "preview" */ './pages/PreviewAnswers'));
+const Recommendations = React.lazy(() => import(/* webpackChunkName: "recommendations" */ './pages/Recommendations'));
 
 function App() {
   return (

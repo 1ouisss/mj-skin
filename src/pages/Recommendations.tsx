@@ -27,12 +27,17 @@ const Recommendations = () => {
   }, [completed, answers, navigate]);
 
   useEffect(() => {
+    let isSubscribed = true;
+    const controller = new AbortController();
+
     const fetchRecommendations = async () => {
       if (!completed || !answers.skinType) return;
 
       try {
-        setLoading(true);
-        setError(null);
+        if (isSubscribed) {
+          setLoading(true);
+          setError(null);
+        }
 
         const params = new URLSearchParams({
           skinType: answers.skinType,
@@ -45,7 +50,7 @@ const Recommendations = () => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          signal: AbortSignal.timeout(10000) // 10 second timeout
+          signal: controller.signal
         });
         
         if (!response.ok) {
@@ -88,6 +93,11 @@ const Recommendations = () => {
     };
 
     fetchRecommendations();
+
+    return () => {
+      isSubscribed = false;
+      controller.abort();
+    };
   }, [answers, completed, navigate]);
 
   if (loading) {
