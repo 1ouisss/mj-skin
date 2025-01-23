@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -11,27 +10,32 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
+// Configure CORS for all routes
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../dist')));
+
 // Load skincare data
 const skincareData = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
 );
-
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../dist')));
 
 // API endpoint for recommendations
 app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
     console.log('Received query:', { skinType, condition, concerns });
-    
+
     const recommendations = skincareData.filter(item => 
       item.skinType === skinType &&
       item.condition === condition &&
       item.concerns.includes(concerns)
     );
-    
+
     console.log('Sending recommendations:', recommendations);
     res.json(recommendations);
   } catch (error) {
@@ -43,6 +47,12 @@ app.get('/api/recommendations', (req, res) => {
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 app.listen(PORT, '0.0.0.0', () => {
