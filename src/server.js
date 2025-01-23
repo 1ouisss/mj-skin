@@ -30,9 +30,7 @@ const limiter = rateLimit({
 
 // Configure CORS for specific origins
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.repl.co'] 
-    : 'http://localhost:3000',
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
