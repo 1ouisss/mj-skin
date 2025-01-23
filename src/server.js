@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,11 +17,7 @@ const skincareData = JSON.parse(
 );
 
 // Configure CORS for all origins
-app.use(cors({
-  origin: '*',
-  credentials: true
-}));
-
+app.use(cors());
 app.use(express.json());
 
 // Request logging middleware
@@ -32,6 +29,7 @@ app.use((req, res, next) => {
 app.get('/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
+    console.log('Query params:', { skinType, condition, concerns });
     const recommendations = skincareData.filter((item) => {
       return (
         item.skinType === skinType &&
