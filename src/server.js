@@ -1,3 +1,4 @@
+
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -15,10 +16,11 @@ const skincareData = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
 );
 
+// Basic middleware
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from dist
+// Serve static files from dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // API Routes
@@ -34,16 +36,16 @@ app.get('/api/recommendations', (req, res) => {
     });
     res.json(recommendations);
   } catch (error) {
-    console.error('Recommendation fetch error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Serve index.html for all other routes
+// Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
