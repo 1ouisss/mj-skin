@@ -7,33 +7,31 @@ import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Import skincare data
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// Load skincare data
 const skincareData = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
 );
 
-// Basic middleware
-app.use(cors());
-app.use(express.json());
-
-// Serve static files from dist directory
-app.use(express.static(path.join(__dirname, '../dist')));
-
-// API Routes
 app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
-    const recommendations = skincareData.filter((item) => {
-      return (
-        item.skinType === skinType &&
-        item.condition === condition &&
-        item.concerns.includes(concerns)
-      );
-    });
+    console.log('Received query:', { skinType, condition, concerns });
+    
+    const recommendations = skincareData.filter(item => 
+      item.skinType === skinType &&
+      item.condition === condition &&
+      item.concerns.includes(concerns)
+    );
+    
+    console.log('Sending recommendations:', recommendations);
     res.json(recommendations);
   } catch (error) {
     console.error('Error:', error);
@@ -41,7 +39,6 @@ app.get('/api/recommendations', (req, res) => {
   }
 });
 
-// Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });

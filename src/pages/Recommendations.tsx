@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuiz } from '../context/QuizContext';
 import { useNavigate } from 'react-router-dom';
@@ -16,37 +15,35 @@ const Recommendations = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!completed) {
-      toast.error('Please complete the quiz first');
-      navigate('/');
-      return;
-    }
-
     const fetchRecommendations = async () => {
+      if (!completed || !answers.skinType) {
+        navigate('/');
+        return;
+      }
+
       try {
-        const searchParams = new URLSearchParams({
-          skinType: answers.skinType || '',
+        const params = new URLSearchParams({
+          skinType: answers.skinType,
           condition: answers.condition || '',
           concerns: answers.concerns || ''
         });
 
-        const response = await fetch(`/recommendations?${searchParams}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch recommendations');
-        }
+        const response = await fetch(`/api/recommendations?${params}`);
+        if (!response.ok) throw new Error('Failed to fetch recommendations');
 
         const data = await response.json();
+        console.log('Received recommendations:', data);
         setRecommendations(data);
       } catch (error) {
-        console.error('Recommendation fetch error:', error);
-        toast.error('Unable to load recommendations. Please try again.');
+        console.error('Error:', error);
+        toast.error('Unable to load recommendations');
       } finally {
         setLoading(false);
       }
     };
 
     fetchRecommendations();
-  }, [completed, answers, navigate]);
+  }, [answers, completed, navigate]);
 
   if (loading) {
     return (
@@ -69,47 +66,36 @@ const Recommendations = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {recommendations?.Products && (
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
-              <ul className="space-y-4">
-                {recommendations.Products.map((product, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="p-4 bg-gray-50 rounded-lg"
-                  >
-                    {product}
-                  </motion.li>
-                ))}
-              </ul>
-            </section>
-          )}
+          {recommendations && (
+            <>
+              <section>
+                <h2 className="text-xl font-semibold mb-4">Résultats de l'Analyse</h2>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p>Type de peau: {answers.skinType}</p>
+                  {answers.condition && <p>Condition: {answers.condition}</p>}
+                  {answers.concerns && <p>Préoccupations: {answers.concerns}</p>}
+                </div>
+              </section>
 
-          {recommendations?.Routine && (
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <h3 className="font-medium mb-2">Matin ☀️</h3>
-                  <ul className="list-disc pl-6 space-y-2">
-                    {recommendations.Routine.Matin.map((step, index) => (
-                      <li key={index}>{step}</li>
+              {recommendations.Products && (
+                <section>
+                  <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
+                  <ul className="space-y-4">
+                    {recommendations.Products.map((product, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="p-4 bg-gray-50 rounded-lg"
+                      >
+                        {product}
+                      </motion.li>
                     ))}
                   </ul>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Soir 🌙</h3>
-                  <ul className="list-disc pl-6 space-y-2">
-                    {recommendations.Routine.Soir.map((step, index) => (
-                      <li key={index}>{step}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </section>
+                </section>
+              )}
+            </>
           )}
 
           <div className="flex justify-center pt-6">
