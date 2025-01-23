@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -6,6 +7,7 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Load skincare data
 const skincareDataPath = path.join(__dirname, 'data', 'skincare-db.json');
 let skincareData;
 
@@ -16,6 +18,7 @@ try {
   process.exit(1);
 }
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -25,17 +28,34 @@ app.use((req, res, next) => {
   next();
 });
 
+// Input validation middleware
+const validateRecommendationQuery = (req, res, next) => {
+  const { skinType, condition, concerns } = req.query;
+  
+  if (!skinType || !condition || !concerns) {
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'Missing required parameters: skinType, condition, or concerns'
+    });
+  }
+  next();
+};
+
 // Recommendations endpoint
-app.get('/recommendations', (req, res) => {
+app.get('/recommendations', validateRecommendationQuery, (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
+    console.log('Processing recommendation request:', { skinType, condition, concerns });
 
-    // Logic to filter recommendations based on query parameters
-    const recommendations = skincareData.filter(item =>
-      (skinType ? item.skinType === skinType : true) &&
-      (condition ? item.condition === condition : true) &&
-      (concerns ? item.concerns.includes(concerns) : true)
-    );
+    // Filter recommendations based on query parameters
+    const recommendations = skincareData.filter(item => {
+      const matchesSkinType = item.skinType === skinType;
+      const matchesCondition = item.condition === condition;
+      const matchesConcerns = Array.isArray(item.concerns) && 
+                            item.concerns.includes(concerns);
+
+      return matchesSkinType && matchesCondition && matchesConcerns;
+    });
 
     if (recommendations.length === 0) {
       return res.status(404).json({
@@ -44,13 +64,29 @@ app.get('/recommendations', (req, res) => {
       });
     }
 
-    res.json(recommendations);
+    res.json({
+      success: true,
+      count: recommendations.length,
+      data: recommendations
+    });
   } catch (error) {
     console.error('Recommendation fetch error:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      message: error.message
+    });
   }
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
+});
+
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled promise rejection:', error);
 });
