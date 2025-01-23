@@ -7,9 +7,8 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Enable all CORS requests
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://0.0.0.0:8080'],
+  origin: '*',
   credentials: true
 }));
 
