@@ -12,6 +12,9 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+// Enable trust proxy
+app.set('trust proxy', true);
+
 // Security headers
 app.use(helmet());
 
