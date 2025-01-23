@@ -1,28 +1,28 @@
 import { useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { QuizContext } from "../context/QuizContext";
+import QuizContext from "../context/QuizContext";
 
 const Index = () => {
-  const quizContext = useContext(QuizContext);
+  const quizContext = useContext(QuizContext) as { resetQuiz: () => void };
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    console.group('Index Page - Navigation');
-    console.log('Component mounted');
+    console.group("Index Page - Navigation");
+    console.log("Component mounted");
     return () => {
-      console.log('Component unmounting');
+      console.log("Component unmounting");
       console.groupEnd();
     };
   }, []);
 
   return (
-    <div 
+    <div
       className="index-page relative min-h-screen"
       style={{
         background: `url('/lovable-uploads/bd24b52e-f34b-46c2-b3cd-536c17c81cb7.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="index-overlay absolute inset-0 bg-gradient-to-b from-transparent to-white/30 backdrop-blur-[2px]" />
@@ -67,9 +67,9 @@ const Index = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => {
-            console.log('Starting new quiz session');
-            quizContext?.clearAnswers();
-            localStorage.setItem('quizAnswers', JSON.stringify({}));
+            console.log("Starting new quiz session");
+            quizContext.resetQuiz();
+            localStorage.setItem("quizAnswers", JSON.stringify({}));
             navigate("/skintypequiz");
           }}
           className="index-button px-8 py-3 text-gray-800 border border-gray-400 hover:border-gray-600 transition-colors duration-300 tracking-[0.2em] text-sm backdrop-blur-sm"
