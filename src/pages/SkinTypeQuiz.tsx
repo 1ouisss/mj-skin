@@ -1,21 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
+import { useQuiz } from './QuizContext'; // Assuming this context exists
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (skinType: string) => {
     try {
-      localStorage.setItem('skinType', JSON.stringify(skinType));
-      const initialAnswers = {
-        skinType,
-        conditions: '',
-        concerns: '',
-        texturePreference: '',
-        scentPreference: ''
-      };
-      localStorage.setItem('quizAnswers', JSON.stringify(initialAnswers));
+      const { updateAnswers } = useQuiz();
+      updateAnswers({ skinType });
+      localStorage.setItem('skinType', skinType);
       navigate("/conditionsquiz");
     } catch (error) {
       console.error('Error saving skin type:', error);
