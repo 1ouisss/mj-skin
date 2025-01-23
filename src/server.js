@@ -1,4 +1,3 @@
-
 const express = require("express");
 const path = require('path');
 const cors = require('cors');
@@ -27,25 +26,12 @@ try {
   process.exit(1);
 }
 
-// Recommendations Route - GET all data
+// GET endpoint for recommendations with query parameters
 app.get("/recommendations", (req, res) => {
   try {
-    res.json({ success: true, data });
-  } catch (error) {
-    console.error('Error serving recommendations:', error);
-    res.status(500).json({
-      error: "Internal Server Error",
-      message: error.message
-    });
-  }
-});
+    const { skinType, conditions, concerns } = req.query;
 
-// Recommendations Route - POST for filtered results
-app.post("/recommendations", async (req, res) => {
-  try {
-    const { skinType, conditions, concerns } = req.body;
     let result = null;
-
     if (skinType && data.skinTypes?.[skinType]) {
       result = data.skinTypes[skinType];
     } else if (conditions && data.conditions?.[conditions]) {
@@ -65,9 +51,8 @@ app.post("/recommendations", async (req, res) => {
       success: true,
       recommendations: result
     });
-
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error serving recommendations:', error);
     res.status(500).json({
       error: "Internal Server Error",
       message: error.message
