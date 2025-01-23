@@ -11,15 +11,16 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../dist')));
-
 // Load skincare data
 const skincareData = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
 );
 
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// API endpoint for recommendations
 app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
@@ -39,6 +40,7 @@ app.get('/api/recommendations', (req, res) => {
   }
 });
 
+// Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });

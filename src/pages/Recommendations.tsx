@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuiz } from '../context/QuizContext';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +10,8 @@ import { Loader2 } from 'lucide-react';
 import type { RecommendationResult } from '../types/skincare';
 
 const Recommendations = () => {
-  const { answers, completed } = useQuiz();
+  const { state } = useQuiz();
+  const { answers, completed } = state;
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
