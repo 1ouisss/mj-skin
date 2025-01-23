@@ -1,106 +1,126 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuiz } from '../context/QuizContext';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { getRecommendations } from '@/utils/recommendations';
+import { Loader2 } from 'lucide-react';
+import type { RecommendationResult } from '../types/skincare';
 
-export default function Recommendations() {
-  const { state } = useQuiz();
+const Recommendations = () => {
+  const { answers, completed } = useQuiz();
   const navigate = useNavigate();
+  const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    const requiredFields = ['skinType', 'conditions', 'concerns'];
-    const isMissingFields = requiredFields.some(field => !state[field]);
-    
-    if (isMissingFields) {
-      console.warn('Incomplete quiz state detected. Redirecting to quiz...');
-      navigate('/skintypequiz');
+  useEffect(() => {
+    if (!completed) {
+      toast.error('Please complete the quiz first');
+      navigate('/');
       return;
     }
-  }, [state, navigate]);
 
-  const recommendations = getRecommendations(
-    state.skinType,
-    state.conditions,
-    state.concerns
-  );
+    const fetchRecommendations = async () => {
+      try {
+        const searchParams = new URLSearchParams({
+          skinType: answers.skinType || '',
+          condition: answers.condition || '',
+          concerns: answers.concerns || ''
+        });
 
-  if (!recommendations) {
+        const response = await fetch(`/recommendations?${searchParams}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch recommendations');
+        }
+
+        const data = await response.json();
+        setRecommendations(data);
+      } catch (error) {
+        console.error('Recommendation fetch error:', error);
+        toast.error('Unable to load recommendations. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, [completed, answers, navigate]);
+
+  if (loading) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <h2 className="text-2xl font-bold mb-4">Aucune recommandation trouvée</h2>
-          <Button onClick={() => navigate('/')}>Recommencer</Button>
-        </motion.div>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="w-full max-w-2xl space-y-6"
-      >
-        <h1 className="text-4xl font-playfair text-center mb-8">
-          Vos Recommandations Personnalisées
-        </h1>
-
-        {recommendations.Products && recommendations.Products.length > 0 && (
-          <Card>
-            <CardContent className="p-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="min-h-screen w-full p-4 max-w-4xl mx-auto"
+    >
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-3xl font-playfair text-center">
+            Vos Recommandations Personnalisées
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {recommendations?.Products && (
+            <section>
               <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
-              <ul className="list-disc pl-6 space-y-2">
+              <ul className="space-y-4">
                 {recommendations.Products.map((product, index) => (
-                  <li key={index} className="text-gray-700">{product}</li>
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="p-4 bg-gray-50 rounded-lg"
+                  >
+                    {product}
+                  </motion.li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
-        )}
+            </section>
+          )}
 
-        {recommendations.Routine && (
-          <Card>
-            <CardContent className="p-6">
+          {recommendations?.Routine && (
+            <section>
               <h2 className="text-xl font-semibold mb-4">Votre Routine</h2>
-              <div className="space-y-4">
+              <div className="grid gap-6 md:grid-cols-2">
                 <div>
                   <h3 className="font-medium mb-2">Matin ☀️</h3>
-                  <ul className="list-disc pl-6">
+                  <ul className="list-disc pl-6 space-y-2">
                     {recommendations.Routine.Matin.map((step, index) => (
-                      <li key={index} className="text-gray-700">{step}</li>
+                      <li key={index}>{step}</li>
                     ))}
                   </ul>
                 </div>
                 <div>
                   <h3 className="font-medium mb-2">Soir 🌙</h3>
-                  <ul className="list-disc pl-6">
+                  <ul className="list-disc pl-6 space-y-2">
                     {recommendations.Routine.Soir.map((step, index) => (
-                      <li key={index} className="text-gray-700">{step}</li>
+                      <li key={index}>{step}</li>
                     ))}
                   </ul>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </section>
+          )}
 
-        <div className="flex justify-center">
-          <Button onClick={() => navigate('/')} className="flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Retour à l'accueil
-          </Button>
-        </div>
-      </motion.div>
-    </div>
+          <div className="flex justify-center pt-6">
+            <Button onClick={() => navigate('/')}>
+              Retour à l'accueil
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
-}
+};
+
+export default Recommendations;
