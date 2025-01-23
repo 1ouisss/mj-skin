@@ -17,7 +17,19 @@ app.use(cors({
 }));
 
 app.use(express.json());
+// Serve static files
 app.use(express.static(path.join(__dirname, '../dist')));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// Fallback route handler for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 // Load skincare data
 const skincareData = JSON.parse(
