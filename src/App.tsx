@@ -25,7 +25,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <QuizProvider>
         <Toaster position="top-center" />
-        <Routes>
+        <div className="app-container">
+          <Routes>
           <Route path="/" element={<React.Suspense fallback={<div>Loading...</div>}><Index /></React.Suspense>} />
           <Route path="/skintypequiz" element={<React.Suspense fallback={<div>Loading...</div>}><SkinTypeQuiz /></React.Suspense>} />
           <Route path="/conditionsquiz" element={<React.Suspense fallback={<div>Loading...</div>}><ConditionsQuiz /></React.Suspense>} />
