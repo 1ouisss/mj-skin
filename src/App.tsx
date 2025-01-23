@@ -1,11 +1,13 @@
+
 import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { TooltipProvider } from './components/ui/tooltip';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProgressBar } from './components/ProgressBar';
 import { BackButton } from './components/BackButton';
+import { QuizProvider } from './context/QuizContext';
 
 const Index = React.lazy(() => import('./pages/Index'));
 const SkinTypeQuiz = React.lazy(() => import('./pages/SkinTypeQuiz'));
@@ -21,30 +23,32 @@ const Recommendations = React.lazy(() => import('./pages/Recommendations'));
 
 function App() {
   return (
-    <ErrorBoundary>
-      <QuizProvider>
-        <TooltipProvider>
-        <Toaster /> {/* Toaster correctly placed within the App component */}
-        <ProgressBar />
-        <BackButton />
-        <Suspense fallback={<LoadingScreen message="Chargement..." />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/skintypequiz" element={<SkinTypeQuiz />} />
-            <Route path="/conditionsquiz" element={<ConditionsQuiz />} />
-            <Route path="/concernsquiz" element={<ConcernsQuiz />} />
-            <Route path="/zonesquiz" element={<ZonesQuiz />} />
-            <Route path="/treatmentquiz" element={<TreatmentQuiz />} />
-            <Route path="/fragrancequiz" element={<FragranceQuiz />} />
-            <Route path="/routinequiz" element={<RoutineQuiz />} />
-            <Route path="/newsletterquiz" element={<NewsletterQuiz />} />
-            <Route path="/preview" element={<PreviewAnswers />} />
-            <Route path="/recommendations" element={<Recommendations />} />
-          </Routes>
-        </Suspense>
-      </TooltipProvider>
-      </QuizProvider>
-    </ErrorBoundary>
+    <Router>
+      <ErrorBoundary>
+        <QuizProvider>
+          <TooltipProvider>
+            <Toaster />
+            <ProgressBar />
+            <BackButton />
+            <Suspense fallback={<LoadingScreen message="Chargement..." />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/skintypequiz" element={<SkinTypeQuiz />} />
+                <Route path="/conditionsquiz" element={<ConditionsQuiz />} />
+                <Route path="/concernsquiz" element={<ConcernsQuiz />} />
+                <Route path="/zonesquiz" element={<ZonesQuiz />} />
+                <Route path="/treatmentquiz" element={<TreatmentQuiz />} />
+                <Route path="/fragrancequiz" element={<FragranceQuiz />} />
+                <Route path="/routinequiz" element={<RoutineQuiz />} />
+                <Route path="/newsletterquiz" element={<NewsletterQuiz />} />
+                <Route path="/preview" element={<PreviewAnswers />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+              </Routes>
+            </Suspense>
+          </TooltipProvider>
+        </QuizProvider>
+      </ErrorBoundary>
+    </Router>
   );
 }
 
