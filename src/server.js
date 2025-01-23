@@ -12,17 +12,20 @@ const PORT = process.env.PORT || 4000; // Updated port
 
 const app = express();
 
-// Enable trust proxy
-app.set('trust proxy', true);
+// Enable trust proxy for specific IPs only
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
 
 // Security headers
 app.use(helmet());
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests from this IP, please try again later.',
+  trustProxy: false
 });
 
 // Configure CORS for specific origins
