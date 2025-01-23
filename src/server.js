@@ -17,7 +17,13 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../dist')));
+
+// Serve static files with caching headers
+app.use(express.static(path.join(__dirname, '../dist'), {
+  maxAge: '1d',
+  etag: true,
+  lastModified: true
+}));
 
 // API routes should be defined before the catch-all route
 app.get('/api/recommendations', (req, res) => {
@@ -39,9 +45,13 @@ app.get('/api/recommendations', (req, res) => {
   }
 });
 
-// Catch-all route for SPA
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+// SPA catch-all route with proper error handling
+app.get('/*', (req, res, next) => {
+  try {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Error handling middleware
@@ -55,36 +65,6 @@ const skincareData = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'skincare-db.json'), 'utf8')
 );
 
-// API endpoint for recommendations
-app.get('/api/recommendations', (req, res) => {
-  try {
-    const { skinType, condition, concerns } = req.query;
-    console.log('Received query:', { skinType, condition, concerns });
-
-    const recommendations = skincareData.filter(item => 
-      item.skinType === skinType &&
-      item.condition === condition &&
-      item.concerns.includes(concerns)
-    );
-
-    console.log('Sending recommendations:', recommendations);
-    res.json(recommendations);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Serve React app for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
-
-// Add error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
