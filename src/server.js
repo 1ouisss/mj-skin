@@ -43,6 +43,11 @@ app.use(express.json());
 // Serve static files from dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
 
+// SPA catch-all route (must be after API routes)
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
 // API routes
 app.get('/api/recommendations', (req, res) => {
   try {
@@ -107,10 +112,6 @@ app.get('/api/recommendations', (req, res) => {
   }
 });
 
-// SPA catch-all route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
