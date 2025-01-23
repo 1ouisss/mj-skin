@@ -5,7 +5,13 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
+
+// Enable all CORS requests
+app.use(cors({
+  origin: ['http://localhost:8080', 'http://0.0.0.0:8080'],
+  credentials: true
+}));
 
 // Load skincare data
 const skincareDataPath = path.join(__dirname, 'data', 'skincare-db.json');
