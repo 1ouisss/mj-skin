@@ -40,14 +40,10 @@ app.use(limiter);
 
 app.use(express.json());
 
-// Serve static files with caching headers
-app.use(express.static(path.join(__dirname, '../dist'), {
-  maxAge: '1d',
-  etag: true,
-  lastModified: true
-}));
+// Serve static files
+app.use(express.static(path.join(__dirname, '../dist')));
 
-// API routes should be defined before the catch-all route
+// API routes
 app.get('/api/recommendations', (req, res) => {
   try {
     const { skinType, condition, concerns } = req.query;
@@ -111,13 +107,9 @@ app.get('/api/recommendations', (req, res) => {
   }
 });
 
-// SPA catch-all route with proper error handling
-app.get('/*', (req, res, next) => {
-  try {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-  } catch (error) {
-    next(error);
-  }
+// SPA catch-all route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 // Error handling middleware
