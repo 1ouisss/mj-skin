@@ -16,6 +16,7 @@ interface QuizContextType {
   updateAnswers: (newState: Partial<QuizState>) => void;
   validateCurrentStep: () => { valid: boolean; message?: string };
   restoreState: () => Promise<boolean>;
+  resetQuiz: () => void;
 }
 
 const initialState: QuizState = {
@@ -42,11 +43,11 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     switch (currentStep) {
       case 0:
-        return { valid: !!skinType, message: 'Please select a skin type' };
+        return { valid: !!skinType, message: 'Veuillez sélectionner un type de peau' };
       case 1:
-        return { valid: !!conditions, message: 'Please select a condition' };
+        return { valid: !!conditions, message: 'Veuillez sélectionner une condition' };
       case 2:
-        return { valid: concerns.length > 0, message: 'Please select at least one concern' };
+        return { valid: concerns.length > 0, message: 'Veuillez sélectionner au moins une préoccupation' };
       default:
         return { valid: true };
     }
@@ -66,12 +67,18 @@ export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const resetQuiz = () => {
+    setState(initialState);
+    localStorage.removeItem('quizState');
+  };
+
   return (
     <QuizContext.Provider value={{
       state,
       updateAnswers,
       validateCurrentStep,
-      restoreState
+      restoreState,
+      resetQuiz
     }}>
       {children}
     </QuizContext.Provider>
