@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuiz } from '../context/QuizContext';
 import { useNavigate } from 'react-router-dom';
@@ -128,54 +127,49 @@ const Recommendations = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="min-h-screen w-full p-4 max-w-4xl mx-auto"
+      className="min-h-screen w-full p-4 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url("/lovable-uploads/d71176fa-0d0f-4bdf-b75e-21854c3e632d.png")' }}
     >
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-3xl font-playfair text-center">
-            Vos Recommandations Personnalisées
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {recommendations && (
-            <>
-              <section>
-                <h2 className="text-xl font-semibold mb-4">Résultats de l'Analyse</h2>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p>Type de peau: {answers.skinType}</p>
-                  {answers.conditions && <p>Condition: {answers.conditions}</p>}
-                  {answers.concerns && <p>Préoccupations: {answers.concerns}</p>}
-                </div>
-              </section>
-
-              {recommendations.Products && (
+      <div className="max-w-4xl mx-auto">
+        <Card className="w-full bg-white/90 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-3xl font-playfair text-center">
+              Vos Recommandations Personnalisées
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {recommendations && (
+              <>
                 <section>
-                  <h2 className="text-xl font-semibold mb-4">Produits Recommandés</h2>
-                  <ul className="space-y-4">
-                    {recommendations.Products.map((product, index) => (
-                      <motion.li
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="p-4 bg-gray-50 rounded-lg"
-                      >
-                        {product}
-                      </motion.li>
-                    ))}
-                  </ul>
+                  <h2 className="text-xl font-semibold mb-4">Résultats de l'Analyse</h2>
+                  <div className="bg-gray-50/80 p-4 rounded-lg">
+                    <p>Type de peau: {answers.skinType}</p>
+                    {answers.conditions && <p>Condition: {answers.conditions}</p>}
+                    {answers.concerns && <p>Préoccupations: {answers.concerns}</p>}
+                  </div>
                 </section>
-              )}
-            </>
-          )}
 
-          <div className="flex justify-center pt-6">
-            <Button onClick={() => navigate('/')}>
-              Retour à l'accueil
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+                <section>
+                  <h2 className="text-xl font-semibold mb-4">Produit Recommandé</h2>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="p-6 bg-gray-50/80 rounded-lg text-center"
+                  >
+                    <p className="text-lg font-playfair">Votre produit s'affiche ici</p>
+                  </motion.div>
+                </section>
+              </>
+            )}
+
+            <div className="flex justify-center pt-6">
+              <Button onClick={() => navigate('/')}>
+                Retour à l'accueil
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </motion.div>
   );
 };
