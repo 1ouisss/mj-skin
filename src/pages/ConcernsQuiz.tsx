@@ -43,8 +43,8 @@ const ConcernsQuiz = () => {
         width: '100vw'
       }}
     >      
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center relative z-10 pt-12 pb-12">
-        <div className="lg:pl-12">
+      <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start relative z-10 py-12">
+        <div className="lg:pl-12 flex items-center h-full">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -54,7 +54,7 @@ const ConcernsQuiz = () => {
           </motion.h1>
         </div>
 
-        <div className="w-full max-w-xl mx-auto grid grid-cols-1 gap-4">
+        <div className="w-full max-w-xl grid grid-cols-1 gap-4">
           {concerns.map((option, index) => (
             <motion.button
               key={option.text}
