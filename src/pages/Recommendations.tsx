@@ -9,7 +9,7 @@ const Recommendations = () => {
     <div 
       className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-12 md:py-20"
       style={{
-        backgroundImage: `url('/lovable-uploads/e7f53e65-98ef-4caa-81f1-4e780443f462.png')`,
+        backgroundImage: `url('/lovable-uploads/a5f22112-a9f1-4265-90a7-e71f3cfd6d6e.png')`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',

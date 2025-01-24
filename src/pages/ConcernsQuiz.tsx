@@ -35,7 +35,7 @@ const ConcernsQuiz = () => {
     <div 
       className="concerns-page flex items-center justify-center px-4"
       style={{
-        background: `url('/lovable-uploads/e7f53e65-98ef-4caa-81f1-4e780443f462.png')`,
+        background: `url('/lovable-uploads/fb3ff92a-8049-4229-b2ce-8e9a41f262f1.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
