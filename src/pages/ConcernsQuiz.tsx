@@ -43,38 +43,20 @@ const ConcernsQuiz = () => {
         width: '100vw'
       }}
     >      
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-start relative z-10 pt-12 pb-12">
-        <div className="space-y-8">
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="concerns-title"
-          >
-            Quelles sont vos principales préoccupations ?
-          </motion.h1>
+      <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center gap-8 relative z-10 pt-12 pb-12">
+        <motion.h1 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="concerns-title text-center"
+        >
+          Quelles sont vos principales préoccupations ?
+        </motion.h1>
 
-          <div className="grid grid-cols-1 gap-4 lg:hidden">
-            {concerns.map((option, index) => (
-              <motion.button
-                key={option.text}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={handleOptionClick}
-                className="concerns-button"
-              >
-                <option.icon className="w-6 h-6 stroke-current" />
-                <span className="text-lg">{option.text}</span>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-
-        <div className="hidden lg:grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 w-full max-w-xl mx-auto">
           {concerns.map((option, index) => (
             <motion.button
               key={option.text}
-              initial={{ x: 20, opacity: 0 }}
+              initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
               onClick={handleOptionClick}
