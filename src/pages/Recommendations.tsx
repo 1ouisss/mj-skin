@@ -7,97 +7,21 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import type { RecommendationResult } from '../types/skincare';
-import { validateRecommendationResponse } from '../utils/recommendationValidator';
 
 const Recommendations = () => {
   const { state } = useQuiz();
-  const { answers, completed } = state;
   const navigate = useNavigate();
-  const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!completed || !answers.skinType) {
+    if (!state || !state.skinType) {
       toast.error('Veuillez compléter le questionnaire');
       navigate('/', { replace: true });
       return;
     }
-  }, [completed, answers, navigate]);
-
-  useEffect(() => {
-    let isSubscribed = true;
-    const controller = new AbortController();
-
-    const fetchRecommendations = async () => {
-      if (!completed || !answers.skinType) return;
-
-      try {
-        if (isSubscribed) {
-          setLoading(true);
-          setError(null);
-        }
-
-        const params = new URLSearchParams({
-          skinType: answers.skinType,
-          conditions: answers.conditions || '',
-          concerns: answers.concerns || ''
-        });
-
-        const response = await fetch(`/api/recommendations?${params}`, {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          signal: controller.signal
-        });
-        
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('Aucune recommandation trouvée pour ces critères');
-          } else if (response.status === 429) {
-            throw new Error('Trop de requêtes, veuillez réessayer plus tard');
-          } else {
-            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-          }
-        }
-
-        const data = await response.json();
-        const validatedData = validateRecommendationResponse(data);
-        
-        if (!validatedData) {
-          throw new Error('Format de données invalide');
-        }
-        
-        setRecommendations(validatedData);
-        console.log('Recommendations fetched successfully:', validatedData);
-      } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : error instanceof DOMException && error.name === 'AbortError'
-            ? 'La requête a pris trop de temps'
-            : 'Une erreur inattendue est survenue';
-            
-        console.error('Recommendation fetch error:', {
-          error,
-          answers,
-          timestamp: new Date().toISOString()
-        });
-        
-        setError(errorMessage);
-        toast.error(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRecommendations();
-
-    return () => {
-      isSubscribed = false;
-      controller.abort();
-    };
-  }, [answers, completed, navigate]);
+    setLoading(false);
+  }, [state, navigate]);
 
   if (loading) {
     return (
@@ -128,7 +52,7 @@ const Recommendations = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="min-h-screen w-full p-4 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url("/lovable-uploads/d71176fa-0d0f-4bdf-b75e-21854c3e632d.png")' }}
+      style={{ backgroundImage: 'url("/lovable-uploads/16a7cd5d-3c28-4346-a540-6de1d525a480.png")' }}
     >
       <div className="max-w-4xl mx-auto">
         <Card className="w-full bg-white/90 backdrop-blur-sm">
@@ -138,29 +62,25 @@ const Recommendations = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {recommendations && (
-              <>
-                <section>
-                  <h2 className="text-xl font-semibold mb-4">Résultats de l'Analyse</h2>
-                  <div className="bg-gray-50/80 p-4 rounded-lg">
-                    <p>Type de peau: {answers.skinType}</p>
-                    {answers.conditions && <p>Condition: {answers.conditions}</p>}
-                    {answers.concerns && <p>Préoccupations: {answers.concerns}</p>}
-                  </div>
-                </section>
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Résultats de l'Analyse</h2>
+              <div className="bg-gray-50/80 p-4 rounded-lg">
+                <p>Type de peau: {state.skinType}</p>
+                {state.conditions && <p>Condition: {state.conditions}</p>}
+                {state.concerns && <p>Préoccupations: {state.concerns}</p>}
+              </div>
+            </section>
 
-                <section>
-                  <h2 className="text-xl font-semibold mb-4">Produit Recommandé</h2>
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="p-6 bg-gray-50/80 rounded-lg text-center"
-                  >
-                    <p className="text-lg font-playfair">Votre produit s'affiche ici</p>
-                  </motion.div>
-                </section>
-              </>
-            )}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Produit Recommandé</h2>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="p-6 bg-gray-50/80 rounded-lg text-center"
+              >
+                <p className="text-lg font-playfair">Votre produit s'affiche ici</p>
+              </motion.div>
+            </section>
 
             <div className="flex justify-center pt-6">
               <Button onClick={() => navigate('/')}>
