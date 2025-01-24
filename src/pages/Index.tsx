@@ -1,10 +1,10 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import QuizContext from "../context/QuizContext";
+import { useQuiz } from "../context/QuizContext";
 
 const Index = () => {
-  const quizContext = useContext(QuizContext) as { resetQuiz: () => void };
+  const { resetQuiz } = useQuiz();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const Index = () => {
           whileTap={{ scale: 0.98 }}
           onClick={() => {
             console.log("Starting new quiz session");
-            quizContext.resetQuiz();
+            resetQuiz();
             localStorage.setItem("quizAnswers", JSON.stringify({}));
             navigate("/skintypequiz");
           }}
