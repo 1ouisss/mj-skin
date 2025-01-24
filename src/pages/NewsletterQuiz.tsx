@@ -11,9 +11,17 @@ const NewsletterQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex">
+    <div 
+      className="min-h-screen w-full flex"
+      style={{
+        background: `url('/lovable-uploads/2ea74546-c40e-4b82-bb21-2ca721b64712.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       {/* Left content section */}
-      <div className="w-full lg:w-1/2 p-8 flex items-center justify-center">
+      <div className="w-full lg:w-1/2 p-8 flex items-center justify-center backdrop-blur-sm bg-white/30">
         <div className="max-w-xl w-full">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
