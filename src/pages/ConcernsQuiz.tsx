@@ -43,16 +43,18 @@ const ConcernsQuiz = () => {
         width: '100vw'
       }}
     >      
-      <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center gap-8 relative z-10 pt-12 pb-12">
-        <motion.h1 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="concerns-title text-center"
-        >
-          Quelles sont vos principales préoccupations ?
-        </motion.h1>
+      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center relative z-10 pt-12 pb-12">
+        <div className="lg:pl-12">
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="concerns-title text-left"
+          >
+            Quelles sont vos principales préoccupations ?
+          </motion.h1>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 w-full max-w-xl mx-auto">
+        <div className="w-full max-w-xl mx-auto grid grid-cols-1 gap-4">
           {concerns.map((option, index) => (
             <motion.button
               key={option.text}
