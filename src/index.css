@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --border: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+/* Styles spécifiques à la page Index */
+.index-page {
+  font-family: 'Playfair Display', serif;
+}
+
+.index-title {
+  color: #333333;
+  letter-spacing: 0.2em;
+}
+
+.index-subtitle {
+  color: #333333;
+  letter-spacing: 0.3em;
+}
+
+.index-description {
+  color: #4a4a4a;
+  letter-spacing: 0.15em;
+}
+
+.index-button {
+  background: transparent;
+  border: 1px solid #666666;
+  letter-spacing: 0.2em;
+  transition: all 0.3s ease;
+}
+
+.index-button:hover {
+  border-color: #333333;
+}
+
+/* Styles spécifiques à la page SkinTypeQuiz */
+.skintype-page {
+  @apply bg-[#0A0A0A] min-h-screen;
+}
+
+.skintype-title {
+  @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight;
+}
+
+.skintype-button {
+  @apply flex items-center gap-4 bg-white rounded-full py-4 px-6 hover:bg-gray-100 transition-colors;
+}
+
+/* Styles spécifiques à la page DailyRoutineQuiz */
+.dailyroutine-page {
+  @apply bg-[#F8F2EA] min-h-screen;
+}
+
+.dailyroutine-title {
+  @apply elegant-title mx-auto text-center w-full max-w-2xl;
+}
+
+.dailyroutine-button {
+  @apply elegant-button;
+}
+
+/* Styles spécifiques à la page ConcernsQuiz */
+.concerns-page {
+  @apply min-h-screen relative;
+}
+
+.concerns-overlay {
+  @apply absolute inset-0 bg-black/40;
+}
+
+.concerns-title {
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+}
+
+.concerns-button {
+  @apply flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-black rounded-full py-4 px-6 shadow-lg transition-colors w-full;
+}
+
+/* Styles spécifiques à la page ZonesQuiz */
+.zones-page {
+  @apply min-h-screen relative;
+}
+
+.zones-overlay {
+  @apply absolute inset-0 bg-black/40;
+}
+
+.zones-title {
+  @apply elegant-title !text-white mb-16;
+}
+
+.zones-button {
+  @apply elegant-button text-white;
+}
+
+/* Styles spécifiques à la page TreatmentQuiz */
+.treatment-page {
+  @apply min-h-screen relative;
+  background-color: #F5E6E0;
+}
+
+.treatment-overlay {
+  @apply absolute inset-0 bg-black/10;
+}
+
+.treatment-title {
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white;
+  letter-spacing: 0.1em;
+}
+
+.treatment-button {
+  @apply flex items-center justify-center gap-4 bg-white/90 backdrop-blur-sm 
+         hover:bg-white text-[#2C2C2C] rounded-full py-6 px-8 
+         shadow-lg transition-all duration-300 w-full
+         hover:shadow-xl hover:transform hover:scale-[1.02];
+}
+
+/* Styles généraux existants */
+.hero-background {
+  background: linear-gradient(45deg, #f6f6f7 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.elegant-title {
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16;
+  color: #333333;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.elegant-button {
+  @apply flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#333333] rounded-full py-4 px-6 shadow-lg transition-colors w-full;
+}
