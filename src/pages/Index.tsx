@@ -1,32 +1,20 @@
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useQuiz } from "../context/QuizContext";
 
 const Index = () => {
-  const { resetQuiz } = useQuiz();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.group("Index Page - Navigation");
-    console.log("Component mounted");
-    return () => {
-      console.log("Component unmounting");
-      console.groupEnd();
-    };
-  }, []);
-
   return (
-    <div
+    <div 
       className="index-page relative min-h-screen"
       style={{
         background: `url('/lovable-uploads/bd24b52e-f34b-46c2-b3cd-536c17c81cb7.png')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <div className="index-overlay absolute inset-0 bg-gradient-to-b from-transparent to-white/30 backdrop-blur-[2px]" />
-
+      
       <div className="index-content relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -66,12 +54,7 @@ const Index = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => {
-            console.log("Starting new quiz session");
-            resetQuiz();
-            localStorage.setItem("quizAnswers", JSON.stringify({}));
-            navigate("/skintypequiz");
-          }}
+          onClick={() => navigate("/skin-type-quiz")}
           className="index-button px-8 py-3 text-gray-800 border border-gray-400 hover:border-gray-600 transition-colors duration-300 tracking-[0.2em] text-sm backdrop-blur-sm"
         >
           COMMENCER LE DIAGNOSTIC

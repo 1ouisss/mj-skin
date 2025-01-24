@@ -1,15 +1,12 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, Sparkles, Flower, Target, Star, Sunrise } from "lucide-react";
-import { ErrorBoundary } from "../components/ErrorBoundary";
 
 const ZonesQuiz = () => {
   const navigate = useNavigate();
 
-  const handleOptionClick = (zone: string) => {
-    localStorage.setItem('zones', JSON.stringify(zone));
-    navigate("/treatmentquiz");
+  const handleOptionClick = () => {
+    navigate("/treatment-quiz");
   };
 
   return (
@@ -45,7 +42,7 @@ const ZonesQuiz = () => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
-              onClick={() => handleOptionClick(option.text)}
+              onClick={handleOptionClick}
               className="elegant-button bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
             >
               <option.icon className="w-6 h-6 stroke-current" />

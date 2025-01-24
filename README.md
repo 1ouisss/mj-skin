@@ -1,9 +1,5 @@
 # Welcome to your Lovable project
 
-## Data Privacy Notice
-
-This app does not store any user data permanently. All data is processed temporarily in memory and deleted immediately after recommendations are generated. User responses are cleared both from the server and client after processing.
-
 ## Project info
 
 **URL**: https://lovable.dev/projects/48163805-6c29-4f6d-b891-eed1f87c7b39

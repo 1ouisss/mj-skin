@@ -1,44 +1,58 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
-import { useQuiz } from '../context/QuizContext';
-import type { SkinType } from '../types/skincare';
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
-  const { updateAnswers } = useQuiz();
 
-  const handleOptionClick = (skinType: SkinType) => {
-    try {
-      updateAnswers({ skinType });
-      navigate("/conditionsquiz");
-    } catch (error) {
-      console.error('Error handling skin type selection:', error);
-    }
+  const handleOptionClick = () => {
+    navigate("/conditions-quiz");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="space-y-6 max-w-2xl w-full">
-        <h1 className="text-3xl text-center mb-8">Quel est votre type de peau ?</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            { text: "Sèche" as SkinType, icon: Flower2 },
-            { text: "Grasse" as SkinType, icon: Droplets },
-            { text: "Mixte" as SkinType, icon: Scale },
-            { text: "Sensible" as SkinType, icon: Cloud },
-            { text: "Terne" as SkinType, icon: Cloud },
-            { text: "Normale" as SkinType, icon: Sparkles }
-          ].map((option) => (
-            <button
-              key={option.text}
-              onClick={() => handleOptionClick(option.text)}
-              className="flex items-center gap-2 p-4 w-full bg-white hover:bg-gray-50 rounded-lg border"
-            >
-              <option.icon className="w-5 h-5" />
-              <span>{option.text}</span>
-            </button>
-          ))}
+    <div 
+      className="skintype-page flex items-center justify-center px-4 min-h-screen w-full"
+      style={{
+        background: `url('/lovable-uploads/686da753-061a-4c41-8ca0-ddada141a419.png')`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw'
+      }}
+    >
+      <div className="w-full max-w-2xl mx-auto">
+        <div className="space-y-8">
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-[#222222] text-center mb-12"
+          >
+            Quel est votre type de peau ?
+          </motion.h1>
+
+          <div className="grid grid-cols-1 gap-4 mt-8">
+            {[
+              { text: "Sèche", icon: Flower2 },
+              { text: "Grasse", icon: Droplets },
+              { text: "Mixte", icon: Scale },
+              { text: "Sensible", icon: Cloud },
+              { text: "Terne", icon: Cloud },
+              { text: "Normale", icon: Sparkles },
+            ].map((option, index) => (
+              <motion.button
+                key={option.text}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={handleOptionClick}
+                className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 shadow-lg transition-colors"
+              >
+                <option.icon className="w-6 h-6 stroke-[1.5]" />
+                <span className="text-lg">{option.text}</span>
+              </motion.button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
