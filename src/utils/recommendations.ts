@@ -1,28 +1,31 @@
-
-import { QuizAnswers, RecommendationResult } from '../types/skincare';
+import { QuizAnswers, RecommendationResult, SkinType, Concern } from '../types/skincare';
 import skincareDb from '../data/skincare-db.json';
 
 export const getRecommendations = (
-  skinType: QuizAnswers['skinType'],
-  conditions: QuizAnswers['conditions'],
-  concerns: QuizAnswers['concerns']
+  skinType: SkinType,
+  conditions: string,
+  concerns: Concern[]
 ): RecommendationResult | null => {
   console.group('[getRecommendations]');
   console.log('Input:', { skinType, conditions, concerns });
 
   try {
+    const db = skincareDb as Record<string, any>;
     let result = null;
 
-    if (skinType && 'skinTypes' in skincareDb && skinType in skincareDb.skinTypes) {
-      result = skincareDb.skinTypes[skinType];
+    if (skinType && db.skinTypes?.[skinType]) {
+      result = db.skinTypes[skinType];
     }
 
-    if (!result && conditions && 'conditions' in skincareDb && conditions in skincareDb.conditions) {
-      result = skincareDb.conditions[conditions];
+    if (!result && conditions && db.conditions?.[conditions]) {
+      result = db.conditions[conditions];
     }
 
-    if (!result && concerns && 'concerns' in skincareDb && concerns in skincareDb.concerns) {
-      result = skincareDb.concerns[concerns];
+    if (!result && concerns.length > 0) {
+      const concernKey = concerns[0];
+      if (db.concerns?.[concernKey]) {
+        result = db.concerns[concernKey];
+      }
     }
 
     if (!result) {
@@ -31,11 +34,19 @@ export const getRecommendations = (
     }
 
     const typedResult: RecommendationResult = {
-      Products: result.products || [],
+      Products: Array.isArray(result.products) ? result.products.map((p: any) => ({
+        id: String(p.id || Math.random()),
+        name: String(p.name || ''),
+        description: String(p.description || ''),
+        usage: p.usage,
+        ingredients: Array.isArray(p.ingredients) ? p.ingredients : [],
+        benefits: Array.isArray(p.benefits) ? p.benefits : [],
+        price: typeof p.price === 'number' ? p.price : undefined
+      })) : [],
       Routine: {
-        Matin: result.routine?.Matin || [],
-        Soir: result.routine?.Soir || [],
-        Résultat: result.routine?.Résultat || ''
+        Matin: Array.isArray(result.routine?.Matin) ? result.routine.Matin : [],
+        Soir: Array.isArray(result.routine?.Soir) ? result.routine.Soir : [],
+        Résultat: String(result.routine?.Résultat || '')
       }
     };
 

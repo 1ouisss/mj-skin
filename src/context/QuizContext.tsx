@@ -1,22 +1,31 @@
-
 import React, { createContext, useContext, useState } from 'react';
-import type { QuizAnswers } from '../types/skincare';
+import type { SkinType, Condition, Concern, TexturePreference, ScentPreference } from '../types/skincare';
 
 interface QuizState {
-  answers: Partial<QuizAnswers>;
   currentStep: number;
+  skinType: SkinType | null;
+  conditions: Condition | null;
+  concerns: Concern[];
+  texturePreference: TexturePreference | null;
+  scentPreference: ScentPreference | null;
+  completed: boolean;
 }
 
 interface QuizContextType {
   state: QuizState;
-  updateAnswers: (answers: Partial<QuizAnswers>) => void;
-  setCurrentStep: (step: number) => void;
-  resetQuiz: () => void;
+  updateAnswers: (newState: Partial<QuizState>) => void;
+  validateCurrentStep: () => { valid: boolean; message?: string };
+  restoreState: () => Promise<boolean>;
 }
 
 const initialState: QuizState = {
-  answers: {},
-  currentStep: 0
+  currentStep: 0,
+  skinType: null,
+  conditions: null,
+  concerns: [],
+  texturePreference: null,
+  scentPreference: null,
+  completed: false
 };
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -24,27 +33,45 @@ const QuizContext = createContext<QuizContextType | undefined>(undefined);
 export const QuizProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<QuizState>(initialState);
 
-  const updateAnswers = (newAnswers: Partial<QuizAnswers>) => {
-    setState(prev => ({
-      ...prev,
-      answers: { ...prev.answers, ...newAnswers }
-    }));
+  const updateAnswers = (newState: Partial<QuizState>) => {
+    setState(prev => ({ ...prev, ...newState }));
   };
 
-  const setCurrentStep = (step: number) => {
-    setState(prev => ({ ...prev, currentStep: step }));
+  const validateCurrentStep = () => {
+    const { currentStep, skinType, conditions, concerns } = state;
+    
+    switch (currentStep) {
+      case 0:
+        return { valid: !!skinType, message: 'Please select a skin type' };
+      case 1:
+        return { valid: !!conditions, message: 'Please select a condition' };
+      case 2:
+        return { valid: concerns.length > 0, message: 'Please select at least one concern' };
+      default:
+        return { valid: true };
+    }
   };
 
-  const resetQuiz = () => {
-    setState(initialState);
+  const restoreState = async (): Promise<boolean> => {
+    try {
+      const savedState = localStorage.getItem('quizState');
+      if (savedState) {
+        setState(JSON.parse(savedState));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to restore state:', error);
+      return false;
+    }
   };
 
   return (
     <QuizContext.Provider value={{
       state,
       updateAnswers,
-      setCurrentStep,
-      resetQuiz
+      validateCurrentStep,
+      restoreState
     }}>
       {children}
     </QuizContext.Provider>
