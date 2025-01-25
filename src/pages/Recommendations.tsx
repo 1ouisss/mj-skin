@@ -1,12 +1,23 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { skinRecommendations, type SkinType } from "@/utils/skinRecommendations";
+import { skinRecommendations } from "@/utils/skinRecommendations";
 import { Sparkles, Sun, Moon, Star } from "lucide-react";
+import { useSkinType } from "@/contexts/SkinTypeContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Recommendations = () => {
-  // For demo purposes, we'll use a fixed skin type
-  // In a real application, this would come from your app's state management
-  const selectedSkinType: SkinType = "Normale";
+  const { selectedSkinType } = useSkinType();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!selectedSkinType) {
+      navigate("/skin-type-quiz");
+    }
+  }, [selectedSkinType, navigate]);
+
+  if (!selectedSkinType) return null;
+
   const recommendation = skinRecommendations[selectedSkinType];
 
   return (

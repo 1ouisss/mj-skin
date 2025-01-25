@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
+import { useSkinType } from "@/contexts/SkinTypeContext";
+import { type SkinType } from "@/utils/skinRecommendations";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
+  const { setSelectedSkinType } = useSkinType();
 
-  const handleOptionClick = () => {
+  const handleOptionClick = (skinType: SkinType) => {
+    setSelectedSkinType(skinType);
     navigate("/conditions-quiz");
   };
 
@@ -33,19 +37,19 @@ const SkinTypeQuiz = () => {
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {[
-              { text: "Sèche", icon: Flower2 },
-              { text: "Grasse", icon: Droplets },
-              { text: "Mixte", icon: Scale },
-              { text: "Sensible", icon: Cloud },
-              { text: "Terne", icon: Cloud },
-              { text: "Normale", icon: Sparkles },
-            ].map((option, index) => (
+              { text: "Sèche", type: "Sèche" as SkinType, icon: Flower2 },
+              { text: "Grasse", type: "Grasse" as SkinType, icon: Droplets },
+              { text: "Mixte", type: "Mixte" as SkinType, icon: Scale },
+              { text: "Sensible", type: "Sensible" as SkinType, icon: Cloud },
+              { text: "Terne", type: "Terne" as SkinType, icon: Cloud },
+              { text: "Normale", type: "Normale" as SkinType, icon: Sparkles },
+            ].map((option) => (
               <motion.button
                 key={option.text}
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={handleOptionClick}
+                transition={{ delay: 0.1 }}
+                onClick={() => handleOptionClick(option.type)}
                 className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 shadow-lg transition-colors"
               >
                 <option.icon className="w-6 h-6 stroke-[1.5]" />
