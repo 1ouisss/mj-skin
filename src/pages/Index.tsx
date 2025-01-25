@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Progress } from "@/components/ui/progress";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -16,6 +17,17 @@ const Index = () => {
       <div className="index-overlay absolute inset-0 bg-gradient-to-b from-transparent to-white/30 backdrop-blur-[2px]" />
       
       <div className="index-content relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center">
+        {/* Progress Bar */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="absolute top-8 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4"
+        >
+          <Progress value={0} className="h-1 bg-gray-200/50" />
+          <p className="text-sm text-gray-600 mt-2 font-light tracking-wider">ÉTAPE 0/8</p>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
