@@ -32,7 +32,7 @@ const Recommendations = () => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl md:text-5xl font-playfair text-center mb-8 text-[#4A4A4A] tracking-wide">
-            Recommandations pour peau {selectedSkinType}
+            Recommandations
           </h1>
 
           {/* Products Section */}
