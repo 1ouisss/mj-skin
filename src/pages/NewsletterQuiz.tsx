@@ -14,7 +14,7 @@ const NewsletterQuiz = () => {
     <div 
       className="min-h-screen w-full flex"
       style={{
-        background: `url('/lovable-uploads/2ea74546-c40e-4b82-bb21-2ca721b64712.png')`,
+        background: `url('/lovable-uploads/a33d5244-470c-46e4-aedc-b08a04f5ecbb.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
