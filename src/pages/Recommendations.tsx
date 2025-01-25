@@ -1,15 +1,19 @@
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { skinRecommendations, type SkinType } from "@/utils/skinRecommendations";
+import { Sparkles, Sun, Moon, Star } from "lucide-react";
 
 const Recommendations = () => {
-  const navigate = useNavigate();
+  // For demo purposes, we'll use a fixed skin type
+  // In a real application, this would come from your app's state management
+  const selectedSkinType: SkinType = "Normale";
+  const recommendation = skinRecommendations[selectedSkinType];
 
   return (
     <div 
-      className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-12 md:py-20"
+      className="min-h-screen w-full flex flex-col items-center justify-start px-4 py-12 md:py-20"
       style={{
-        backgroundImage: `url('/lovable-uploads/a5f22112-a9f1-4265-90a7-e71f3cfd6d6e.png')`,
+        background: `url('/lovable-uploads/a33d5244-470c-46e4-aedc-b08a04f5ecbb.png')`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
@@ -21,55 +25,77 @@ const Recommendations = () => {
       }}
     >
       <div className="w-full max-w-7xl mx-auto relative z-10">
-        {/* Products Section */}
         <motion.section 
-          className="results-section mb-16"
+          className="mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-playfair text-center mb-12 text-[#4A4A4A] tracking-wide">
-            Vos recommandations
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
-            {[1, 2, 3].map((index) => (
-              <Card 
-                key={index}
-                className="product-card bg-white/80 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-                data-product-placeholder={`product-${index}`}
-              >
-                <CardContent className="flex items-center justify-center p-8 h-48">
-                  <p className="text-lg text-[#8E9196] text-center font-playfair">
-                    Votre produit s'affiche ici
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </motion.section>
+          <h1 className="text-4xl md:text-5xl font-playfair text-center mb-8 text-[#4A4A4A] tracking-wide">
+            Recommandations pour peau {selectedSkinType}
+          </h1>
 
-        {/* Routine Section */}
-        <motion.section 
-          className="routine-section"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <h2 className="text-4xl md:text-5xl font-playfair text-center mb-12 text-[#4A4A4A] tracking-wide">
-            Votre routine recommandée
-          </h2>
-          
-          <Card className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 shadow-sm">
-            <CardContent className="p-8">
-              <div 
-                className="min-h-[200px] flex items-center justify-center text-center"
-                data-routine-placeholder="routine-text"
-              >
-                <p className="text-lg text-[#8E9196] font-playfair">
-                  Votre routine personnalisée s'affiche ici
+          {/* Products Section */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-playfair text-center mb-8 text-[#4A4A4A] flex items-center justify-center gap-2">
+              <Sparkles className="w-6 h-6" />
+              Produits recommandés
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+              {recommendation.products.map((product, index) => (
+                <Card 
+                  key={index}
+                  className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
+                >
+                  <CardContent className="flex items-center justify-center p-8 h-40">
+                    <p className="text-lg text-[#4A4A4A] text-center font-playfair">
+                      {product}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Routines Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {/* Morning Routine */}
+            <Card className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-playfair text-[#4A4A4A] mb-6 flex items-center gap-2">
+                  <Sun className="w-6 h-6" />
+                  Routine du matin
+                </h3>
+                <p className="text-lg text-[#666666] leading-relaxed font-playfair">
+                  {recommendation.morningRoutine}
                 </p>
-              </div>
+              </CardContent>
+            </Card>
+
+            {/* Evening Routine */}
+            <Card className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-playfair text-[#4A4A4A] mb-6 flex items-center gap-2">
+                  <Moon className="w-6 h-6" />
+                  Routine du soir
+                </h3>
+                <p className="text-lg text-[#666666] leading-relaxed font-playfair">
+                  {recommendation.eveningRoutine}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Results Section */}
+          <Card className="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-playfair text-[#4A4A4A] mb-6 flex items-center justify-center gap-2">
+                <Star className="w-6 h-6" />
+                Résultats attendus
+              </h3>
+              <p className="text-xl text-[#666666] text-center font-playfair">
+                {recommendation.results}
+              </p>
             </CardContent>
           </Card>
         </motion.section>
