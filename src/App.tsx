@@ -8,7 +8,6 @@ import Index from "./pages/Index";
 import SkinTypeQuiz from "./pages/SkinTypeQuiz";
 import ConditionsQuiz from "./pages/ConditionsQuiz";
 import ConcernsQuiz from "./pages/ConcernsQuiz";
-import ZonesQuiz from "./pages/ZonesQuiz";
 import TreatmentQuiz from "./pages/TreatmentQuiz";
 import FragranceQuiz from "./pages/FragranceQuiz";
 import RoutineQuiz from "./pages/RoutineQuiz";
@@ -29,7 +28,6 @@ const App = () => (
             <Route path="/skin-type-quiz" element={<SkinTypeQuiz />} />
             <Route path="/conditions-quiz" element={<ConditionsQuiz />} />
             <Route path="/concerns-quiz" element={<ConcernsQuiz />} />
-            <Route path="/zones-quiz" element={<ZonesQuiz />} />
             <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
             <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
             <Route path="/routine-quiz" element={<RoutineQuiz />} />

@@ -60,7 +60,7 @@ const Index = () => {
           onClick={() => navigate("/skin-type-quiz")}
           className="index-button px-8 py-3 text-gray-800 border border-gray-400 hover:border-gray-600 transition-colors duration-300 tracking-[0.2em] text-sm backdrop-blur-sm"
         >
-          COMMENCER LE DIAGNOSTIC
+          ANALYSE
         </motion.button>
       </div>
     </div>

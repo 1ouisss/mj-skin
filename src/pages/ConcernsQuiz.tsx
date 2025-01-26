@@ -17,7 +17,7 @@ const ConcernsQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = () => {
-    navigate("/zones-quiz");
+    navigate("/treatment-quiz");
   };
 
   const concerns = [
@@ -46,12 +46,12 @@ const ConcernsQuiz = () => {
     >      
       <ProgressHeader currentStep={3} />
       
-      <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start relative z-10 py-12">
+      <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start relative z-10 py-24">
         <div className="lg:pl-12 flex items-center h-full">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="concerns-title text-left"
+            className="concerns-title text-left drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
           >
             Quelles sont vos principales préoccupations ?
           </motion.h1>
