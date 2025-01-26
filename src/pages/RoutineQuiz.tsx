@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Zap, Timer, Sparkles } from "lucide-react";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const RoutineQuiz = () => {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const RoutineQuiz = () => {
         height: '100vh',
       }}
     >      
+      <ProgressHeader currentStep={7} />
+      
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}

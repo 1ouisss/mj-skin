@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Heart } from "lucide-react";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const NewsletterQuiz = () => {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ const NewsletterQuiz = () => {
         backgroundRepeat: 'no-repeat',
       }}
     >
+      <ProgressHeader currentStep={8} />
+      
       {/* Left content section */}
       <div className="w-full lg:w-1/2 p-8 flex items-center justify-center backdrop-blur-sm bg-white/30">
         <div className="max-w-xl w-full">

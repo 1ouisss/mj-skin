@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, Sparkles, Flower, Target, Star, Sunrise } from "lucide-react";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const ZonesQuiz = () => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const ZonesQuiz = () => {
         backgroundAttachment: 'fixed',
       }}
     >      
+      <ProgressHeader currentStep={4} />
+      
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Feather, Droplets, Flower2, Sparkles } from "lucide-react";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const TreatmentQuiz = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const TreatmentQuiz = () => {
         backgroundPosition: 'center',
       }}
     >      
+      <ProgressHeader currentStep={5} />
+      
       <div className="w-full max-w-6xl mx-auto relative z-10 pt-20">
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}

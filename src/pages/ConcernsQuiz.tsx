@@ -11,6 +11,7 @@ import {
   Search, 
   ArrowDown 
 } from "lucide-react";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const ConcernsQuiz = () => {
   const navigate = useNavigate();
@@ -43,6 +44,8 @@ const ConcernsQuiz = () => {
         width: '100vw'
       }}
     >      
+      <ProgressHeader currentStep={3} />
+      
       <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start relative z-10 py-12">
         <div className="lg:pl-12 flex items-center h-full">
           <motion.h1 
