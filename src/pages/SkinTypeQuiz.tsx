@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { type SkinType } from "@/utils/skinRecommendations";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const SkinTypeQuiz = () => {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ const SkinTypeQuiz = () => {
         width: '100vw'
       }}
     >
+      <ProgressHeader currentStep={1} />
+      
       <div className="w-full max-w-2xl mx-auto">
         <div className="space-y-8">
           <motion.h1 

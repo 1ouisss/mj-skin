@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Progress } from "@/components/ui/progress";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -17,34 +17,7 @@ const Index = () => {
       <div className="index-overlay absolute inset-0 bg-gradient-to-b from-transparent to-white/30 backdrop-blur-[2px]" />
       
       <div className="index-content relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center">
-        {/* Enhanced Progress Bar */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="absolute top-0 left-0 w-full px-4 pt-8 pb-4 bg-gradient-to-b from-white/10 to-transparent backdrop-blur-[1px]"
-        >
-          <div className="max-w-4xl mx-auto">
-            <p className="text-sm text-gray-700 mb-2 font-playfair tracking-[0.2em] text-center">
-              ÉTAPE 0/8
-            </p>
-            <div className="relative">
-              <Progress 
-                value={0} 
-                className="h-2.5 bg-[#FEF7CD]/60 rounded-full overflow-hidden"
-                style={{
-                  backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.2))'
-                }}
-              />
-              <div 
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.05)'
-                }}
-              />
-            </div>
-          </div>
-        </motion.div>
+        <ProgressHeader currentStep={0} />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

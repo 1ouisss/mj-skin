@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Flower2, Check } from "lucide-react";
+import ProgressHeader from "@/components/ProgressHeader";
 
 const ConditionsQuiz = () => {
   const navigate = useNavigate();
@@ -14,14 +15,16 @@ const ConditionsQuiz = () => {
       className="flex items-center justify-center px-4 min-h-screen w-full relative"
       style={{
         background: `url('/lovable-uploads/ada41ff7-d054-4869-8e8a-8138b7c1aa81.png')`,
-        backgroundSize: '150%', // Zoomed out for better quality
+        backgroundSize: '150%',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         height: '100vh',
         width: '100vw'
       }}
     >
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" /> {/* Added subtle overlay for better text readability */}
+      <ProgressHeader currentStep={2} />
+      
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
       <div className="w-full max-w-2xl mx-auto relative z-10">
         <div className="space-y-8">
           <motion.h1 
