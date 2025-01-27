@@ -30,7 +30,7 @@ const ConditionsQuiz = () => {
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-5xl font-light tracking-wider leading-tight text-[#222222] text-center mb-12"
+            className="glass-title text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-12"
           >
             Avez-vous une condition particulière ?
           </motion.h1>
@@ -47,7 +47,7 @@ const ConditionsQuiz = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={handleOptionClick}
-                className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 shadow-lg transition-colors"
+                className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 transition-colors"
               >
                 <option.icon className="w-6 h-6 stroke-[1.5]" />
                 <span className="text-lg">{option.text}</span>

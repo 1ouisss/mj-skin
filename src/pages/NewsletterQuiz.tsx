@@ -29,7 +29,7 @@ const NewsletterQuiz = () => {
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="elegant-title text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-[#4A4A4A]"
+            className="glass-title text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-[#4A4A4A]"
           >
             Souhaitez-vous recevoir la lettre de Jacynthe avec des rituels beauté par saison et des inspirations ?
           </motion.h1>
