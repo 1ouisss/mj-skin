@@ -23,8 +23,7 @@ const NewsletterQuiz = () => {
     >
       <ProgressHeader currentStep={8} />
       
-      {/* Left content section */}
-      <div className="w-full lg:w-1/2 p-8 flex items-center justify-center backdrop-blur-sm bg-white/30">
+      <div className="w-full p-8 flex items-center justify-center backdrop-blur-sm bg-white/30">
         <div className="max-w-xl w-full">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
@@ -53,15 +52,6 @@ const NewsletterQuiz = () => {
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Right image section */}
-      <div className="hidden lg:block w-1/2 relative">
-        <img
-          src="/lovable-uploads/58c8f277-7b88-4ca7-b0b1-ebf83f82f290.png"
-          alt="Portrait élégant"
-          className="object-cover w-full h-full"
-        />
       </div>
     </div>
   );
