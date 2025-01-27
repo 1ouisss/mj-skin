@@ -65,6 +65,7 @@
 
 .skintype-title {
   @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight;
+  @apply bg-black/20 backdrop-blur-sm px-8 py-6 rounded-2xl;
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.7),
     4px 4px 8px rgba(0, 0, 0, 0.5),
@@ -82,6 +83,7 @@
 
 .dailyroutine-title {
   @apply elegant-title mx-auto text-center w-full max-w-2xl;
+  @apply bg-black/10 backdrop-blur-sm px-8 py-6 rounded-2xl;
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.7),
     4px 4px 8px rgba(0, 0, 0, 0.5),
@@ -103,6 +105,7 @@
 
 .concerns-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+  @apply bg-black/20 backdrop-blur-sm px-8 py-6 rounded-2xl;
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.7),
     4px 4px 8px rgba(0, 0, 0, 0.5),
@@ -125,6 +128,7 @@
 
 .treatment-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white;
+  @apply bg-black/10 backdrop-blur-sm px-8 py-6 rounded-2xl;
   letter-spacing: 0.1em;
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.7),
@@ -164,6 +168,7 @@
 /* Styles for zones page */
 .zones-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+  @apply bg-black/20 backdrop-blur-sm px-8 py-6 rounded-2xl;
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.7),
     4px 4px 8px rgba(0, 0, 0, 0.5),
