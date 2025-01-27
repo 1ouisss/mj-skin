@@ -64,14 +64,19 @@
 }
 
 .skintype-title {
-  @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight relative z-10;
+  @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight;
+  position: relative;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .skintype-button {
@@ -84,14 +89,19 @@
 }
 
 .dailyroutine-title {
-  @apply elegant-title mx-auto text-center w-full max-w-2xl relative z-10;
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+  position: relative;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .dailyroutine-button {
@@ -108,14 +118,19 @@
 }
 
 .concerns-title {
-  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white relative z-10;
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+  position: relative;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .concerns-button {
@@ -128,19 +143,20 @@
   background-color: #F5E6E0;
 }
 
-.treatment-overlay {
-  @apply absolute inset-0 bg-black/10;
-}
-
 .treatment-title {
-  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white relative z-10;
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+  position: relative;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
   letter-spacing: 0.1em;
 }
 
