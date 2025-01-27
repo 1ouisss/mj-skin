@@ -26,7 +26,7 @@ const FragranceQuiz = () => {
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="zones-title"
+          className="glass-title"
         >
           Préférez-vous des produits avec ou sans odeur ?
         </motion.h1>

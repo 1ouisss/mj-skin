@@ -51,7 +51,7 @@ const ConcernsQuiz = () => {
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="concerns-title text-left drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+            className="glass-title text-left"
           >
             Quelles sont vos principales préoccupations ?
           </motion.h1>

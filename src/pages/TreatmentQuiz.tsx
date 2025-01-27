@@ -25,7 +25,7 @@ const TreatmentQuiz = () => {
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="treatment-title"
+          className="glass-title"
         >
           Quel type de texture préférez-vous pour vos produits ?
         </motion.h1>

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Flower2, Droplets, Scale, Cloud, Sparkles } from "lucide-react";
+import { Sparkles, Flower2, Check } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { type SkinType } from "@/utils/skinRecommendations";
 import ProgressHeader from "@/components/ProgressHeader";
@@ -32,7 +32,7 @@ const SkinTypeQuiz = () => {
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="skintype-title mb-16"
+          className="glass-title mb-16"
         >
           Quel est votre type de peau ?
         </motion.div>
@@ -40,11 +40,11 @@ const SkinTypeQuiz = () => {
         <div className="grid grid-cols-1 gap-4 mt-8">
           {[
             { text: "Sèche", type: "Sèche" as SkinType, icon: Flower2 },
-            { text: "Grasse", type: "Grasse" as SkinType, icon: Droplets },
-            { text: "Mixte", type: "Mixte" as SkinType, icon: Scale },
-            { text: "Sensible", type: "Sensible" as SkinType, icon: Cloud },
-            { text: "Terne", type: "Terne" as SkinType, icon: Cloud },
-            { text: "Normale", type: "Normale" as SkinType, icon: Sparkles },
+            { text: "Grasse", type: "Grasse" as SkinType, icon: Sparkles },
+            { text: "Mixte", type: "Mixte" as SkinType, icon: Check },
+            { text: "Sensible", type: "Sensible" as SkinType, icon: Check },
+            { text: "Terne", type: "Terne" as SkinType, icon: Check },
+            { text: "Normale", type: "Normale" as SkinType, icon: Check },
           ].map((option) => (
             <motion.button
               key={option.text}
