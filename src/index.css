@@ -64,11 +64,13 @@
 }
 
 .skintype-title {
-  @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight;
-  @apply bg-black/40 backdrop-blur-md px-8 py-6 rounded-3xl;
+  @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight relative z-10;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem;
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -82,11 +84,13 @@
 }
 
 .dailyroutine-title {
-  @apply elegant-title mx-auto text-center w-full max-w-2xl;
-  @apply bg-black/30 backdrop-blur-md px-8 py-6 rounded-3xl;
+  @apply elegant-title mx-auto text-center w-full max-w-2xl relative z-10;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem;
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -104,11 +108,13 @@
 }
 
 .concerns-title {
-  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
-  @apply bg-black/40 backdrop-blur-md px-8 py-6 rounded-3xl;
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white relative z-10;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem;
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -127,13 +133,15 @@
 }
 
 .treatment-title {
-  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white;
-  @apply bg-black/40 backdrop-blur-md px-8 py-6 rounded-3xl;
-  letter-spacing: 0.1em;
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white relative z-10;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem;
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 8px 32px 0 rgba(0, 0, 0, 0.36),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.1em;
 }
 
 .treatment-button {
@@ -167,12 +175,14 @@
 
 /* Styles for zones page */
 .zones-title {
-  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
-  @apply bg-black/20 backdrop-blur-sm px-8 py-6 rounded-2xl;
-  text-shadow: 
-    2px 2px 4px rgba(0, 0, 0, 0.7),
-    4px 4px 8px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(0, 0, 0, 0.9);
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white relative z-10;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.36),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .zones-button {
