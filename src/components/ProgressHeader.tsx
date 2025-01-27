@@ -14,13 +14,13 @@ const ProgressHeader = ({ currentStep, totalSteps = 7 }: ProgressHeaderProps) =>
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8 }}
-      className="fixed left-4 top-1/2 -translate-y-1/2 h-[60vh] z-50 flex flex-col justify-center"
+      className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col justify-center items-center"
     >
-      <div className="h-full bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg flex flex-col">
-        <p className="text-sm text-white/90 mb-2 font-playfair tracking-[0.2em] text-left rotate-180" style={{ writingMode: 'vertical-rl' }}>
+      <div className="h-[60vh] bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg flex flex-col items-center">
+        <p className="text-sm text-white/90 mb-2 font-playfair tracking-[0.2em] text-center rotate-180" style={{ writingMode: 'vertical-rl' }}>
           ÉTAPE {currentStep}/{totalSteps}
         </p>
-        <div className="relative flex-1 flex items-center">
+        <div className="relative flex-1 flex items-center justify-center">
           <Progress 
             value={progress} 
             className="h-[300px] w-3 bg-white/20 rounded-full overflow-hidden [&>div]:rotate-180"
