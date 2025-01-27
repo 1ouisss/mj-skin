@@ -32,16 +32,19 @@
 .index-title {
   color: #333333;
   letter-spacing: 0.2em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .index-subtitle {
   color: #333333;
   letter-spacing: 0.3em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .index-description {
   color: #4a4a4a;
   letter-spacing: 0.15em;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .index-button {
@@ -62,9 +65,10 @@
 
 .skintype-title {
   @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
-               4px 4px 8px rgba(0, 0, 0, 0.5),
-               0 0 20px rgba(0, 0, 0, 0.9);
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .skintype-button {
@@ -78,9 +82,10 @@
 
 .dailyroutine-title {
   @apply elegant-title mx-auto text-center w-full max-w-2xl;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
-               4px 4px 8px rgba(0, 0, 0, 0.5),
-               0 0 20px rgba(0, 0, 0, 0.9);
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .dailyroutine-button {
@@ -98,9 +103,10 @@
 
 .concerns-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
-               4px 4px 8px rgba(0, 0, 0, 0.5),
-               0 0 20px rgba(0, 0, 0, 0.9);
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .concerns-button {
@@ -120,9 +126,10 @@
 .treatment-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white;
   letter-spacing: 0.1em;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
-               4px 4px 8px rgba(0, 0, 0, 0.5),
-               0 0 20px rgba(0, 0, 0, 0.9);
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .treatment-button {
@@ -132,7 +139,7 @@
          hover:shadow-xl hover:transform hover:scale-[1.02];
 }
 
-/* Styles généraux existants */
+/* Styles généraux */
 .hero-background {
   background: linear-gradient(45deg, #f6f6f7 0%, #ffffff 100%);
   position: relative;
@@ -144,8 +151,25 @@
   color: #333333;
   letter-spacing: 0.5px;
   line-height: 1.4;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .elegant-button {
   @apply flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#333333] rounded-full py-4 px-6 shadow-lg transition-colors w-full;
+}
+
+/* Styles for zones page */
+.zones-title {
+  @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.9);
+}
+
+.zones-button {
+  @apply flex items-center gap-4 rounded-full py-4 px-6 transition-colors w-full;
 }
