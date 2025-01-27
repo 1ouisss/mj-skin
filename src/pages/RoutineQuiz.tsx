@@ -34,12 +34,12 @@ const RoutineQuiz = () => {
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="glass-title"
+          className="glass-title mb-20"
         >
           Combien de temps consacrez-vous à votre routine beauté ?
         </motion.h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mt-16">
           {[
             { text: "Moins de 5 minutes", icon: Zap },
             { text: "5-10 minutes", icon: Timer },
