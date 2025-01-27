@@ -34,7 +34,7 @@ const RoutineQuiz = () => {
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="zones-title"
+          className="glass-title"
         >
           Combien de temps consacrez-vous à votre routine beauté ?
         </motion.h1>
