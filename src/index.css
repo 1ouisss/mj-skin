@@ -62,7 +62,9 @@
 
 .skintype-title {
   @apply text-4xl md:text-5xl font-light text-white tracking-wider leading-tight;
-  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
+               4px 4px 8px rgba(0, 0, 0, 0.5),
+               0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .skintype-button {
@@ -76,7 +78,9 @@
 
 .dailyroutine-title {
   @apply elegant-title mx-auto text-center w-full max-w-2xl;
-  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
+               4px 4px 8px rgba(0, 0, 0, 0.5),
+               0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .dailyroutine-button {
@@ -94,7 +98,9 @@
 
 .concerns-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-white;
-  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 0, 0, 0.4);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
+               4px 4px 8px rgba(0, 0, 0, 0.5),
+               0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .concerns-button {
@@ -114,7 +120,9 @@
 .treatment-title {
   @apply text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-16 text-white;
   letter-spacing: 0.1em;
-  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
+               4px 4px 8px rgba(0, 0, 0, 0.5),
+               0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .treatment-button {
