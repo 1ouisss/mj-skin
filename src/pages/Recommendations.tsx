@@ -59,9 +59,14 @@ const Recommendations = () => {
                   className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
                 >
                   <CardContent className="flex items-center justify-center p-8 h-40">
-                    <p className="text-lg text-[#4A4A4A] text-center font-playfair">
-                      {product}
-                    </p>
+                    <a 
+                      href={product.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-lg text-[#4A4A4A] text-center font-playfair hover:text-blue-600 transition-colors"
+                    >
+                      {product.name}
+                    </a>
                   </CardContent>
                 </Card>
               ))}
