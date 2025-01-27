@@ -38,6 +38,10 @@
   max-width: 800px;
   margin: 0 auto;
   color: white;
+  font-size: 3.5rem;
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: 0.05em;
 }
 
 /* Styles spécifiques à la page Index */
