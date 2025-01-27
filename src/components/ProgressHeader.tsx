@@ -11,21 +11,21 @@ const ProgressHeader = ({ currentStep, totalSteps = 7 }: ProgressHeaderProps) =>
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8 }}
-      className="fixed top-4 left-4 w-96 z-50"
+      className="fixed left-4 top-1/2 -translate-y-1/2 h-[80vh] z-50 flex flex-col justify-center"
     >
-      <div className="max-w-4xl bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg">
-        <p className="text-sm text-white/90 mb-2 font-playfair tracking-[0.2em] text-left">
+      <div className="h-full bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg flex flex-col">
+        <p className="text-sm text-white/90 mb-2 font-playfair tracking-[0.2em] text-left rotate-180" style={{ writingMode: 'vertical-rl' }}>
           ÉTAPE {currentStep}/{totalSteps}
         </p>
-        <div className="relative">
+        <div className="relative flex-1 flex items-center">
           <Progress 
             value={progress} 
-            className="h-3 bg-white/20 rounded-full overflow-hidden"
+            className="h-[300px] w-3 bg-white/20 rounded-full overflow-hidden [&>div]:rotate-180"
             style={{
-              backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.2))'
+              backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.2))'
             }}
           />
         </div>
