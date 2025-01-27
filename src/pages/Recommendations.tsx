@@ -63,7 +63,7 @@ const Recommendations = () => {
                       href={product.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-lg text-[#4A4A4A] text-center font-playfair hover:text-blue-600 transition-colors"
+                      className="text-lg text-[#4A4A4A] text-center font-playfair hover:text-blue-600 transition-colors cursor-pointer"
                     >
                       {product.name}
                     </a>
