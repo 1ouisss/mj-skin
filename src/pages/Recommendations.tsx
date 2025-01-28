@@ -25,14 +25,14 @@ const Recommendations = () => {
 
   if (!selectedSkinType) return null;
 
-  const recommendation = routineRecommendations[selectedSkinType];
-  const filteredProducts = getFilteredRecommendations(
-    selectedSkinType,
-    selectedCondition || "Aucune",
-    "< 5 minutes", // You might want to get this from context
-    "Légère", // You might want to get this from context
-    false // You might want to get this from context
-  );
+  const filteredProducts = getFilteredRecommendations({
+    skinType: selectedSkinType,
+    condition: selectedCondition || "Aucune",
+    duration: "< 5 minutes",
+    texture: "Légère",
+    noEssentialOils: false,
+    timeOfDay: new Date().getHours() < 18 ? 'morning' : 'evening'
+  });
 
   return (
     <div 
@@ -105,7 +105,7 @@ const Recommendations = () => {
                   Routine du matin
                 </h3>
                 <p className="text-lg text-[#666666] leading-relaxed font-playfair">
-                  {recommendation.morningRoutine}
+                  {routineRecommendations[selectedSkinType].morningRoutine}
                 </p>
               </CardContent>
             </Card>
@@ -117,7 +117,7 @@ const Recommendations = () => {
                   Routine du soir
                 </h3>
                 <p className="text-lg text-[#666666] leading-relaxed font-playfair">
-                  {recommendation.eveningRoutine}
+                  {routineRecommendations[selectedSkinType].eveningRoutine}
                 </p>
               </CardContent>
             </Card>
@@ -130,7 +130,7 @@ const Recommendations = () => {
                 Résultats attendus
               </h3>
               <p className="text-xl text-[#666666] text-center font-playfair">
-                {recommendation.results}
+                {routineRecommendations[selectedSkinType].results}
               </p>
             </CardContent>
           </Card>
