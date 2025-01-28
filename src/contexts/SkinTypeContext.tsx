@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { SkinType, SkinCondition } from "@/utils/skinRecommendations";
+import { SkinType, SkinCondition } from "../types/skincare";
 
 interface SkinTypeContextType {
   selectedSkinType: SkinType | null;

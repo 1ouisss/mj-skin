@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Flower2, Check } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
-import { type SkinType } from "@/utils/skinRecommendations";
+import { type SkinType } from "../types/skincare";
 import ProgressHeader from "@/components/ProgressHeader";
 
 const SkinTypeQuiz = () => {
