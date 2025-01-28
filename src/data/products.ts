@@ -2,203 +2,303 @@ import { Product } from "../types/skincare";
 
 export const skinProducts: Record<string, Product> = {
   cremeFraiche: {
+    id: "creme-fraiche",
     name: "Crème Fraîche",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/creme-fraiche",
     ingredients: "Citrus sinensis (Orange) water, Simmondsia chinensis (Jojoba) seed oil, Cetearyl olivate (Olivate de cétéaryle) (et) Sorbitan olivate (Olivate de sorbitan), Butyrospermum parkii (Karité) butter, Mangifera indica (Mangue) seed butter, Vanillin (Vanilline), Glycerin (Glycérine végétale), Tocopherol (Vitamine E), Sodium benzoate (Benzoate de sodium), Potassium sorbate (Sorbate de potassium).",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible", "Normale"]
   },
   eauNeroli: {
+    id: "eau-neroli",
     name: "Eau de Néroli enrichie",
+    type: "Tonique",
     url: "https://maisonjacynthe.ca/fr/eau-de-neroli-enrichie",
     ingredients: "Citrus sinensis (Orange) water, Glycerin (Glycérine végétale), Citrus aurantium var amara (Néroli) flower oil, Citrus aurantium (Petit grain) leaf/twig oil.",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: true
+    hasEssentialOils: true,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Normale"]
   },
   lotusSacre: {
+    id: "lotus-sacre",
     name: "Lotus Sacré",
+    type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/booster-d-hydratation-acide-hyaluronique-lotus-sacre",
     ingredients: "Citrus sinensis (Orange) water, Aloe barbadensis (Aloès) leaf juice, Glycerin (Glycérine végétale), Hyaluronic acid (Acide hyaluronique), Sodium benzoate (Benzoate de sodium), Potassium sorbate (Sorbate de potassium), Xanthan gum (Gomme xanthane), Nelumbo nucifera (Lotus rose) flower extract, Santalum album (Bois de santal) wood oil.",
     texture: "Fluide",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Déshydratation"],
+    skinTypes: ["Sèche", "Normale", "Mixte"]
   },
   serumImmortelle: {
+    id: "serum-immortelle",
     name: "Sérum Immortelle",
+    type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/serum-immortelle-30-ml",
     ingredients: "Rosa canina (Rose musquée) fruit oil, Triticum vulgare/aestivum (Blé) extract oil, Hippophae rhamnoides (Argousier) CO2 extract, Tocopherol (Tocophérol), Tocotrienol (Tocotriénol), Rosmarinus officinalis (Romarin) CO2 leaf extract, Calendula officinalis (Calendule) CO2 extract, Helichrysum italicum (Immortelle) oil, Eucalyptus radiata (Eucalyptus radié) leaf oil.",
     texture: "Légère",
     duration: "5-10 minutes",
-    hasEssentialOils: true
+    hasEssentialOils: true,
+    conditions: ["Rides"],
+    skinTypes: ["Sèche", "Normale"]
   },
   huileNettoyante: {
+    id: "huile-nettoyante",
     name: "Huile Nettoyante",
+    type: "Nettoyant",
     url: "https://maisonjacynthe.ca/fr/huile-nettoyante-100-ml",
     ingredients: "Simmondsia chinensis (Jojoba) seed oil, Prunus armeniaca kernel (Abricot) oil, Hippophae rhamnoides (Argousier) oil, Pelargonium x asperum (Géranium bourbon) leaf oil, Cananga odorata (Ylang-ylang) flower oil, Santalum album (Bois de santal) oil.",
     texture: "Fluide",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Grasse", "Mixte", "Sensible", "Normale"]
   },
   eauOrange: {
+    id: "eau-orange",
     name: "Eau d'Orange",
+    type: "Tonique",
     url: "https://maisonjacynthe.ca/fr/eau-florale-d-orange",
     ingredients: "Eau d’orange (Citrus sinensis).",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Grasse", "Mixte", "Sensible", "Normale"]
   },
   gelSebo: {
+    id: "gel-sebo",
     name: "Gel Sébo",
+    type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/gel-sebo-regulateur",
     ingredients: "Aqua (Eau), Aloe barbadensis (Aloès) leaf juice, Simondsia chinensis (Jojoba) seed oil, Xanthan gum (Gomme xanthane), Rosmarinus officinalis verbenoniferum (Romarin à verbenone) oil, Lavandula latifolia (Lavande aspic) oil, Pelargonium X asperum (Géranium bourbon) leaf oil, Eucalyptus radiata (Eucalyptus radié) oil, Salvia sclarea (Sauge sclarée) oil, Cymbopogon martini (Palmarosa) oil, Sodium benzoate (Benzoate de sodium), Potassium sorbate (Sorbate de potassium).",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Acné"],
+    skinTypes: ["Grasse", "Mixte"]
   },
   gelAloes: {
+    id: "gel-aloes",
     name: "Gel d'Aloès",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/gel-d-aloes-pur-50-ml",
     ingredients: "Aqua (Eau distillée), Aloe barbadensis (Aloès) leaf juice, Xanthan gum (Gomme de xanthane), Glycerin (Glycérine), Sodium benzoate (Benzoate de sodium), Potassium sorbate (Sorbate de potassium).",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible", "Normale"]
   },
   serumRose: {
+    id: "serum-rose",
     name: "Sérum Rose",
+    type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/catalog/product/view/id/887/s/serum-a-la-roses/",
     ingredients: "Rosa rubiginosa (Rose musquée) fruit oil, Oenothera biennis (Onagre) oil, Borago officinalis (Bourrache) seed oil, Rosmarinus officinalis (Romarin) leaf extract, Rosa damascena (Absolue de rose Damas) flower extract, Rosa damascena (Rose) flower oil, Santalum album (Bois de santal) oil, Tocopherol (Vitamine E), Hippophae rhamnoides (Argousier) oil.",
     texture: "Fluide",
     duration: "5-10 minutes",
-    hasEssentialOils: true
+    hasEssentialOils: true,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible", "Normale"]
   },
   exfopur: {
+    id: "exfopur",
     name: "Exfopur",
+    type: "Masque",
     url: "https://maisonjacynthe.ca/fr/exfopur",
     ingredients: "Acide salicylique, Aloe vera, Tea tree",
     texture: "Légère",
     duration: "5-10 minutes",
-    hasEssentialOils: true
+    hasEssentialOils: true,
+    conditions: ["Acné"],
+    skinTypes: ["Grasse", "Mixte"]
   },
   masquePurifiant: {
+    id: "masque-purifiant",
     name: "Masque purifiant au charbon",
+    type: "Masque",
     url: "https://maisonjacynthe.ca/fr/masque-purifiant",
     ingredients: "Charbon actif, Argile, Aloe vera",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Grasse", "Mixte", "Sensible"]
   },
   hydrogelRafraichissant: {
+    id: "hydrogel-raffraichissant",
     name: "Hydrogel rafraîchissant",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/hydrogel",
     ingredients: "Aloe vera, Concombre, Zinc",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible", "Normale"]
   },
   baumeApaisant: {
+    id: "baume-apaisant",
     name: "Baume Apaisant",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/baume-apaisant",
     ingredients: "Beurre de karité, Huile de jojoba, Calendula",
     texture: "Riche",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   huileJojoba: {
+    id: "huile-jojoba",
     name: "Huile de Jojoba",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/huile-jojoba",
     ingredients: "Huile de jojoba pure",
     texture: "Fluide",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible", "Normale"]
   },
   eauDeRose: {
+    id: "eau-de-rose",
     name: "Eau de Rose",
+    type: "Tonique",
     url: "https://maisonjacynthe.ca/fr/eau-de-rose",
     ingredients: "Eau de rose pure, Extraits de camomille",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sensible", "Normale"]
   },
   cremeApaisante: {
+    id: "creme-apaisante",
     name: "Crème Apaisante Camomille",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/creme-camomille",
     ingredients: "Camomille, Aloe vera, Panthénol",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sensible"]
   },
   huileKukui: {
+    id: "huile-kukui",
     name: "Huile réparatrice Kukui",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/huile-kukui",
     ingredients: "Huile de Kukui, Calendula, Camomille",
     texture: "Fluide",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   masqueCollagene: {
+    id: "masque-collagene",
     name: "Masque TYPE collagène avec Karité chaud",
+    type: "Masque",
     url: "https://maisonjacynthe.ca/fr/masque-collagene",
     ingredients: "Beurre de karité, Collagène marin, Huile d'argan",
     texture: "Riche",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   soinJeunesse: {
+    id: "soin-jeunesse",
     name: "Soin jeunesse contour des yeux",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/soin-jeunesse",
     ingredients: "Peptides, Caféine, Acide hyaluronique",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   cremeLotus: {
+    id: "creme-lotus",
     name: "Crème Lotus Sacré",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/creme-lotus",
     ingredients: "Extrait de lotus, Acide hyaluronique, Peptides",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   masqueLiftant: {
+    id: "masque-liftant",
     name: "Masque liftant au miel",
+    type: "Masque",
     url: "https://maisonjacynthe.ca/fr/masque-liftant",
     ingredients: "Miel bio, Gelée royale, Propolis",
     texture: "Riche",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   serumEclat: {
+    id: "serum-eclat",
     name: "Sérum éclat",
+    type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/serum-eclat",
     ingredients: "Vitamine C, Niacinamide, Alpha-arbutine",
     texture: "Fluide",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   gelClarifiant: {
+    id: "gel-clarifiant",
     name: "Gel clarifiant au magnolia",
+    type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/gel-clarifiant",
     ingredients: "Extrait de magnolia, AHA, Niacinamide",
     texture: "Légère",
     duration: "< 5 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Grasse", "Mixte"]
   },
   triphase: {
+    id: "triphase",
     name: "Triphase",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/triphase",
     ingredients: "Peptides, Céramides, Acide hyaluronique",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   },
   phytocomplexe: {
+    id: "phytocomplexe",
     name: "Phytocomplexe",
+    type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/phytocomplexe",
     ingredients: "Extraits botaniques, Peptides, Vitamines",
     texture: "Riche",
     duration: "5-10 minutes",
-    hasEssentialOils: false
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"]
   }
 };
