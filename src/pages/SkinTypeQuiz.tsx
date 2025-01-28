@@ -11,7 +11,7 @@ const SkinTypeQuiz = () => {
 
   const handleOptionClick = (skinType: SkinType) => {
     setSelectedSkinType(skinType);
-    navigate("/skin-condition-quiz");
+    navigate("/conditions-quiz");
   };
 
   return (
