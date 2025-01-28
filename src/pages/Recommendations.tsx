@@ -4,7 +4,13 @@ import { skinRecommendations } from "@/utils/skinRecommendations";
 import { Sparkles, Sun, Moon, Star } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Recommendations = () => {
   const { selectedSkinType } = useSkinType();
@@ -46,7 +52,6 @@ const Recommendations = () => {
             Recommandations
           </h1>
 
-          {/* Products Section */}
           <div className="mb-16">
             <h2 className="text-3xl font-playfair text-center mb-8 text-[#4A4A4A] flex items-center justify-center gap-2">
               <Sparkles className="w-6 h-6" />
@@ -54,28 +59,32 @@ const Recommendations = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
               {recommendation.products.map((product, index) => (
-                <Card 
-                  key={index}
-                  className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                  <CardContent className="flex items-center justify-center p-8 h-40">
-                    <a 
-                      href={product.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lg text-[#4A4A4A] text-center font-playfair hover:text-blue-600 transition-colors cursor-pointer"
-                    >
-                      {product.name}
-                    </a>
-                  </CardContent>
-                </Card>
+                <TooltipProvider key={index}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Card className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                        <CardContent className="flex items-center justify-center p-8 h-40">
+                          <a 
+                            href={product.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-lg text-[#4A4A4A] text-center font-playfair hover:text-blue-600 transition-colors cursor-pointer"
+                          >
+                            {product.name}
+                          </a>
+                        </CardContent>
+                      </Card>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-[300px] p-4 text-sm">
+                      <p className="font-playfair">{product.ingredients}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ))}
             </div>
           </div>
 
-          {/* Routines Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {/* Morning Routine */}
             <Card className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-playfair text-[#4A4A4A] mb-6 flex items-center gap-2">
@@ -88,7 +97,6 @@ const Recommendations = () => {
               </CardContent>
             </Card>
 
-            {/* Evening Routine */}
             <Card className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-playfair text-[#4A4A4A] mb-6 flex items-center gap-2">
@@ -102,7 +110,6 @@ const Recommendations = () => {
             </Card>
           </div>
 
-          {/* Results Section */}
           <Card className="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm">
             <CardContent className="p-8">
               <h3 className="text-2xl font-playfair text-[#4A4A4A] mb-6 flex items-center justify-center gap-2">
