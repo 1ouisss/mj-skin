@@ -1,17 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Flower2, Check } from "lucide-react";
+import { Sparkles, Flower2, Heart, Check } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
-import { type SkinType } from "@/utils/skinRecommendations";
+import type { SkinCondition } from "@/contexts/SkinTypeContext";
 import ProgressHeader from "@/components/ProgressHeader";
 
-const SkinTypeQuiz = () => {
+const SkinConditionQuiz = () => {
   const navigate = useNavigate();
-  const { setSelectedSkinType } = useSkinType();
+  const { setSkinCondition } = useSkinType();
 
-  const handleOptionClick = (skinType: SkinType) => {
-    setSelectedSkinType(skinType);
-    navigate("/skin-condition-quiz");
+  const handleOptionClick = (condition: SkinCondition) => {
+    setSkinCondition(condition);
+    navigate("/concerns-quiz");
   };
 
   return (
@@ -24,7 +24,7 @@ const SkinTypeQuiz = () => {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <ProgressHeader currentStep={1} />
+      <ProgressHeader currentStep={2} />
       
       <div className="absolute inset-0 bg-black/30" />
       
@@ -34,17 +34,15 @@ const SkinTypeQuiz = () => {
           animate={{ y: 0, opacity: 1 }}
           className="glass-title mb-16"
         >
-          Quel est votre type de peau ?
+          Avez-vous une condition particulière ?
         </motion.div>
 
         <div className="grid grid-cols-1 gap-4 mt-8">
           {[
-            { text: "Sèche", type: "Sèche" as SkinType, icon: Flower2 },
-            { text: "Grasse", type: "Grasse" as SkinType, icon: Sparkles },
-            { text: "Mixte", type: "Mixte" as SkinType, icon: Check },
-            { text: "Sensible", type: "Sensible" as SkinType, icon: Check },
-            { text: "Terne", type: "Terne" as SkinType, icon: Check },
-            { text: "Normale", type: "Normale" as SkinType, icon: Check },
+            { text: "Acné", type: "Acné" as SkinCondition, icon: Sparkles },
+            { text: "Eczéma", type: "Eczéma" as SkinCondition, icon: Flower2 },
+            { text: "Rougeurs", type: "Rougeurs" as SkinCondition, icon: Heart },
+            { text: "Aucune", type: "Aucune" as SkinCondition, icon: Check },
           ].map((option) => (
             <motion.button
               key={option.text}
@@ -64,4 +62,4 @@ const SkinTypeQuiz = () => {
   );
 };
 
-export default SkinTypeQuiz;
+export default SkinConditionQuiz;

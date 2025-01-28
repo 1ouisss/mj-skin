@@ -13,18 +13,36 @@ import {
 } from "@/components/ui/tooltip";
 
 const Recommendations = () => {
-  const { selectedSkinType } = useSkinType();
+  const { selectedSkinType, skinCondition } = useSkinType();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!selectedSkinType) {
+    if (!selectedSkinType || !skinCondition) {
       navigate("/skin-type-quiz");
     }
-  }, [selectedSkinType, navigate]);
+  }, [selectedSkinType, skinCondition, navigate]);
 
-  if (!selectedSkinType) return null;
+  if (!selectedSkinType || !skinCondition) return null;
 
   const recommendation = skinRecommendations[selectedSkinType];
+
+  // Adjust recommendations based on skin condition
+  const adjustedProducts = recommendation.products.filter(product => {
+    switch (skinCondition) {
+      case "Acné":
+        return product.name.includes("Exfopur") || product.name.includes("Sébo");
+      case "Eczéma":
+        return !product.name.includes("Exfopur") && (
+          product.name.includes("Apaisant") || 
+          product.name.includes("Jojoba")
+        );
+      case "Rougeurs":
+        return product.name.includes("Rose") || 
+               product.name.includes("Apaisant");
+      default:
+        return true;
+    }
+  });
 
   return (
     <div 
@@ -63,7 +81,7 @@ const Recommendations = () => {
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
-              {recommendation.products.map((product, index) => (
+              {adjustedProducts.map((product, index) => (
                 <TooltipProvider key={index}>
                   <Tooltip>
                     <TooltipTrigger asChild>
