@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { skinRecommendations, getFilteredRecommendations } from "@/utils/skinRecommendations";
+import { getFilteredRecommendations } from "@/services/recommendationService";
+import { routineRecommendations } from "@/data/routines";
 import { Sparkles, Sun, Moon, Star } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +25,7 @@ const Recommendations = () => {
 
   if (!selectedSkinType) return null;
 
-  const recommendation = skinRecommendations[selectedSkinType];
+  const recommendation = routineRecommendations[selectedSkinType];
   const filteredProducts = getFilteredRecommendations(
     selectedSkinType,
     selectedCondition || "Aucune",
@@ -70,7 +71,7 @@ const Recommendations = () => {
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
-              {recommendation.products.map((product, index) => (
+              {filteredProducts.map((product, index) => (
                 <TooltipProvider key={index}>
                   <Tooltip>
                     <TooltipTrigger asChild>
