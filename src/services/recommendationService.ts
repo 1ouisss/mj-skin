@@ -1,7 +1,6 @@
-import { SkinType, SkinCondition, RoutineDuration, TexturePreference, Product } from "../types/skincare";
-import { routineRecommendations } from "../data/routines";
-import { conditionRecommendations } from "../data/conditions";
-import { skinProducts } from "../data/products";
+import { SkinType, SkinCondition, Product, RoutineDuration, TexturePreference } from "../types/skincare";
+import { hydratants } from "../data/products/hydratants";
+import { serums } from "../data/products/serums";
 
 interface FilterCriteria {
   skinType: SkinType;
@@ -12,83 +11,45 @@ interface FilterCriteria {
   timeOfDay?: 'morning' | 'evening';
 }
 
-export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
-  // Commencer avec tous les produits
-  let products = Object.values(skinProducts);
-  let matchingCriteria = 0;
+const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
+  let score = 0;
+  const maxScore = 100;
 
-  // Filtrer par type de peau
-  const skinTypeProducts = routineRecommendations[criteria.skinType].products;
-  if (skinTypeProducts.length > 0) {
-    products = products.filter(p => skinTypeProducts.some(sp => sp.name === p.name));
-    matchingCriteria++;
-  }
+  // Critères obligatoires (50% du score)
+  if (product.skinTypes.includes(criteria.skinType)) score += 25;
+  if (product.conditions.includes(criteria.condition)) score += 25;
 
-  // Filtrer par condition si spécifiée
-  if (criteria.condition !== "Aucune" && conditionRecommendations[criteria.condition].products) {
-    const conditionProducts = conditionRecommendations[criteria.condition].products || [];
-    products = [...new Set([...products, ...conditionProducts])];
-    matchingCriteria++;
-  }
+  // Critères secondaires (50% du score)
+  if (product.texture.toLowerCase() === criteria.texture.toLowerCase()) score += 20;
+  if (criteria.noEssentialOils === !product.hasEssentialOils) score += 15;
+  if (product.duration === criteria.duration) score += 15;
 
-  // Appliquer le filtre de texture si spécifié
-  if (criteria.texture) {
-    const textureFiltered = products.filter(p => p.texture.toLowerCase() === criteria.texture.toLowerCase());
-    if (textureFiltered.length > 0) {
-      products = textureFiltered;
-      matchingCriteria++;
-    }
-  }
-
-  // Filtrer par durée de routine
-  if (criteria.duration === "< 5 minutes") {
-    const durationFiltered = products.filter(p => p.duration === "rapide");
-    if (durationFiltered.length > 0) {
-      products = durationFiltered;
-      matchingCriteria++;
-    }
-  }
-
-  // Filtrer par présence d'huiles essentielles
-  if (criteria.noEssentialOils) {
-    const noEssentialOilsProducts = products.filter(p => !p.hasEssentialOils);
-    if (noEssentialOilsProducts.length > 0) {
-      products = noEssentialOilsProducts;
-      matchingCriteria++;
-    }
-  }
-
-  // Filtrer par moment de la journée
-  if (criteria.timeOfDay) {
-    const timeSpecificProducts = products.filter(p => {
-      if (criteria.timeOfDay === 'morning') {
-        return !p.name.toLowerCase().includes('nuit');
-      } else {
-        return !p.name.toLowerCase().includes('jour');
-      }
-    });
-    if (timeSpecificProducts.length > 0) {
-      products = timeSpecificProducts;
-      matchingCriteria++;
-    }
-  }
-
-  // S'assurer qu'au moins 2 critères sont satisfaits
-  if (matchingCriteria < 2) {
-    console.warn('Moins de 2 critères satisfaits, retour aux recommandations par défaut du type de peau');
-    return routineRecommendations[criteria.skinType].products;
-  }
-
-  // Limiter à maximum 5 produits pour éviter les routines trop longues
-  return products.slice(0, 5);
+  return (score / maxScore) * 100;
 };
 
-// Fonction utilitaire pour mélanger les produits de manière aléatoire
-const shuffleArray = <T>(array: T[]): T[] => {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
+  const allProducts = [...hydratants, ...serums];
+  
+  // Calculer les scores pour chaque produit
+  const scoredProducts = allProducts.map(product => ({
+    product,
+    score: calculateProductScore(product, criteria)
+  }));
+
+  // Filtrer les produits avec un score minimum de 50%
+  const validProducts = scoredProducts
+    .filter(item => item.score >= 50)
+    .sort((a, b) => b.score - a.score)
+    .map(item => item.product);
+
+  // Séparer les produits du matin et du soir
+  if (criteria.timeOfDay) {
+    const timeSpecificProducts = validProducts.filter(product => {
+      const isNightProduct = product.name.toLowerCase().includes('nuit');
+      return criteria.timeOfDay === 'evening' ? isNightProduct : !isNightProduct;
+    });
+    return timeSpecificProducts.slice(0, 4);
   }
-  return shuffled;
+
+  return validProducts.slice(0, 4);
 };
