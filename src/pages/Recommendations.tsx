@@ -88,8 +88,11 @@ const Recommendations = () => {
                         </CardContent>
                       </Card>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-[300px] p-4 text-sm">
-                      <p className="font-playfair">{product.ingredients}</p>
+                    <TooltipContent 
+                      className="max-w-[300px] p-4 text-sm bg-white/95 backdrop-blur-md border border-gray-200 shadow-lg"
+                      sideOffset={5}
+                    >
+                      <p className="font-playfair text-[#4A4A4A]">{product.ingredients}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
