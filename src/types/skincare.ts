@@ -7,14 +7,14 @@ export interface Product {
   name: string;
   url: string;
   ingredients: string;
-  texture?: "légère" | "fluide" | "crémeuse" | "riche";
-  duration?: "rapide" | "standard";
-  hasEssentialOils?: boolean;
+  texture: "légère" | "fluide" | "crémeuse" | "riche";
+  duration: "rapide" | "standard";
+  hasEssentialOils: boolean;
 }
 
 export interface SkinRecommendation {
   products: Product[];
   morningRoutine: string;
   eveningRoutine: string;
-  results: string;
+  results?: string;
 }
