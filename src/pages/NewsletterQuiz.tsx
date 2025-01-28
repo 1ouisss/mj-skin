@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Heart } from "lucide-react";
+import { Sparkles, Heart, Mail } from "lucide-react";
 import ProgressHeader from "@/components/ProgressHeader";
 
 const NewsletterQuiz = () => {
@@ -37,6 +37,7 @@ const NewsletterQuiz = () => {
             {[
               { text: "Oui", value: "yes", icon: Sparkles },
               { text: "Non", value: "no", icon: Heart },
+              { text: "Je suis déjà inscrit(e)", value: "already", icon: Mail }
             ].map((option, index) => (
               <motion.button
                 key={option.value}
