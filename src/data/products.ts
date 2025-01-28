@@ -34,7 +34,7 @@ export const skinProducts: Record<string, Product> = {
     texture: "Fluide",
     duration: "5-10 minutes",
     hasEssentialOils: false,
-    conditions: ["Déshydratation"],
+    conditions: ["Aucune"],
     skinTypes: ["Sèche", "Normale", "Mixte"]
   },
   serumImmortelle: {
