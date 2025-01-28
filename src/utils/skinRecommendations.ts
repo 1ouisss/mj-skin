@@ -2,6 +2,9 @@ export interface Product {
   name: string;
   url: string;
   ingredients: string;
+  texture?: "légère" | "fluide" | "crémeuse" | "riche";
+  duration?: "rapide" | "standard";
+  hasEssentialOils?: boolean;
 }
 
 export interface SkinRecommendation {
@@ -13,6 +16,8 @@ export interface SkinRecommendation {
 
 export type SkinType = "Sèche" | "Grasse" | "Mixte" | "Sensible" | "Terne" | "Normale";
 export type SkinCondition = "Acné" | "Eczéma" | "Rougeurs" | "Aucune";
+export type RoutineDuration = "< 5 minutes" | "5-10 minutes" | "> 10 minutes";
+export type TexturePreference = "Légère" | "Fluide" | "Crémeuse" | "Riche";
 
 export const skinRecommendations: Record<SkinType, SkinRecommendation> = {
   "Sèche": {
@@ -185,12 +190,34 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
       {
         name: "Exfopur",
         url: "https://maisonjacynthe.ca/fr/exfopur",
-        ingredients: "Acide salicylique, Aloe vera, Tea tree"
+        ingredients: "Acide salicylique, Aloe vera, Tea tree",
+        texture: "légère",
+        duration: "standard",
+        hasEssentialOils: true
       },
       {
         name: "Gel Sébo",
         url: "https://maisonjacynthe.ca/fr/gel-sebo",
-        ingredients: "Zinc PCA, Niacinamide, Acide salicylique"
+        ingredients: "Zinc PCA, Niacinamide, Acide salicylique",
+        texture: "légère",
+        duration: "rapide",
+        hasEssentialOils: false
+      },
+      {
+        name: "Masque purifiant au charbon",
+        url: "https://maisonjacynthe.ca/fr/masque-purifiant",
+        ingredients: "Charbon actif, Argile, Aloe vera",
+        texture: "crémeuse",
+        duration: "standard",
+        hasEssentialOils: false
+      },
+      {
+        name: "Hydrogel rafraîchissant",
+        url: "https://maisonjacynthe.ca/fr/hydrogel",
+        ingredients: "Aloe vera, Concombre, Zinc",
+        texture: "légère",
+        duration: "rapide",
+        hasEssentialOils: false
       }
     ],
     morningRoutine: "Nettoyage doux → Application de Gel Sébo → Protection solaire non comédogène",
@@ -201,12 +228,18 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
       {
         name: "Baume Apaisant",
         url: "https://maisonjacynthe.ca/fr/baume-apaisant",
-        ingredients: "Beurre de karité, Huile de jojoba, Calendula"
+        ingredients: "Beurre de karité, Huile de jojoba, Calendula",
+        texture: "riche",
+        duration: "standard",
+        hasEssentialOils: false
       },
       {
         name: "Huile de Jojoba",
         url: "https://maisonjacynthe.ca/fr/huile-jojoba",
-        ingredients: "Huile de jojoba pure"
+        ingredients: "Huile de jojoba pure",
+        texture: "fluide",
+        duration: "rapide",
+        hasEssentialOils: false
       }
     ],
     morningRoutine: "Nettoyage très doux → Application de Baume Apaisant → Protection",
@@ -217,17 +250,34 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
       {
         name: "Eau de Rose",
         url: "https://maisonjacynthe.ca/fr/eau-de-rose",
-        ingredients: "Eau de rose pure, Extraits de camomille"
+        ingredients: "Eau de rose pure, Extraits de camomille",
+        texture: "légère",
+        duration: "rapide",
+        hasEssentialOils: false
       },
       {
         name: "Sérum Rose",
         url: "https://maisonjacynthe.ca/fr/serum-rose",
-        ingredients: "Huile de rose musquée, Extraits de camomille, Centella asiatica"
+        ingredients: "Huile de rose musquée, Extraits de camomille, Centella asiatica",
+        texture: "fluide",
+        duration: "standard",
+        hasEssentialOils: true
       },
       {
         name: "Crème Apaisante Camomille",
         url: "https://maisonjacynthe.ca/fr/creme-camomille",
-        ingredients: "Camomille, Aloe vera, Panthénol"
+        ingredients: "Camomille, Aloe vera, Panthénol",
+        texture: "crémeuse",
+        duration: "standard",
+        hasEssentialOils: false
+      },
+      {
+        name: "Huile réparatrice Kukui",
+        url: "https://maisonjacynthe.ca/fr/huile-kukui",
+        ingredients: "Huile de Kukui, Calendula, Camomille",
+        texture: "fluide",
+        duration: "standard",
+        hasEssentialOils: false
       }
     ],
     morningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Crème Apaisante",
@@ -238,4 +288,40 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
     morningRoutine: "Suivre les recommandations selon votre type de peau",
     eveningRoutine: "Suivre les recommandations selon votre type de peau"
   }
+};
+
+export const getFilteredRecommendations = (
+  skinType: SkinType,
+  condition: SkinCondition,
+  duration: RoutineDuration,
+  texture: TexturePreference,
+  noEssentialOils: boolean
+): Product[] => {
+  // Get base products from skin type
+  let products = [...skinRecommendations[skinType].products];
+
+  // Add condition-specific products
+  if (condition !== "Aucune") {
+    products = [...products, ...(conditionRecommendations[condition].products || [])];
+  }
+
+  // Filter based on preferences
+  return products.filter(product => {
+    // Duration filter
+    if (duration === "< 5 minutes" && product.duration !== "rapide") {
+      return false;
+    }
+
+    // Texture filter
+    if (product.texture && product.texture !== texture.toLowerCase()) {
+      return false;
+    }
+
+    // Essential oils filter
+    if (noEssentialOils && product.hasEssentialOils) {
+      return false;
+    }
+
+    return true;
+  });
 };

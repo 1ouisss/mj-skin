@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { skinRecommendations } from "@/utils/skinRecommendations";
+import { skinRecommendations, getFilteredRecommendations } from "@/utils/skinRecommendations";
 import { Sparkles, Sun, Moon, Star } from "lucide-react";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const Recommendations = () => {
-  const { selectedSkinType } = useSkinType();
+  const { selectedSkinType, selectedCondition } = useSkinType();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +25,13 @@ const Recommendations = () => {
   if (!selectedSkinType) return null;
 
   const recommendation = skinRecommendations[selectedSkinType];
+  const filteredProducts = getFilteredRecommendations(
+    selectedSkinType,
+    selectedCondition || "Aucune",
+    "< 5 minutes", // You might want to get this from context
+    "Légère", // You might want to get this from context
+    false // You might want to get this from context
+  );
 
   return (
     <div 
