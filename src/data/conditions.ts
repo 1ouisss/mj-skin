@@ -15,7 +15,8 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
   "Eczéma": {
     products: [
       skinProducts.baumeApaisant,
-      skinProducts.huileJojoba
+      skinProducts.huileJojoba,
+      skinProducts.cremeApaisante
     ],
     morningRoutine: "Nettoyage très doux → Application de Baume Apaisant → Protection",
     eveningRoutine: "Nettoyage doux → Application d'Huile de Jojoba → Baume Apaisant"
@@ -29,6 +30,32 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
     ],
     morningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Crème Apaisante",
     eveningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Masque apaisant (2x/semaine)"
+  },
+  "Cernes": {
+    products: [
+      skinProducts.masqueCollagene,
+      skinProducts.soinJeunesse
+    ],
+    morningRoutine: "Application délicate du Soin jeunesse contour des yeux",
+    eveningRoutine: "Application du Masque collagène (2x/semaine) → Soin jeunesse contour des yeux"
+  },
+  "Rides": {
+    products: [
+      skinProducts.cremeLotus,
+      skinProducts.masqueLiftant,
+      skinProducts.triphase,
+      skinProducts.phytocomplexe
+    ],
+    morningRoutine: "Application de Crème Lotus → Triphase",
+    eveningRoutine: "Application de Phytocomplexe → Masque liftant (2x/semaine)"
+  },
+  "Taches": {
+    products: [
+      skinProducts.serumEclat,
+      skinProducts.gelClarifiant
+    ],
+    morningRoutine: "Application du Sérum éclat → Protection solaire",
+    eveningRoutine: "Application du Gel clarifiant → Sérum éclat"
   },
   "Aucune": {
     products: [],

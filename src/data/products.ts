@@ -136,5 +136,69 @@ export const skinProducts: Record<string, Product> = {
     texture: "fluide",
     duration: "standard",
     hasEssentialOils: false
+  },
+  masqueCollagene: {
+    name: "Masque TYPE collagène avec Karité chaud",
+    url: "https://maisonjacynthe.ca/fr/masque-collagene",
+    ingredients: "Beurre de karité, Collagène marin, Huile d'argan",
+    texture: "riche",
+    duration: "standard",
+    hasEssentialOils: false
+  },
+  soinJeunesse: {
+    name: "Soin jeunesse contour des yeux",
+    url: "https://maisonjacynthe.ca/fr/soin-jeunesse",
+    ingredients: "Peptides, Caféine, Acide hyaluronique",
+    texture: "légère",
+    duration: "rapide",
+    hasEssentialOils: false
+  },
+  cremeLotus: {
+    name: "Crème Lotus Sacré",
+    url: "https://maisonjacynthe.ca/fr/creme-lotus",
+    ingredients: "Extrait de lotus, Acide hyaluronique, Peptides",
+    texture: "crémeuse",
+    duration: "standard",
+    hasEssentialOils: false
+  },
+  masqueLiftant: {
+    name: "Masque liftant au miel",
+    url: "https://maisonjacynthe.ca/fr/masque-liftant",
+    ingredients: "Miel bio, Gelée royale, Propolis",
+    texture: "riche",
+    duration: "standard",
+    hasEssentialOils: false
+  },
+  serumEclat: {
+    name: "Sérum éclat",
+    url: "https://maisonjacynthe.ca/fr/serum-eclat",
+    ingredients: "Vitamine C, Niacinamide, Alpha-arbutine",
+    texture: "fluide",
+    duration: "rapide",
+    hasEssentialOils: false
+  },
+  gelClarifiant: {
+    name: "Gel clarifiant au magnolia",
+    url: "https://maisonjacynthe.ca/fr/gel-clarifiant",
+    ingredients: "Extrait de magnolia, AHA, Niacinamide",
+    texture: "légère",
+    duration: "rapide",
+    hasEssentialOils: false
+  },
+  triphase: {
+    name: "Triphase",
+    url: "https://maisonjacynthe.ca/fr/triphase",
+    ingredients: "Peptides, Céramides, Acide hyaluronique",
+    texture: "crémeuse",
+    duration: "standard",
+    hasEssentialOils: false
+  },
+  phytocomplexe: {
+    name: "Phytocomplexe",
+    url: "https://maisonjacynthe.ca/fr/phytocomplexe",
+    ingredients: "Extraits botaniques, Peptides, Vitamines",
+    texture: "riche",
+    duration: "standard",
+    hasEssentialOils: false
   }
 };
