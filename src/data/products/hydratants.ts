@@ -11,7 +11,8 @@ export const hydratants: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"]
+    skinTypes: ["Sèche", "Sensible", "Normale"],
+    timeOfDay: "both"
   },
   // ... autres hydratants
 ];

@@ -5,13 +5,14 @@ export const serums: Product[] = [
     id: "serum-immortelle",
     name: "Sérum Immortelle",
     type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/serum-immortelle-30-ml",
+    url: "https://maisonjacynthe.ca/fr/serum-immortelle",
     ingredients: "Rosa canina (Rose musquée) fruit oil...",
-    texture: "Légère",
-    duration: "< 5 minutes",
+    texture: "Fluide",
+    duration: "5-10 minutes",
     hasEssentialOils: true,
     conditions: ["Rides"],
-    skinTypes: ["Sèche", "Normale"]
+    skinTypes: ["Sèche", "Normale"],
+    timeOfDay: "evening"
   },
   // ... autres sérums
 ];

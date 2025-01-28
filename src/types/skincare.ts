@@ -3,6 +3,7 @@ export type SkinCondition = "Acné" | "Eczéma" | "Rougeurs" | "Cernes" | "Rides
 export type RoutineDuration = "< 5 minutes" | "5-10 minutes" | "> 10 minutes";
 export type TexturePreference = "Légère" | "Fluide" | "Crémeuse" | "Riche";
 export type ProductType = "Hydratant" | "Sérum" | "Masque" | "Nettoyant" | "Tonique" | "Traitement";
+export type TimeOfDay = "morning" | "evening" | "both";
 
 export interface Product {
   id: string;
@@ -15,6 +16,7 @@ export interface Product {
   hasEssentialOils: boolean;
   conditions: SkinCondition[];
   skinTypes: SkinType[];
+  timeOfDay: TimeOfDay;
 }
 
 export interface SkinRecommendation {
