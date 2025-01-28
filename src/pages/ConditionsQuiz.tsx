@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Flower2, Check } from "lucide-react";
+import { Sparkles, Flower2, Heart, Check } from "lucide-react";
 import ProgressHeader from "@/components/ProgressHeader";
 
 const ConditionsQuiz = () => {
@@ -39,6 +39,7 @@ const ConditionsQuiz = () => {
             {[
               { text: "Acné", icon: Sparkles },
               { text: "Eczéma", icon: Flower2 },
+              { text: "Rougeurs", icon: Heart },
               { text: "Aucune", icon: Check },
             ].map((option, index) => (
               <motion.button

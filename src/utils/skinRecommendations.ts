@@ -12,6 +12,7 @@ export interface SkinRecommendation {
 }
 
 export type SkinType = "Sèche" | "Grasse" | "Mixte" | "Sensible" | "Terne" | "Normale";
+export type SkinCondition = "Acné" | "Eczéma" | "Rougeurs" | "Aucune";
 
 export const skinRecommendations: Record<SkinType, SkinRecommendation> = {
   "Sèche": {
@@ -175,5 +176,66 @@ export const skinRecommendations: Record<SkinType, SkinRecommendation> = {
     morningRoutine: "Nettoyage avec Huile Nettoyante → Tonification avec Eau de Magnolia → Application de Crème Fraîche → Sérum Immortelle pour préserver l'hydratation.",
     eveningRoutine: "Nettoyage avec Huile Nettoyante → Application de Sérum Immortelle → Masque Collagène pour revitaliser.",
     results: "Peau équilibrée et naturellement éclatante. 😊"
+  }
+};
+
+export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecommendation>> = {
+  "Acné": {
+    products: [
+      {
+        name: "Exfopur",
+        url: "https://maisonjacynthe.ca/fr/exfopur",
+        ingredients: "Acide salicylique, Aloe vera, Tea tree"
+      },
+      {
+        name: "Gel Sébo",
+        url: "https://maisonjacynthe.ca/fr/gel-sebo",
+        ingredients: "Zinc PCA, Niacinamide, Acide salicylique"
+      }
+    ],
+    morningRoutine: "Nettoyage doux → Application de Gel Sébo → Protection solaire non comédogène",
+    eveningRoutine: "Double nettoyage → Application d'Exfopur → Hydratant léger non comédogène"
+  },
+  "Eczéma": {
+    products: [
+      {
+        name: "Baume Apaisant",
+        url: "https://maisonjacynthe.ca/fr/baume-apaisant",
+        ingredients: "Beurre de karité, Huile de jojoba, Calendula"
+      },
+      {
+        name: "Huile de Jojoba",
+        url: "https://maisonjacynthe.ca/fr/huile-jojoba",
+        ingredients: "Huile de jojoba pure"
+      }
+    ],
+    morningRoutine: "Nettoyage très doux → Application de Baume Apaisant → Protection",
+    eveningRoutine: "Nettoyage doux → Application d'Huile de Jojoba → Baume Apaisant"
+  },
+  "Rougeurs": {
+    products: [
+      {
+        name: "Eau de Rose",
+        url: "https://maisonjacynthe.ca/fr/eau-de-rose",
+        ingredients: "Eau de rose pure, Extraits de camomille"
+      },
+      {
+        name: "Sérum Rose",
+        url: "https://maisonjacynthe.ca/fr/serum-rose",
+        ingredients: "Huile de rose musquée, Extraits de camomille, Centella asiatica"
+      },
+      {
+        name: "Crème Apaisante Camomille",
+        url: "https://maisonjacynthe.ca/fr/creme-camomille",
+        ingredients: "Camomille, Aloe vera, Panthénol"
+      }
+    ],
+    morningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Crème Apaisante",
+    eveningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Masque apaisant (2x/semaine)"
+  },
+  "Aucune": {
+    products: [],
+    morningRoutine: "Suivre les recommandations selon votre type de peau",
+    eveningRoutine: "Suivre les recommandations selon votre type de peau"
   }
 };
