@@ -11,7 +11,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"]
+    skinTypes: ["Sèche", "Sensible", "Normale"],
+    timeOfDay: "both"
   },
   eauNeroli: {
     id: "eau-neroli",
@@ -23,7 +24,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "< 5 minutes",
     hasEssentialOils: true,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Normale"]
+    skinTypes: ["Sèche", "Normale"],
+    timeOfDay: "morning"
   },
   lotusSacre: {
     id: "lotus-sacre",
@@ -35,7 +37,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Normale", "Mixte"]
+    skinTypes: ["Sèche", "Normale", "Mixte"],
+    timeOfDay: "both"
   },
   serumImmortelle: {
     id: "serum-immortelle",
@@ -47,7 +50,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: true,
     conditions: ["Rides"],
-    skinTypes: ["Sèche", "Normale"]
+    skinTypes: ["Sèche", "Normale"],
+    timeOfDay: "evening"
   },
   huileNettoyante: {
     id: "huile-nettoyante",
@@ -59,7 +63,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Grasse", "Mixte", "Sensible", "Normale"]
+    skinTypes: ["Sèche", "Grasse", "Mixte", "Sensible", "Normale"],
+    timeOfDay: "both"
   },
   eauOrange: {
     id: "eau-orange",
@@ -71,7 +76,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "< 5 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Grasse", "Mixte", "Sensible", "Normale"]
+    skinTypes: ["Grasse", "Mixte", "Sensible", "Normale"],
+    timeOfDay: "morning"
   },
   gelSebo: {
     id: "gel-sebo",
@@ -83,7 +89,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "< 5 minutes",
     hasEssentialOils: false,
     conditions: ["Acné"],
-    skinTypes: ["Grasse", "Mixte"]
+    skinTypes: ["Grasse", "Mixte"],
+    timeOfDay: "both"
   },
   gelAloes: {
     id: "gel-aloes",
@@ -95,7 +102,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "< 5 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"]
+    skinTypes: ["Sèche", "Sensible", "Normale"],
+    timeOfDay: "both"
   },
   serumRose: {
     id: "serum-rose",
@@ -107,7 +115,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: true,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"]
+    skinTypes: ["Sèche", "Sensible", "Normale"],
+    timeOfDay: "evening"
   },
   exfopur: {
     id: "exfopur",
@@ -119,7 +128,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: true,
     conditions: ["Acné"],
-    skinTypes: ["Grasse", "Mixte"]
+    skinTypes: ["Grasse", "Mixte"],
+    timeOfDay: "evening"
   },
   masquePurifiant: {
     id: "masque-purifiant",
@@ -131,79 +141,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Grasse", "Mixte", "Sensible"]
-  },
-  hydrogelRafraichissant: {
-    id: "hydrogel-raffraichissant",
-    name: "Hydrogel rafraîchissant",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/hydrogel",
-    ingredients: "Aloe vera, Concombre, Zinc",
-    texture: "Légère",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"]
-  },
-  baumeApaisant: {
-    id: "baume-apaisant",
-    name: "Baume Apaisant",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/baume-apaisant",
-    ingredients: "Beurre de karité, Huile de jojoba, Calendula",
-    texture: "Riche",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
-  },
-  huileJojoba: {
-    id: "huile-jojoba",
-    name: "Huile de Jojoba",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/huile-jojoba",
-    ingredients: "Huile de jojoba pure",
-    texture: "Fluide",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"]
-  },
-  eauDeRose: {
-    id: "eau-de-rose",
-    name: "Eau de Rose",
-    type: "Tonique",
-    url: "https://maisonjacynthe.ca/fr/eau-de-rose",
-    ingredients: "Eau de rose pure, Extraits de camomille",
-    texture: "Légère",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sensible", "Normale"]
-  },
-  cremeApaisante: {
-    id: "creme-apaisante",
-    name: "Crème Apaisante Camomille",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/creme-camomille",
-    ingredients: "Camomille, Aloe vera, Panthénol",
-    texture: "Crémeuse",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sensible"]
-  },
-  huileKukui: {
-    id: "huile-kukui",
-    name: "Huile réparatrice Kukui",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/huile-kukui",
-    ingredients: "Huile de Kukui, Calendula, Camomille",
-    texture: "Fluide",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
+    skinTypes: ["Grasse", "Mixte", "Sensible"],
+    timeOfDay: "evening"
   },
   masqueCollagene: {
     id: "masque-collagene",
@@ -215,31 +154,8 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
-  },
-  soinJeunesse: {
-    id: "soin-jeunesse",
-    name: "Soin jeunesse contour des yeux",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/soin-jeunesse",
-    ingredients: "Peptides, Caféine, Acide hyaluronique",
-    texture: "Légère",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
-  },
-  cremeLotus: {
-    id: "creme-lotus",
-    name: "Crème Lotus Sacré",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/creme-lotus",
-    ingredients: "Extrait de lotus, Acide hyaluronique, Peptides",
-    texture: "Crémeuse",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
+    skinTypes: ["Sèche", "Sensible"],
+    timeOfDay: "evening"
   },
   masqueLiftant: {
     id: "masque-liftant",
@@ -251,54 +167,20 @@ export const skinProducts: Record<string, Product> = {
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
+    skinTypes: ["Sèche", "Sensible"],
+    timeOfDay: "evening"
   },
-  serumEclat: {
-    id: "serum-eclat",
-    name: "Sérum éclat",
-    type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/serum-eclat",
-    ingredients: "Vitamine C, Niacinamide, Alpha-arbutine",
-    texture: "Fluide",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
-  },
-  gelClarifiant: {
-    id: "gel-clarifiant",
-    name: "Gel clarifiant au magnolia",
-    type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/gel-clarifiant",
-    ingredients: "Extrait de magnolia, AHA, Niacinamide",
-    texture: "Légère",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Grasse", "Mixte"]
-  },
-  triphase: {
-    id: "triphase",
-    name: "Triphase",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/triphase",
-    ingredients: "Peptides, Céramides, Acide hyaluronique",
+  masqueHydratant: {
+    id: "masque-hydratant",
+    name: "Masque Hydratant",
+    type: "Masque",
+    url: "https://maisonjacynthe.ca/fr/masque-hydratant",
+    ingredients: "Acide hyaluronique, Aloe vera",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: false,
+    hasEssentialOils: true,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
-  },
-  phytocomplexe: {
-    id: "phytocomplexe",
-    name: "Phytocomplexe",
-    type: "Hydratant",
-    url: "https://maisonjacynthe.ca/fr/phytocomplexe",
-    ingredients: "Extraits botaniques, Peptides, Vitamines",
-    texture: "Riche",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"]
+    skinTypes: ["Sèche", "Normale"],
+    timeOfDay: "evening"
   }
 };
