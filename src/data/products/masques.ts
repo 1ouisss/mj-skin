@@ -39,5 +39,44 @@ export const masques: Product[] = [
     conditions: ["Rougeurs", "Eczéma"],
     skinTypes: ["Sensible", "Sèche", "Mixte"],
     timeOfDay: "evening"
+  },
+  {
+    id: "masque-eclaircissant",
+    name: "Masque éclaircissant",
+    type: "Masque",
+    url: "https://maisonjacynthe.ca/fr/masque-eclaircissant",
+    ingredients: "Vitamin C, Pearl powder, Rice extract",
+    texture: "Crémeuse",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Taches"],
+    skinTypes: ["Terne", "Normale"],
+    timeOfDay: "evening"
+  },
+  {
+    id: "masque-chocolat",
+    name: "Masque au Chocolat",
+    type: "Masque",
+    url: "https://maisonjacynthe.ca/fr/masque-chocolat",
+    ingredients: "Theobroma cacao seed powder, Honey",
+    texture: "Riche",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Normale"],
+    timeOfDay: "evening"
+  },
+  {
+    id: "masque-miel",
+    name: "Masque au Miel",
+    type: "Masque",
+    url: "https://maisonjacynthe.ca/fr/masque-miel",
+    ingredients: "Honey, Royal jelly, Propolis",
+    texture: "Riche",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Sensible"],
+    timeOfDay: "evening"
   }
 ];

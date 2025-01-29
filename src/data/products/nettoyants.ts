@@ -13,5 +13,18 @@ export const nettoyants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sèche", "Grasse", "Mixte", "Sensible", "Normale"],
     timeOfDay: "both"
+  },
+  {
+    id: "eau-micellaire",
+    name: "Eau Micellaire",
+    type: "Nettoyant",
+    url: "https://maisonjacynthe.ca/fr/eau-micellaire",
+    ingredients: "Aqua, Glycerin, Decyl Glucoside, Aloe Barbadensis Leaf Juice, Chamomilla Recutita Flower Extract",
+    texture: "Légère",
+    duration: "< 5 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sensible", "Normale", "Mixte"],
+    timeOfDay: "both"
   }
 ];
