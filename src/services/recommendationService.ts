@@ -5,7 +5,7 @@ import { masques } from "../data/products/masques";
 
 interface FilterCriteria {
   skinType: SkinType;
-  condition: SkinCondition;
+  conditions: SkinCondition[];
   duration: RoutineDuration;
   texture: TexturePreference;
   noEssentialOils: boolean;
@@ -21,16 +21,24 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
   let score = 0;
   const maxScore = 100;
 
-  // Critères prioritaires (60%)
+  // Skin type match (30%)
   if (product.skinTypes.includes(criteria.skinType)) score += 30;
-  if (product.conditions.includes(criteria.condition)) score += 30;
 
-  // Critères secondaires (40%)
+  // Conditions match (30%)
+  const conditionScore = criteria.conditions.reduce((acc, condition) => {
+    if (product.conditions.includes(condition)) {
+      return acc + (30 / criteria.conditions.length);
+    }
+    return acc;
+  }, 0);
+  score += conditionScore;
+
+  // Secondary criteria (40%)
   if (product.texture.toLowerCase() === criteria.texture.toLowerCase()) score += 15;
   if (criteria.noEssentialOils === !product.hasEssentialOils) score += 10;
   if (product.duration === criteria.duration) score += 10;
   
-  // Bonus pour correspondance moment de la journée
+  // Time of day bonus (5%)
   if (criteria.timeOfDay && 
       (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both')) {
     score += 5;
@@ -40,7 +48,6 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
 };
 
 const diversifyResults = (scoredProducts: ScoredProduct[]): Product[] => {
-  // Assure une diversité dans les types de produits
   const categories = ['Hydratant', 'Sérum', 'Masque'];
   const result: Product[] = [];
   
@@ -53,18 +60,16 @@ const diversifyResults = (scoredProducts: ScoredProduct[]): Product[] => {
     result.push(...categoryProducts.map(sp => sp.product));
   });
 
-  return result.slice(0, 4); // Retourne max 4 produits
+  return result.slice(0, 6); // Return max 6 products to account for multiple conditions
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   const allProducts = [...hydratants, ...serums, ...masques];
   
-  // Calculer les scores pour chaque produit
   const scoredProducts = allProducts.map(product => ({
     product,
     score: calculateProductScore(product, criteria)
   }));
 
-  // Filtrer et diversifier les résultats
   return diversifyResults(scoredProducts);
 };

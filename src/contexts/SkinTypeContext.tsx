@@ -4,23 +4,23 @@ import { SkinType, SkinCondition } from "../types/skincare";
 interface SkinTypeContextType {
   selectedSkinType: SkinType | null;
   setSelectedSkinType: (type: SkinType) => void;
-  selectedCondition: SkinCondition | null;
-  setSelectedCondition: (condition: SkinCondition) => void;
+  selectedConditions: SkinCondition[];
+  setSelectedConditions: (conditions: SkinCondition[]) => void;
 }
 
 const SkinTypeContext = createContext<SkinTypeContextType | undefined>(undefined);
 
 export function SkinTypeProvider({ children }: { children: ReactNode }) {
   const [selectedSkinType, setSelectedSkinType] = useState<SkinType | null>(null);
-  const [selectedCondition, setSelectedCondition] = useState<SkinCondition | null>(null);
+  const [selectedConditions, setSelectedConditions] = useState<SkinCondition[]>([]);
 
   return (
     <SkinTypeContext.Provider 
       value={{ 
         selectedSkinType, 
         setSelectedSkinType,
-        selectedCondition,
-        setSelectedCondition
+        selectedConditions,
+        setSelectedConditions
       }}
     >
       {children}
