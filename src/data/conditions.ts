@@ -16,7 +16,8 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
     products: [
       skinProducts.baumeApaisant,
       skinProducts.huileJojoba,
-      skinProducts.cremeApaisante
+      skinProducts.cremeApaisante,
+      skinProducts.masqueApaisant
     ],
     morningRoutine: "Nettoyage très doux → Application de Baume Apaisant → Protection",
     eveningRoutine: "Nettoyage doux → Application d'Huile de Jojoba → Baume Apaisant"
@@ -26,10 +27,11 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
       skinProducts.eauRose,
       skinProducts.serumRose,
       skinProducts.cremeApaisante,
-      skinProducts.huileKukui
+      skinProducts.huileKukui,
+      skinProducts.masqueApaisant
     ],
     morningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Crème Apaisante",
-    eveningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Masque apaisant (2x/semaine)"
+    eveningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Masque TYPE apaisant (2x/semaine)"
   },
   "Cernes": {
     products: [
@@ -37,7 +39,7 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
       skinProducts.soinJeunesse
     ],
     morningRoutine: "Application délicate du Soin jeunesse contour des yeux",
-    eveningRoutine: "Application du Masque collagène (2x/semaine) → Soin jeunesse contour des yeux"
+    eveningRoutine: "Application du Masque TYPE collagène (2x/semaine) → Soin jeunesse contour des yeux"
   },
   "Rides": {
     products: [
@@ -47,7 +49,7 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
       skinProducts.phytocomplexe
     ],
     morningRoutine: "Application de Crème Lotus → Triphase",
-    eveningRoutine: "Application de Phytocomplexe → Masque liftant (2x/semaine)"
+    eveningRoutine: "Application de Phytocomplexe → Masque TYPE liftant (2x/semaine)"
   },
   "Taches": {
     products: [

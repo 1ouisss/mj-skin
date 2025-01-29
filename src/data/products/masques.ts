@@ -26,5 +26,18 @@ export const masques: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sèche", "Sensible"],
     timeOfDay: "evening"
+  },
+  {
+    id: "masque-apaisant",
+    name: "Masque TYPE apaisant",
+    type: "Masque",
+    url: "https://maisonjacynthe.ca/fr/masque-apaisant",
+    ingredients: "Aloe vera, Camomille, Calendula, Eau florale de rose",
+    texture: "Crémeuse",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Rougeurs", "Eczéma"],
+    skinTypes: ["Sensible", "Sèche", "Mixte"],
+    timeOfDay: "evening"
   }
 ];
