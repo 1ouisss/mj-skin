@@ -17,66 +17,90 @@ interface ScoredProduct {
   score: number;
 }
 
+// Enhanced weight multipliers with critical and secondary criteria
 const WEIGHT_MULTIPLIERS = {
-  TEXTURE: 1.5,
-  DURATION: 1.3,
-  SKIN_TYPE: 1.0,
-  CONDITIONS: 1.2
+  // Critical criteria (60%)
+  SKIN_TYPE: 0.25,
+  CONDITIONS: 0.20,
+  TEXTURE: 0.15,
+  
+  // Secondary criteria (40%)
+  DURATION: 0.15,
+  ESSENTIAL_OILS: 0.15,
+  TIME_OF_DAY: 0.10
 };
 
 const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
   let score = 0;
+  let criteriaMet = 0;
   const maxScore = 100;
 
-  // Texture match (weighted)
-  if (product.texture.toLowerCase() === criteria.texture.toLowerCase()) {
-    score += 30 * WEIGHT_MULTIPLIERS.TEXTURE;
-  }
-
-  // Duration match (weighted)
-  if (product.duration === criteria.duration) {
-    score += 20 * WEIGHT_MULTIPLIERS.DURATION;
-  }
-
-  // Skin type match
+  // Critical criteria (60%)
   if (product.skinTypes.includes(criteria.skinType)) {
     score += 25 * WEIGHT_MULTIPLIERS.SKIN_TYPE;
+    criteriaMet++;
   }
 
-  // Conditions match (weighted)
   const conditionScore = criteria.conditions.reduce((acc, condition) => {
     if (product.conditions.includes(condition)) {
-      return acc + (25 / criteria.conditions.length) * WEIGHT_MULTIPLIERS.CONDITIONS;
+      criteriaMet++;
+      return acc + (20 / criteria.conditions.length) * WEIGHT_MULTIPLIERS.CONDITIONS;
     }
     return acc;
   }, 0);
   score += conditionScore;
 
-  // Essential oils preference
-  if (criteria.noEssentialOils === !product.hasEssentialOils) {
-    score += 10;
+  if (product.texture.toLowerCase() === criteria.texture.toLowerCase()) {
+    score += 15 * WEIGHT_MULTIPLIERS.TEXTURE;
+    criteriaMet++;
   }
 
-  return Math.min((score / maxScore) * 100, 100);
+  // Secondary criteria (40%)
+  if (product.duration === criteria.duration) {
+    score += 15 * WEIGHT_MULTIPLIERS.DURATION;
+    criteriaMet++;
+  }
+
+  if (criteria.noEssentialOils === !product.hasEssentialOils) {
+    score += 15 * WEIGHT_MULTIPLIERS.ESSENTIAL_OILS;
+    criteriaMet++;
+  }
+
+  if (criteria.timeOfDay) {
+    if (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both') {
+      score += 10 * WEIGHT_MULTIPLIERS.TIME_OF_DAY;
+      criteriaMet++;
+    }
+  }
+
+  // Ensure at least 2 criteria are met for a recommendation
+  return criteriaMet >= 2 ? Math.min((score / maxScore) * 100, 100) : 0;
+};
+
+const shuffleArray = <T>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 };
 
 const filterProductsByDuration = (products: Product[], duration: RoutineDuration): Product[] => {
   if (duration === "< 5 minutes") {
-    // For quick routines, prefer products with shorter application times
     return products.filter(product => product.duration === "< 5 minutes");
   }
-  // For longer routines, include all products but prioritize them in scoring
   return products;
 };
 
 const filterProductsByTexture = (products: Product[], texture: TexturePreference): Product[] => {
-  // Strict texture matching
   return products.filter(product => product.texture.toLowerCase() === texture.toLowerCase());
 };
 
 const diversifyResults = (scoredProducts: ScoredProduct[], criteria: FilterCriteria): Product[] => {
-  // Filter by texture and duration first
+  // Filter by texture and duration
   let filteredProducts = scoredProducts
+    .filter(sp => sp.score > 0) // Only include products that met at least 2 criteria
     .map(sp => sp.product)
     .filter(p => p.texture.toLowerCase() === criteria.texture.toLowerCase());
   
@@ -85,18 +109,31 @@ const diversifyResults = (scoredProducts: ScoredProduct[], criteria: FilterCrite
 
   // Categories to include based on routine duration
   const categories = criteria.duration === "< 5 minutes" 
-    ? ['Hydratant', 'Sérum'] // Simplified routine
-    : ['Hydratant', 'Sérum', 'Masque']; // Complete routine
+    ? ['Hydratant', 'Sérum'] 
+    : ['Hydratant', 'Sérum', 'Masque'];
 
   const result: Product[] = [];
   
   categories.forEach(category => {
     const categoryProducts = scoredProducts
-      .filter(sp => sp.product.type === category && filteredProducts.includes(sp.product))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, criteria.duration === "< 5 minutes" ? 1 : 2);
+      .filter(sp => 
+        sp.product.type === category && 
+        filteredProducts.includes(sp.product) &&
+        sp.score > 0
+      )
+      .sort((a, b) => b.score - a.score);
+
+    // Take top scoring products and shuffle optional ones
+    const essentialProducts = categoryProducts.slice(0, 1);
+    const optionalProducts = shuffleArray(categoryProducts.slice(1));
     
-    result.push(...categoryProducts.map(sp => sp.product));
+    // Add essential products
+    result.push(...essentialProducts.map(sp => sp.product));
+    
+    // Add some randomized optional products based on routine duration
+    if (criteria.duration !== "< 5 minutes") {
+      result.push(...optionalProducts.slice(0, 1).map(sp => sp.product));
+    }
   });
 
   return result;
@@ -105,15 +142,12 @@ const diversifyResults = (scoredProducts: ScoredProduct[], criteria: FilterCrite
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   const allProducts = [...hydratants, ...serums, ...masques];
   
-  // First, filter by texture
-  const textureFilteredProducts = filterProductsByTexture(allProducts, criteria.texture);
-  
-  // Then score the filtered products
-  const scoredProducts = textureFilteredProducts.map(product => ({
+  // Score all products
+  const scoredProducts = allProducts.map(product => ({
     product,
     score: calculateProductScore(product, criteria)
   }));
 
-  // Finally, diversify and return the results
+  // Return diversified results
   return diversifyResults(scoredProducts, criteria);
 };
