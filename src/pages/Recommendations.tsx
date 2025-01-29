@@ -7,13 +7,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
-import { getRecommendations } from "@/services/recommendationService";
+import { getFilteredRecommendations } from "@/services/recommendationService";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { Product } from "@/types/skincare";
 
 const Recommendations = () => {
-  const { selectedSkinType } = useSkinType();
-  const recommendations = getRecommendations(selectedSkinType);
+  const { selectedSkinType, selectedCondition } = useSkinType();
+
+  const recommendations = selectedSkinType
+    ? getFilteredRecommendations({
+        skinType: selectedSkinType,
+        condition: selectedCondition || "Aucune",
+        duration: "5-10 minutes", // default duration
+        texture: "Légère", // default texture
+        noEssentialOils: false, // default value
+      })
+    : [];
 
   useEffect(() => {
     window.scrollTo(0, 0);
