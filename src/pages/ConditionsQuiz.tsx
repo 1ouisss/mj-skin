@@ -24,14 +24,12 @@ const ConditionsQuiz = () => {
       return;
     }
 
-    setSelectedConditions((prev) => {
-      const newConditions = prev.filter(c => c !== "Aucune");
-      if (newConditions.includes(condition)) {
-        return newConditions.filter(c => c !== condition);
-      } else {
-        return [...newConditions, condition];
-      }
-    });
+    const newConditions = selectedConditions.filter(c => c !== "Aucune");
+    if (newConditions.includes(condition)) {
+      setSelectedConditions(newConditions.filter(c => c !== condition));
+    } else {
+      setSelectedConditions([...newConditions, condition]);
+    }
   };
 
   const handleContinue = () => {
