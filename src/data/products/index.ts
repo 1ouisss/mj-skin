@@ -4,7 +4,9 @@ import { masques } from './masques';
 import { toniques } from './toniques';
 import { nettoyants } from './nettoyants';
 import { traitements } from './traitements';
-import { huiles } from './huiles';
+import { baumes } from './baumes';
+import { yeux } from './yeux';
+import { specifiques } from './specifiques';
 import { Product } from '../../types/skincare';
 
 // Combine all products into a single record
@@ -15,7 +17,9 @@ export const skinProducts: Record<string, Product> = {
   ...Object.fromEntries(toniques.map(product => [product.id, product])),
   ...Object.fromEntries(nettoyants.map(product => [product.id, product])),
   ...Object.fromEntries(traitements.map(product => [product.id, product])),
-  ...Object.fromEntries(huiles.map(product => [product.id, product]))
+  ...Object.fromEntries(baumes.map(product => [product.id, product])),
+  ...Object.fromEntries(yeux.map(product => [product.id, product])),
+  ...Object.fromEntries(specifiques.map(product => [product.id, product]))
 };
 
 // Export individual categories
@@ -25,4 +29,6 @@ export { masques } from './masques';
 export { toniques } from './toniques';
 export { nettoyants } from './nettoyants';
 export { traitements } from './traitements';
-export { huiles } from './huiles';
+export { baumes } from './baumes';
+export { yeux } from './yeux';
+export { specifiques } from './specifiques';

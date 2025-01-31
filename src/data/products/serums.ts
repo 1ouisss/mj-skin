@@ -2,24 +2,11 @@ import { Product } from "../../types/skincare";
 
 export const serums: Product[] = [
   {
-    id: "lotus-sacre",
-    name: "Lotus Sacré",
-    type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/booster-d-hydratation-acide-hyaluronique-lotus-sacre",
-    ingredients: "Citrus sinensis (Orange) water, Aloe barbadensis (Aloès) leaf juice, Glycerin (Glycérine végétale), Hyaluronic acid (Acide hyaluronique), Sodium benzoate (Benzoate de sodium), Potassium sorbate (Sorbate de potassium), Xanthan gum (Gomme xanthane), Nelumbo nucifera (Lotus rose) flower extract, Santalum album (Bois de santal) wood oil.",
-    texture: "Fluide",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Normale", "Mixte"],
-    timeOfDay: "both"
-  },
-  {
     id: "serum-immortelle",
     name: "Sérum Immortelle",
     type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/serum-immortelle-30-ml",
-    ingredients: "Rosa canina (Rose musquée) fruit oil, Triticum vulgare/aestivum (Blé) extract oil, Hippophae rhamnoides (Argousier) CO2 extract, Tocopherol (Tocophérol), Tocotrienol (Tocotriénol), Rosmarinus officinalis (Romarin) CO2 leaf extract, Calendula officinalis (Calendule) CO2 extract, Helichrysum italicum (Immortelle) oil, Eucalyptus radiata (Eucalyptus radié) leaf oil.",
+    url: "https://maisonjacynthe.ca/fr/serum-immortelle",
+    ingredients: "Helichrysum italicum oil",
     texture: "Légère",
     duration: "5-10 minutes",
     hasEssentialOils: true,
@@ -32,12 +19,12 @@ export const serums: Product[] = [
     name: "Sérum à la Rose",
     type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/serum-rose",
-    ingredients: "Rosa damascena flower oil, Simmondsia chinensis seed oil",
+    ingredients: "Rosa damascena flower oil",
     texture: "Légère",
     duration: "5-10 minutes",
     hasEssentialOils: true,
-    conditions: ["Rougeurs", "Eczéma"],
-    skinTypes: ["Sensible", "Sèche"],
+    conditions: ["Rougeurs"],
+    skinTypes: ["Sensible"],
     timeOfDay: "both"
   },
   {
@@ -45,7 +32,7 @@ export const serums: Product[] = [
     name: "Sérum Chanvre & Chrysanthème",
     type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/serum-chanvre-chrysantheme",
-    ingredients: "Cannabis sativa seed oil, Chrysanthemum indicum flower extract",
+    ingredients: "Cannabis sativa seed oil, Chrysanthemum extract",
     texture: "Légère",
     duration: "5-10 minutes",
     hasEssentialOils: false,
@@ -71,7 +58,7 @@ export const serums: Product[] = [
     name: "Sérum Jasmin Rose",
     type: "Sérum",
     url: "https://maisonjacynthe.ca/fr/serum-jasmin-rose",
-    ingredients: "Jasminum officinale flower oil, Rosa damascena flower oil",
+    ingredients: "Jasminum officinale oil, Rosa damascena flower oil",
     texture: "Légère",
     duration: "5-10 minutes",
     hasEssentialOils: true,
@@ -130,5 +117,18 @@ export const serums: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sensible"],
     timeOfDay: "both"
+  },
+  {
+    id: "elixir-myrrhe",
+    name: "Élixir à la myrrhe",
+    type: "Sérum",
+    url: "https://maisonjacynthe.ca/fr/elixir-myrrhe",
+    ingredients: "Commiphora myrrha oil",
+    texture: "Légère",
+    duration: "5-10 minutes",
+    hasEssentialOils: true,
+    conditions: ["Rides"],
+    skinTypes: ["Sèche", "Normale"],
+    timeOfDay: "evening"
   }
 ];
