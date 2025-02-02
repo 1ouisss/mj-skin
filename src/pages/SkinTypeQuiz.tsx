@@ -28,16 +28,16 @@ const SkinTypeQuiz = () => {
       
       <div className="absolute inset-0 bg-black/30" />
       
-      <div className="w-full max-w-2xl mx-auto relative z-10 pt-16">
+      <div className="w-full max-w-2xl mx-auto relative z-10 pt-16 px-4 md:px-6">
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="glass-title mb-12"
+          className="glass-title text-3xl md:text-4xl lg:text-5xl mb-8 md:mb-12"
         >
           Quel est votre type de peau ?
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 mt-8 px-6">
+        <div className="grid grid-cols-1 gap-4 md:gap-6 mt-6 md:mt-8">
           {[
             { text: "Sèche", type: "Sèche" as SkinType, icon: Flower2 },
             { text: "Grasse", type: "Grasse" as SkinType, icon: Sparkles },
@@ -52,10 +52,10 @@ const SkinTypeQuiz = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
               onClick={() => handleOptionClick(option.type)}
-              className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-6 px-8 shadow-lg transition-all duration-300 hover:transform hover:translate-y-[-2px] hover:shadow-xl w-full"
+              className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-5 md:py-6 px-6 md:px-8 shadow-lg transition-all duration-300 hover:transform hover:translate-y-[-2px] hover:shadow-xl w-full text-left"
             >
-              <option.icon className="w-6 h-6 stroke-[1.5]" />
-              <span className="text-lg">{option.text}</span>
+              <option.icon className="w-6 h-6 stroke-[1.5] flex-shrink-0" />
+              <span className="text-base md:text-lg">{option.text}</span>
             </motion.button>
           ))}
         </div>
