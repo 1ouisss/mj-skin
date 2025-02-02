@@ -22,7 +22,7 @@ const ConcernsQuiz = () => {
   const { selectedConditions, setSelectedConditions } = useSkinType();
 
   const handleOptionToggle = (condition: SkinCondition) => {
-    setSelectedConditions(prev => {
+    setSelectedConditions((prev: SkinCondition[]) => {
       if (prev.includes(condition)) {
         return prev.filter(c => c !== condition);
       } else {
