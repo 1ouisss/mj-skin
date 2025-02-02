@@ -11,25 +11,38 @@ import {
   Search, 
   ArrowDown 
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import ProgressHeader from "@/components/ProgressHeader";
+import { useSkinType } from "@/contexts/SkinTypeContext";
+import { Button } from "@/components/ui/button";
+import { SkinCondition } from "@/types/skincare";
 
 const ConcernsQuiz = () => {
   const navigate = useNavigate();
+  const { selectedConditions, setSelectedConditions } = useSkinType();
 
-  const handleOptionClick = () => {
+  const handleOptionToggle = (condition: SkinCondition) => {
+    setSelectedConditions(prev => {
+      if (prev.includes(condition)) {
+        return prev.filter(c => c !== condition);
+      } else {
+        return [...prev, condition];
+      }
+    });
+  };
+
+  const handleNext = () => {
     navigate("/treatment-quiz");
   };
 
   const concerns = [
-    { text: "Rides", icon: Waves },
-    { text: "Cernes", icon: Eye },
-    { text: "Points noirs", icon: Circle },
-    { text: "Taches pigmentaires", icon: Sun },
-    { text: "Rougeurs", icon: Heart },
-    { text: "Boutons", icon: Zap },
-    { text: "Imperfections", icon: Sparkles },
-    { text: "Pores dilatés", icon: Search },
-    { text: "Perte de fermeté", icon: ArrowDown },
+    { text: "Rides" as SkinCondition, icon: Waves },
+    { text: "Cernes" as SkinCondition, icon: Eye },
+    { text: "Acné" as SkinCondition, icon: Circle },
+    { text: "Taches" as SkinCondition, icon: Sun },
+    { text: "Rougeurs" as SkinCondition, icon: Heart },
+    { text: "Eczéma" as SkinCondition, icon: Zap },
+    { text: "Aucune" as SkinCondition, icon: Sparkles },
   ];
 
   return (
@@ -57,20 +70,32 @@ const ConcernsQuiz = () => {
           </motion.h1>
         </div>
 
-        <div className="w-full max-w-xl grid grid-cols-1 gap-4">
+        <div className="w-full max-w-xl space-y-4">
           {concerns.map((option, index) => (
-            <motion.button
+            <motion.div
               key={option.text}
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
-              onClick={handleOptionClick}
-              className="concerns-button"
+              className="concerns-button flex items-center space-x-4 p-4 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all cursor-pointer"
+              onClick={() => handleOptionToggle(option.text)}
             >
+              <Checkbox 
+                checked={selectedConditions.includes(option.text)}
+                onCheckedChange={() => handleOptionToggle(option.text)}
+              />
               <option.icon className="w-6 h-6 stroke-current" />
               <span className="text-lg">{option.text}</span>
-            </motion.button>
+            </motion.div>
           ))}
+
+          <Button 
+            onClick={handleNext}
+            className="w-full mt-8"
+            disabled={selectedConditions.length === 0}
+          >
+            Continuer
+          </Button>
         </div>
       </div>
     </div>

@@ -46,50 +46,52 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
   let criteriaMet = 0;
   const maxScore = 100;
 
-  // If "Sans huiles essentielles" is selected, only consider essential oil free products
+  // Si "Sans huiles essentielles" est sélectionné
   if (criteria.fragrancePreference === "Sans huiles essentielles") {
     if (!ESSENTIAL_OIL_FREE_PRODUCTS.includes(product.id)) {
       return 0;
     }
-    // Boost score for essential oil free products
     score += 25;
     criteriaMet++;
   }
 
-  // Special case for Mousseline Calendule
-  if (product.id === 'mousseline-calendule' && criteria.skinType !== 'Sèche') {
-    return 0;
-  }
-
+  // Vérification du type de peau
   if (product.skinTypes.includes(criteria.skinType)) {
     score += 25 * WEIGHT_MULTIPLIERS.SKIN_TYPE;
     criteriaMet++;
   }
 
-  const conditionScore = criteria.conditions.reduce((acc, condition) => {
-    if (product.conditions.includes(condition)) {
+  // Score pour les conditions de peau (maintenant avec sélection multiple)
+  if (criteria.conditions.length > 0) {
+    const matchingConditions = criteria.conditions.filter(condition => 
+      product.conditions.includes(condition)
+    );
+    
+    if (matchingConditions.length > 0) {
+      score += (20 * (matchingConditions.length / criteria.conditions.length)) * WEIGHT_MULTIPLIERS.CONDITIONS;
       criteriaMet++;
-      return acc + (20 / criteria.conditions.length) * WEIGHT_MULTIPLIERS.CONDITIONS;
     }
-    return acc;
-  }, 0);
-  score += conditionScore;
+  }
 
+  // Vérification de la texture
   if (criteria.textures.includes(product.texture)) {
     score += 15 * WEIGHT_MULTIPLIERS.TEXTURE;
     criteriaMet++;
   }
 
+  // Vérification de la durée
   if (product.duration === criteria.duration) {
     score += 15 * WEIGHT_MULTIPLIERS.DURATION;
     criteriaMet++;
   }
 
+  // Vérification des huiles essentielles
   if (criteria.noEssentialOils === !product.hasEssentialOils) {
     score += 15 * WEIGHT_MULTIPLIERS.ESSENTIAL_OILS;
     criteriaMet++;
   }
 
+  // Vérification du moment de la journée
   if (criteria.timeOfDay) {
     if (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both') {
       score += 10 * WEIGHT_MULTIPLIERS.TIME_OF_DAY;
@@ -97,6 +99,7 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     }
   }
 
+  // Retourne le score uniquement si au moins 2 critères sont remplis
   return criteriaMet >= 2 ? Math.min((score / maxScore) * 100, 100) : 0;
 };
 
