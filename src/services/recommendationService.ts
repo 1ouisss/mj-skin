@@ -2,6 +2,7 @@ import { SkinType, SkinCondition, Product, RoutineDuration, TexturePreference } 
 import { hydratants } from "../data/products/hydratants";
 import { serums } from "../data/products/serums";
 import { masques } from "../data/products/masques";
+import { nettoyants } from "../data/products/nettoyants";
 import { skinProducts } from "../data/products";
 
 interface FilterCriteria {
@@ -28,14 +29,10 @@ const ESSENTIAL_OIL_FREE_PRODUCTS = [
   'mousseline-calendule'
 ];
 
-// Enhanced weight multipliers with critical and secondary criteria
 const WEIGHT_MULTIPLIERS = {
-  // Critical criteria (60%)
   SKIN_TYPE: 0.25,
   CONDITIONS: 0.20,
   TEXTURE: 0.15,
-  
-  // Secondary criteria (40%)
   DURATION: 0.15,
   ESSENTIAL_OILS: 0.15,
   TIME_OF_DAY: 0.10
@@ -44,15 +41,10 @@ const WEIGHT_MULTIPLIERS = {
 const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
   let score = 0;
   let criteriaMet = 0;
-  const maxScore = 100;
 
-  // Si "Sans huiles essentielles" est sélectionné
-  if (criteria.fragrancePreference === "Sans huiles essentielles") {
-    if (!ESSENTIAL_OIL_FREE_PRODUCTS.includes(product.id)) {
-      return 0;
-    }
-    score += 25;
-    criteriaMet++;
+  // Vérification des huiles essentielles
+  if (criteria.fragrancePreference === "Sans huiles essentielles" && product.hasEssentialOils) {
+    return 0;
   }
 
   // Vérification du type de peau
@@ -61,7 +53,7 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     criteriaMet++;
   }
 
-  // Score pour les conditions de peau (maintenant avec sélection multiple)
+  // Score pour les conditions de peau
   if (criteria.conditions.length > 0) {
     const matchingConditions = criteria.conditions.filter(condition => 
       product.conditions.includes(condition)
@@ -85,12 +77,6 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     criteriaMet++;
   }
 
-  // Vérification des huiles essentielles
-  if (criteria.noEssentialOils === !product.hasEssentialOils) {
-    score += 15 * WEIGHT_MULTIPLIERS.ESSENTIAL_OILS;
-    criteriaMet++;
-  }
-
   // Vérification du moment de la journée
   if (criteria.timeOfDay) {
     if (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both') {
@@ -99,94 +85,50 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     }
   }
 
-  // Retourne le score uniquement si au moins 2 critères sont remplis
-  return criteriaMet >= 2 ? Math.min((score / maxScore) * 100, 100) : 0;
+  return criteriaMet >= 2 ? score : 0;
 };
 
-const shuffleArray = <T>(array: T[]): T[] => {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-};
+const getBestProductForCategory = (
+  products: Product[], 
+  criteria: FilterCriteria, 
+  productType: string
+): Product | null => {
+  const categoryProducts = products.filter(p => p.type === productType);
+  const scoredProducts = categoryProducts
+    .map(product => ({
+      product,
+      score: calculateProductScore(product, criteria)
+    }))
+    .filter(sp => sp.score > 0)
+    .sort((a, b) => b.score - a.score);
 
-const filterProductsByDuration = (products: Product[], duration: RoutineDuration): Product[] => {
-  if (duration === "< 5 minutes") {
-    return products.filter(product => product.duration === "< 5 minutes");
-  }
-  return products;
-};
-
-const filterProductsByTexture = (products: Product[], textures: TexturePreference[]): Product[] => {
-  return products.filter(product => textures.includes(product.texture));
-};
-
-const diversifyResults = (scoredProducts: ScoredProduct[], criteria: FilterCriteria): Product[] => {
-  // Filter by texture and duration
-  let filteredProducts = scoredProducts
-    .filter(sp => sp.score > 0) // Only include products that met at least 2 criteria
-    .map(sp => sp.product)
-    .filter(p => criteria.textures.includes(p.texture));
-  
-  // Apply duration-based filtering
-  filteredProducts = filterProductsByDuration(filteredProducts, criteria.duration);
-
-  // Categories to include based on routine duration
-  const categories = criteria.duration === "< 5 minutes" 
-    ? ['Hydratant', 'Sérum'] 
-    : ['Hydratant', 'Sérum', 'Masque'];
-
-  const result: Product[] = [];
-  
-  categories.forEach(category => {
-    const categoryProducts = scoredProducts
-      .filter(sp => 
-        sp.product.type === category && 
-        filteredProducts.includes(sp.product) &&
-        sp.score > 0
-      )
-      .sort((a, b) => b.score - a.score);
-
-    // Take top scoring products and shuffle optional ones
-    const essentialProducts = categoryProducts.slice(0, 1);
-    const optionalProducts = shuffleArray(categoryProducts.slice(1));
-    
-    // Add essential products
-    result.push(...essentialProducts.map(sp => sp.product));
-    
-    // Add some randomized optional products based on routine duration
-    if (criteria.duration !== "< 5 minutes") {
-      result.push(...optionalProducts.slice(0, 1).map(sp => sp.product));
-    }
-  });
-
-  return result;
+  return scoredProducts.length > 0 ? scoredProducts[0].product : null;
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
-  const allProducts = [...hydratants, ...serums, ...masques];
+  const recommendations: Product[] = [];
   
-  // Score all products
-  const scoredProducts = allProducts.map(product => ({
-    product,
-    score: calculateProductScore(product, criteria)
-  }));
+  // 1. Nettoyant
+  const cleanser = getBestProductForCategory(nettoyants, criteria, "Nettoyant");
+  if (cleanser) recommendations.push(cleanser);
 
-  // Filter and sort products by score
-  const filteredProducts = scoredProducts
-    .filter(sp => sp.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .map(sp => sp.product);
+  // 2. Sérum
+  const serum = getBestProductForCategory(serums, criteria, "Sérum");
+  if (serum) recommendations.push(serum);
 
-  // If "Sans huiles essentielles" is selected, ensure only allowed products are included
-  if (criteria.fragrancePreference === "Sans huiles essentielles") {
-    return filteredProducts.filter(product => 
-      ESSENTIAL_OIL_FREE_PRODUCTS.includes(product.id) &&
-      (product.id !== 'mousseline-calendule' || criteria.skinType === 'Sèche')
-    );
+  // 3. Hydratant
+  const moisturizer = getBestProductForCategory(hydratants, criteria, "Hydratant");
+  if (moisturizer) recommendations.push(moisturizer);
+
+  // 4. Masque/Traitement (optionnel, uniquement pour le soir ou si durée ≥ 10 minutes)
+  if (
+    (criteria.timeOfDay === 'evening' || criteria.duration === "> 10 minutes") &&
+    criteria.conditions.length > 0 &&
+    criteria.conditions[0] !== "Aucune"
+  ) {
+    const treatment = getBestProductForCategory(masques, criteria, "Masque");
+    if (treatment) recommendations.push(treatment);
   }
 
-  return filteredProducts;
+  return recommendations;
 };
