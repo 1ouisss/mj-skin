@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Feather, Droplets, Flower2, Sparkles } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import ProgressHeader from "@/components/ProgressHeader";
@@ -12,17 +11,13 @@ const TreatmentQuiz = () => {
   const navigate = useNavigate();
   const { selectedTextures, setSelectedTextures } = useSkinType();
 
-  const handleTextureToggle = (texture: TexturePreference) => {
-    const newTextures = selectedTextures.includes(texture)
-      ? selectedTextures.filter(t => t !== texture)
-      : [...selectedTextures, texture];
-    
-    setSelectedTextures(newTextures);
+  const handleTextureSelect = (texture: TexturePreference) => {
+    setSelectedTextures([texture]);
   };
 
   const handleNext = () => {
     if (selectedTextures.length === 0) {
-      toast.error("Veuillez sélectionner au moins une texture");
+      toast.error("Veuillez sélectionner une texture");
       return;
     }
     navigate("/fragrance-quiz");
@@ -52,31 +47,26 @@ const TreatmentQuiz = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-3xl font-bold text-center mb-8 glass-title"
         >
-          Quelles textures préférez-vous pour vos produits ?
+          Quelle texture préférez-vous pour vos produits ?
         </motion.h1>
 
         <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto mt-12">
           {textureOptions.map((option, index) => (
-            <motion.div
+            <motion.button
               key={option.text}
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
-              className="flex items-center space-x-4 p-4 rounded-lg bg-white/80 backdrop-blur-sm shadow-md"
+              onClick={() => handleTextureSelect(option.text)}
+              className={`flex items-center space-x-4 p-4 rounded-lg ${
+                selectedTextures.includes(option.text)
+                  ? "bg-primary text-white"
+                  : "bg-white/80 backdrop-blur-sm"
+              } shadow-md transition-all duration-300`}
             >
-              <Checkbox
-                id={option.text}
-                checked={selectedTextures.includes(option.text)}
-                onCheckedChange={() => handleTextureToggle(option.text)}
-              />
-              <label
-                htmlFor={option.text}
-                className="flex items-center space-x-3 flex-1 cursor-pointer"
-              >
-                <option.icon className="w-6 h-6 stroke-[1.5]" />
-                <span className="text-lg">{option.text}</span>
-              </label>
-            </motion.div>
+              <option.icon className="w-6 h-6 stroke-[1.5]" />
+              <span className="text-lg">{option.text}</span>
+            </motion.button>
           ))}
         </div>
 
