@@ -7,12 +7,10 @@ export const routineRecommendations: Record<SkinType, SkinRecommendation> = {
       skinProducts.huileNettoyante,
       skinProducts.eauNeroli,
       skinProducts.lotusSacre,
-      skinProducts.serumImmortelle,
-      skinProducts.eauRose,
-      skinProducts.serumMagnolia
+      skinProducts.serumImmortelle
     ],
     morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de l'Eau de Néroli enrichie → 3. Application de Lotus Sacré → 4. Sérum Immortelle pour sceller l'hydratation.",
-    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de l'Eau de Rose → 3. Sérum Magnolia → 4. Masque TYPE collagène avec Karité chaud.",
+    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de l'Eau de Néroli → 3. Sérum Immortelle → 4. Masque TYPE collagène avec Karité chaud.",
     results: "Hydratation profonde et confort immédiat. 😊"
   },
   "Grasse": {
@@ -20,7 +18,6 @@ export const routineRecommendations: Record<SkinType, SkinRecommendation> = {
       skinProducts.huileNettoyante,
       skinProducts.eauOrange,
       skinProducts.gelSebo,
-      skinProducts.gelAloes,
       skinProducts.serumChanvre
     ],
     morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Tonification avec Eau d'Orange → 3. Application de Gel Sébo → 4. Sérum Chanvre & Chrysanthème pour équilibrer.",
@@ -57,7 +54,7 @@ export const routineRecommendations: Record<SkinType, SkinRecommendation> = {
       skinProducts.serumMagnolia
     ],
     morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Tonification avec Eau d'Orange → 3. Application de Gel Coup d'Éclat → 4. Sérum Magnolia pour une peau lumineuse.",
-    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Sérum Magnolia → 3. Masque TYPE collagène avec Karité chaud → 4. Application de Gel Coup d'Éclat.",
+    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de Gel Coup d'Éclat → 3. Sérum Magnolia → 4. Masque TYPE collagène avec Karité chaud.",
     results: "Peau lumineuse et revitalisée. ✨"
   },
   "Normale": {
@@ -68,7 +65,7 @@ export const routineRecommendations: Record<SkinType, SkinRecommendation> = {
       skinProducts.serumImmortelle
     ],
     morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Tonification avec Eau de Magnolia → 3. Application de Crème Fraîche → 4. Sérum Immortelle pour préserver l'hydratation.",
-    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de Sérum Immortelle → 3. Masque TYPE collagène avec Karité chaud → 4. Application de Crème Fraîche.",
+    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Sérum Immortelle → 3. Masque TYPE collagène avec Karité chaud → 4. Application de Crème Fraîche.",
     results: "Peau équilibrée et naturellement éclatante. 😊"
   }
 };
