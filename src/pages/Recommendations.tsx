@@ -12,14 +12,14 @@ import { useSkinType } from "@/contexts/SkinTypeContext";
 import { Product } from "@/types/skincare";
 
 const Recommendations = () => {
-  const { selectedSkinType, selectedConditions } = useSkinType();
+  const { selectedSkinType, selectedConditions, selectedTextures } = useSkinType();
 
   const recommendations = selectedSkinType
     ? getFilteredRecommendations({
         skinType: selectedSkinType,
         conditions: selectedConditions,
         duration: "5-10 minutes",
-        texture: "Légère",
+        textures: selectedTextures,
         noEssentialOils: false,
       })
     : [];
