@@ -1,16 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  Waves, 
-  Eye, 
-  Circle, 
-  Sun, 
-  Heart, 
-  Zap, 
-  Sparkles, 
-  Search, 
-  ArrowDown 
-} from "lucide-react";
+import { Waves, Eye, Circle, Sun, Heart, Zap, Sparkles } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import ProgressHeader from "@/components/ProgressHeader";
 import { useSkinType } from "@/contexts/SkinTypeContext";
@@ -22,9 +12,14 @@ const ConcernsQuiz = () => {
   const { selectedConditions, setSelectedConditions } = useSkinType();
 
   const handleOptionToggle = (condition: SkinCondition) => {
+    if (condition === "Aucune") {
+      setSelectedConditions(["Aucune"]);
+      return;
+    }
+
     const newConditions = selectedConditions.includes(condition)
-      ? selectedConditions.filter(c => c !== condition)
-      : [...selectedConditions, condition];
+      ? selectedConditions.filter(c => c !== condition && c !== "Aucune")
+      : [...selectedConditions.filter(c => c !== "Aucune"), condition];
     
     setSelectedConditions(newConditions);
   };
@@ -89,7 +84,7 @@ const ConcernsQuiz = () => {
 
           <Button 
             onClick={handleNext}
-            className="w-full mt-8"
+            className="w-full mt-8 py-6"
             disabled={selectedConditions.length === 0}
           >
             Continuer
