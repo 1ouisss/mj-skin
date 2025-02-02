@@ -8,6 +8,8 @@ interface SkinTypeContextType {
   setSelectedConditions: (conditions: SkinCondition[]) => void;
   selectedTextures: TexturePreference[];
   setSelectedTextures: (textures: TexturePreference[]) => void;
+  fragrancePreference: string;
+  setFragrancePreference: (preference: string) => void;
 }
 
 const SkinTypeContext = createContext<SkinTypeContextType | undefined>(undefined);
@@ -16,6 +18,7 @@ export function SkinTypeProvider({ children }: { children: ReactNode }) {
   const [selectedSkinType, setSelectedSkinType] = useState<SkinType | null>(null);
   const [selectedConditions, setSelectedConditions] = useState<SkinCondition[]>([]);
   const [selectedTextures, setSelectedTextures] = useState<TexturePreference[]>([]);
+  const [fragrancePreference, setFragrancePreference] = useState<string>("");
 
   return (
     <SkinTypeContext.Provider 
@@ -25,7 +28,9 @@ export function SkinTypeProvider({ children }: { children: ReactNode }) {
         selectedConditions,
         setSelectedConditions,
         selectedTextures,
-        setSelectedTextures
+        setSelectedTextures,
+        fragrancePreference,
+        setFragrancePreference
       }}
     >
       {children}

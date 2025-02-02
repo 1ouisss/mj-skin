@@ -2,11 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flower, Leaf } from "lucide-react";
 import ProgressHeader from "@/components/ProgressHeader";
+import { useSkinType } from "@/contexts/SkinTypeContext";
 
 const FragranceQuiz = () => {
   const navigate = useNavigate();
+  const { setFragrancePreference } = useSkinType();
 
   const handleOptionClick = (fragrance: string) => {
+    setFragrancePreference(fragrance);
     navigate("/recommendations");
   };
 

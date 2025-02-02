@@ -2,6 +2,7 @@ import { SkinType, SkinCondition, Product, RoutineDuration, TexturePreference } 
 import { hydratants } from "../data/products/hydratants";
 import { serums } from "../data/products/serums";
 import { masques } from "../data/products/masques";
+import { skinProducts } from "../data/products";
 
 interface FilterCriteria {
   skinType: SkinType;
@@ -10,12 +11,22 @@ interface FilterCriteria {
   textures: TexturePreference[];
   noEssentialOils: boolean;
   timeOfDay?: 'morning' | 'evening';
+  fragrancePreference?: string;
 }
 
 interface ScoredProduct {
   product: Product;
   score: number;
 }
+
+const ESSENTIAL_OIL_FREE_PRODUCTS = [
+  'huile-jojoba',
+  'creme-fraiche',
+  'sublimateur',
+  'gel-aloes',
+  'serum-neutre',
+  'mousseline-calendule'
+];
 
 // Enhanced weight multipliers with critical and secondary criteria
 const WEIGHT_MULTIPLIERS = {
@@ -35,7 +46,21 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
   let criteriaMet = 0;
   const maxScore = 100;
 
-  // Critical criteria (60%)
+  // If "Sans huiles essentielles" is selected, only consider essential oil free products
+  if (criteria.fragrancePreference === "Sans huiles essentielles") {
+    if (!ESSENTIAL_OIL_FREE_PRODUCTS.includes(product.id)) {
+      return 0;
+    }
+    // Boost score for essential oil free products
+    score += 25;
+    criteriaMet++;
+  }
+
+  // Special case for Mousseline Calendule
+  if (product.id === 'mousseline-calendule' && criteria.skinType !== 'Sèche') {
+    return 0;
+  }
+
   if (product.skinTypes.includes(criteria.skinType)) {
     score += 25 * WEIGHT_MULTIPLIERS.SKIN_TYPE;
     criteriaMet++;
@@ -50,13 +75,11 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
   }, 0);
   score += conditionScore;
 
-  // Updated texture scoring to handle multiple preferences
   if (criteria.textures.includes(product.texture)) {
     score += 15 * WEIGHT_MULTIPLIERS.TEXTURE;
     criteriaMet++;
   }
 
-  // Secondary criteria (40%)
   if (product.duration === criteria.duration) {
     score += 15 * WEIGHT_MULTIPLIERS.DURATION;
     criteriaMet++;
@@ -148,6 +171,19 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     score: calculateProductScore(product, criteria)
   }));
 
-  // Return diversified results
-  return diversifyResults(scoredProducts, criteria);
+  // Filter and sort products by score
+  const filteredProducts = scoredProducts
+    .filter(sp => sp.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(sp => sp.product);
+
+  // If "Sans huiles essentielles" is selected, ensure only allowed products are included
+  if (criteria.fragrancePreference === "Sans huiles essentielles") {
+    return filteredProducts.filter(product => 
+      ESSENTIAL_OIL_FREE_PRODUCTS.includes(product.id) &&
+      (product.id !== 'mousseline-calendule' || criteria.skinType === 'Sèche')
+    );
+  }
+
+  return filteredProducts;
 };
