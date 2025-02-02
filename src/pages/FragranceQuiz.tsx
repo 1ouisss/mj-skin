@@ -7,7 +7,7 @@ const FragranceQuiz = () => {
   const navigate = useNavigate();
 
   const handleOptionClick = (fragrance: string) => {
-    navigate("/routine-quiz");
+    navigate("/recommendations");
   };
 
   return (
@@ -21,7 +21,7 @@ const FragranceQuiz = () => {
     >      
       <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
       
-      <ProgressHeader currentStep={6} />
+      <ProgressHeader currentStep={5} />
       
       <div className="w-full max-w-6xl mx-auto relative z-10">
         <motion.div 

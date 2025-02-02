@@ -6,7 +6,7 @@ interface ProgressHeaderProps {
   totalSteps?: number;
 }
 
-const ProgressHeader = ({ currentStep, totalSteps = 7 }: ProgressHeaderProps) => {
+const ProgressHeader = ({ currentStep, totalSteps = 5 }: ProgressHeaderProps) => {
   const progress = (currentStep / totalSteps) * 100;
 
   return (

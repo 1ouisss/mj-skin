@@ -10,8 +10,6 @@ import ConditionsQuiz from "./pages/ConditionsQuiz";
 import ConcernsQuiz from "./pages/ConcernsQuiz";
 import TreatmentQuiz from "./pages/TreatmentQuiz";
 import FragranceQuiz from "./pages/FragranceQuiz";
-import RoutineQuiz from "./pages/RoutineQuiz";
-import NewsletterQuiz from "./pages/NewsletterQuiz";
 import Recommendations from "./pages/Recommendations";
 
 const queryClient = new QueryClient();
@@ -30,8 +28,6 @@ const App = () => (
             <Route path="/concerns-quiz" element={<ConcernsQuiz />} />
             <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
             <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
-            <Route path="/routine-quiz" element={<RoutineQuiz />} />
-            <Route path="/newsletter-quiz" element={<NewsletterQuiz />} />
             <Route path="/recommendations" element={<Recommendations />} />
           </Routes>
         </BrowserRouter>
