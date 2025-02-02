@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { SkinType, SkinCondition } from "../types/skincare";
+import { SkinType, SkinCondition, TexturePreference } from "../types/skincare";
 
 interface SkinTypeContextType {
   selectedSkinType: SkinType | null;
   setSelectedSkinType: (type: SkinType) => void;
   selectedConditions: SkinCondition[];
   setSelectedConditions: (conditions: SkinCondition[]) => void;
+  selectedTextures: TexturePreference[];
+  setSelectedTextures: (textures: TexturePreference[]) => void;
 }
 
 const SkinTypeContext = createContext<SkinTypeContextType | undefined>(undefined);
@@ -13,6 +15,7 @@ const SkinTypeContext = createContext<SkinTypeContextType | undefined>(undefined
 export function SkinTypeProvider({ children }: { children: ReactNode }) {
   const [selectedSkinType, setSelectedSkinType] = useState<SkinType | null>(null);
   const [selectedConditions, setSelectedConditions] = useState<SkinCondition[]>([]);
+  const [selectedTextures, setSelectedTextures] = useState<TexturePreference[]>([]);
 
   return (
     <SkinTypeContext.Provider 
@@ -20,7 +23,9 @@ export function SkinTypeProvider({ children }: { children: ReactNode }) {
         selectedSkinType, 
         setSelectedSkinType,
         selectedConditions,
-        setSelectedConditions
+        setSelectedConditions,
+        selectedTextures,
+        setSelectedTextures
       }}
     >
       {children}

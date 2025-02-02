@@ -7,7 +7,7 @@ interface FilterCriteria {
   skinType: SkinType;
   conditions: SkinCondition[];
   duration: RoutineDuration;
-  texture: TexturePreference;
+  textures: TexturePreference[];
   noEssentialOils: boolean;
   timeOfDay?: 'morning' | 'evening';
 }
@@ -50,7 +50,8 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
   }, 0);
   score += conditionScore;
 
-  if (product.texture.toLowerCase() === criteria.texture.toLowerCase()) {
+  // Updated texture scoring to handle multiple preferences
+  if (criteria.textures.includes(product.texture)) {
     score += 15 * WEIGHT_MULTIPLIERS.TEXTURE;
     criteriaMet++;
   }
@@ -73,7 +74,6 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     }
   }
 
-  // Ensure at least 2 criteria are met for a recommendation
   return criteriaMet >= 2 ? Math.min((score / maxScore) * 100, 100) : 0;
 };
 
@@ -93,8 +93,8 @@ const filterProductsByDuration = (products: Product[], duration: RoutineDuration
   return products;
 };
 
-const filterProductsByTexture = (products: Product[], texture: TexturePreference): Product[] => {
-  return products.filter(product => product.texture.toLowerCase() === texture.toLowerCase());
+const filterProductsByTexture = (products: Product[], textures: TexturePreference[]): Product[] => {
+  return products.filter(product => textures.includes(product.texture));
 };
 
 const diversifyResults = (scoredProducts: ScoredProduct[], criteria: FilterCriteria): Product[] => {
@@ -102,7 +102,7 @@ const diversifyResults = (scoredProducts: ScoredProduct[], criteria: FilterCrite
   let filteredProducts = scoredProducts
     .filter(sp => sp.score > 0) // Only include products that met at least 2 criteria
     .map(sp => sp.product)
-    .filter(p => p.texture.toLowerCase() === criteria.texture.toLowerCase());
+    .filter(p => criteria.textures.includes(p.texture));
   
   // Apply duration-based filtering
   filteredProducts = filterProductsByDuration(filteredProducts, criteria.duration);
