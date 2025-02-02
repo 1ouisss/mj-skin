@@ -13,12 +13,11 @@ const TreatmentQuiz = () => {
   const { selectedTextures, setSelectedTextures } = useSkinType();
 
   const handleTextureToggle = (texture: TexturePreference) => {
-    setSelectedTextures((prev: TexturePreference[]) => {
-      if (prev.includes(texture)) {
-        return prev.filter(t => t !== texture);
-      }
-      return [...prev, texture];
-    });
+    const newTextures = selectedTextures.includes(texture)
+      ? selectedTextures.filter(t => t !== texture)
+      : [...selectedTextures, texture];
+    
+    setSelectedTextures(newTextures);
   };
 
   const handleNext = () => {
