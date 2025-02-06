@@ -60,7 +60,7 @@ export const nettoyants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Asphyxiée", "Normale", "Atonique"],
     timeOfDay: "both",
-    image: "/lovable-uploads/8e273f01-53bf-4484-88ed-fe13bf742ae7.png",
+    image: "/lovable-uploads/c9ea69c6-1d01-49ec-866d-1e98bc869bc6.png",
     benefits: [
       "Régénère & protège de la déshydratation",
       "Raffermissante",
