@@ -1,17 +1,28 @@
 
 export type SkinType = 
-  | "Acnéique" 
-  | "Asphyxiée" 
-  | "Atonique" 
-  | "Sensible" 
-  | "Très sensible" 
-  | "Rougeurs";
+  | "Acnéique"
+  | "Asphyxiée"
+  | "Atonique"
+  | "Sensible"
+  | "Très sensible"
+  | "Rougeurs"
+  | "Normale"
+  | "Mixte"
+  | "Grasse"
+  | "Sèche"
+  | "Terne";
 
 export type SkinCondition = 
   | "Boutons" 
   | "Peau mixte" 
   | "Peau grasse" 
-  | "Déshydratation" 
+  | "Déshydratation"
+  | "Acné"
+  | "Rides"
+  | "Taches"
+  | "Eczéma"
+  | "Cernes"
+  | "Rougeurs"
   | "Aucune";
 
 export type RoutineDuration = "< 5 minutes" | "5-10 minutes" | "> 10 minutes";
