@@ -1,3 +1,4 @@
+
 import { SkinType, SkinCondition, Product, RoutineDuration, TexturePreference } from "../types/skincare";
 import { hydratants } from "../data/products/hydratants";
 import { serums } from "../data/products/serums";
@@ -6,6 +7,8 @@ import { nettoyants } from "../data/products/nettoyants";
 import { skinProducts } from "../data/products";
 import { huiles } from "../data/products/huiles";
 import { specifiques } from "../data/products/specifiques";
+import { skinTypeRecommendations } from "../data/skinTypes";
+import { conditionRecommendations } from "../data/conditions";
 
 interface FilterCriteria {
   skinType: SkinType;
@@ -34,25 +37,6 @@ const ESSENTIAL_OIL_FREE_PRODUCTS = [
 const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
   let score = 0;
   let criteriaMet = 0;
-
-  // Prioriser les produits pour les boutons si c'est la condition sélectionnée
-  if (criteria.conditions.includes("Boutons") && 
-      (product.conditions.includes("Boutons") || product.conditions.includes("Acné"))) {
-    score += 50;
-    criteriaMet++;
-  }
-
-  // Score spécial pour les rougeurs
-  if (criteria.conditions.includes("Rougeurs") && product.conditions.includes("Rougeurs")) {
-    score += 45;
-    criteriaMet++;
-  }
-
-  // Prioriser les produits pour l'acné si c'est la condition sélectionnée
-  if (criteria.conditions.includes("Acné") && product.conditions.includes("Acné")) {
-    score += 50;
-    criteriaMet++;
-  }
 
   // Vérification des huiles essentielles
   if (criteria.fragrancePreference === "Sans huiles essentielles" && product.hasEssentialOils) {
@@ -118,98 +102,39 @@ const getBestProductForCategory = (
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
-  // Si la condition est Boutons, retourner la routine spécifique
-  if (criteria.conditions.includes("Boutons")) {
-    return [
-      skinProducts.huileNettoyante,
-      skinProducts.huileTamanu,
-      skinProducts.exfopur,
-      skinProducts.gelSebo
-    ];
+  let baseRecommendations: Product[] = [];
+  let conditionAdjustments: Product[] = [];
+
+  // Obtenir les recommandations de base selon le type de peau
+  if (skinTypeRecommendations[criteria.skinType]) {
+    baseRecommendations = skinTypeRecommendations[criteria.skinType].products;
   }
 
-  // Si la condition est Rougeurs, retourner la routine spécifique
-  if (criteria.conditions.includes("Rougeurs")) {
-    return [
-      skinProducts.huileJojoba,
-      skinProducts.eauCamomille,
-      skinProducts.eauRose,
-      skinProducts.eauNeroli,
-      skinProducts.mousselineCalendule,
-      skinProducts.mousselineKukui,
-      skinProducts.gelApaisant,
-      skinProducts.serumChanvre
-    ];
-  }
+  // Ajouter les ajustements pour chaque condition
+  criteria.conditions.forEach(condition => {
+    if (condition !== "Aucune" && conditionRecommendations[condition]) {
+      conditionAdjustments = [
+        ...conditionAdjustments,
+        ...conditionRecommendations[condition].products
+      ];
+    }
+  });
 
-  // Si la condition est Acné, retourner la routine spécifique
-  if (criteria.conditions.includes("Acné")) {
-    return [
-      skinProducts.huileJojoba,
-      skinProducts.gelAloes,
-      skinProducts.eauNeroli,
-      skinProducts.exfopur,
-      skinProducts.gelSebo,
-      skinProducts.dermopurAcne,
-      skinProducts.huileTamanu,
-      skinProducts.mousselineKukui
-    ];
-  }
-
-  // Si le type de peau est Asphyxiée, retourner la routine spécifique
-  if (criteria.skinType === "Asphyxiée") {
-    return [
-      skinProducts.huileAbricot,
-      skinProducts.huileJojoba,
-      skinProducts.huileTamanu,
-      skinProducts.huileNettoyante,
-      skinProducts.exfopur,
-      skinProducts.gelAloes,
-      skinProducts.gelCoupEclat,
-      skinProducts.mousselineKukui,
-      skinProducts.mousselineTamanu
-    ];
-  }
-
-  // Si le type de peau est Atonie, retourner la routine spécifique
-  if (criteria.skinType === "Atonique") {
-    return [
-      skinProducts.huileAbricot,
-      skinProducts.huileJojoba,
-      skinProducts.huileKukui,
-      skinProducts.huileMoringa,
-      skinProducts.huileNettoyante,
-      skinProducts.exfopur,
-      skinProducts.gelAloes,
-      skinProducts.gelCoupEclat,
-      skinProducts.mousselineKukui,
-      skinProducts.kariteVanille
-    ];
-  }
-
-  const recommendations: Product[] = [];
+  // Combiner les recommandations en évitant les doublons
+  const combinedProducts = [...baseRecommendations];
   
-  // 1. Nettoyant
-  const cleanser = getBestProductForCategory(nettoyants, criteria, "Nettoyant");
-  if (cleanser) recommendations.push(cleanser);
+  conditionAdjustments.forEach(product => {
+    if (!combinedProducts.find(p => p.id === product.id)) {
+      combinedProducts.push(product);
+    }
+  });
 
-  // 2. Sérum
-  const serum = getBestProductForCategory(serums, criteria, "Sérum");
-  if (serum) recommendations.push(serum);
-
-  // 3. Hydratant
-  const moisturizer = getBestProductForCategory(hydratants, criteria, "Hydratant");
-  if (moisturizer) recommendations.push(moisturizer);
-
-  // 4. Masque/Traitement (optionnel, uniquement pour le soir ou si durée ≥ 10 minutes)
-  if (
-    (criteria.timeOfDay === 'evening' || criteria.duration === "> 10 minutes") &&
-    criteria.conditions.length > 0 &&
-    criteria.conditions[0] !== "Aucune"
-  ) {
-    const treatment = getBestProductForCategory(masques, criteria, "Masque");
-    if (treatment) recommendations.push(treatment);
-  }
-
-  return recommendations;
+  // Trier les produits selon leur ordre d'utilisation
+  const productTypeOrder = ["Nettoyant", "Tonique", "Sérum", "Traitement", "Masque", "Hydratant"];
+  
+  return combinedProducts.sort((a, b) => {
+    const aIndex = productTypeOrder.indexOf(a.type);
+    const bIndex = productTypeOrder.indexOf(b.type);
+    return aIndex - bIndex;
+  });
 };
