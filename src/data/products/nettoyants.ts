@@ -1,3 +1,4 @@
+
 import { Product } from "../../types/skincare";
 
 export const nettoyants: Product[] = [
@@ -15,7 +16,7 @@ export const nettoyants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sèche", "Grasse", "Mixte", "Sensible", "Normale"],
     timeOfDay: "both",
-    image: "/lovable-uploads/7a479df1-5705-4433-9ece-1c80b98bf6b6.png",
+    image: "/lovable-uploads/660beb96-797a-40c7-a99b-7c846d5ca653.png",
     benefits: [
       "Nettoie & démaquille",
       "Protège & raffermit",
@@ -131,3 +132,4 @@ export const nettoyants: Product[] = [
     ]
   }
 ];
+
