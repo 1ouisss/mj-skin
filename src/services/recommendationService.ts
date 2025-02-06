@@ -35,6 +35,19 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
   let score = 0;
   let criteriaMet = 0;
 
+  // Prioriser les produits pour les boutons si c'est la condition sélectionnée
+  if (criteria.conditions.includes("Boutons") && 
+      (product.conditions.includes("Boutons") || product.conditions.includes("Acné"))) {
+    score += 50;
+    criteriaMet++;
+  }
+
+  // Score spécial pour les rougeurs
+  if (criteria.conditions.includes("Rougeurs") && product.conditions.includes("Rougeurs")) {
+    score += 45;
+    criteriaMet++;
+  }
+
   // Prioriser les produits pour l'acné si c'est la condition sélectionnée
   if (criteria.conditions.includes("Acné") && product.conditions.includes("Acné")) {
     score += 50;
@@ -105,6 +118,30 @@ const getBestProductForCategory = (
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
+  // Si la condition est Boutons, retourner la routine spécifique
+  if (criteria.conditions.includes("Boutons")) {
+    return [
+      skinProducts.huileNettoyante,
+      skinProducts.huileTamanu,
+      skinProducts.exfopur,
+      skinProducts.gelSebo
+    ];
+  }
+
+  // Si la condition est Rougeurs, retourner la routine spécifique
+  if (criteria.conditions.includes("Rougeurs")) {
+    return [
+      skinProducts.huileJojoba,
+      skinProducts.eauCamomille,
+      skinProducts.eauRose,
+      skinProducts.eauNeroli,
+      skinProducts.mousselineCalendule,
+      skinProducts.mousselineKukui,
+      skinProducts.gelApaisant,
+      skinProducts.serumChanvre
+    ];
+  }
+
   // Si la condition est Acné, retourner la routine spécifique
   if (criteria.conditions.includes("Acné")) {
     return [

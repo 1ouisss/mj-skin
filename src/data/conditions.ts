@@ -1,3 +1,4 @@
+
 import { SkinCondition, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
@@ -24,14 +25,27 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
   },
   "Rougeurs": {
     products: [
+      skinProducts.huileJojoba,
+      skinProducts.eauCamomille,
       skinProducts.eauRose,
-      skinProducts.serumRose,
-      skinProducts.cremeApaisante,
-      skinProducts.huileKukui,
-      skinProducts.masqueApaisant
+      skinProducts.eauNeroli,
+      skinProducts.mousselineCalendule,
+      skinProducts.mousselineKukui,
+      skinProducts.gelApaisant,
+      skinProducts.serumChanvre
     ],
-    morningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Crème Apaisante",
-    eveningRoutine: "Nettoyage doux → Eau de Rose → Sérum Rose → Masque TYPE apaisant (2x/semaine)"
+    morningRoutine: "1. Nettoyage avec Eau Florale + Jojoba → 2. Application d'Eau Florale (Camomille/Rose/Néroli) → 3. Hydratation (Eau Florale Camomille ou Gel Apaisant) → 4. Protection (Mousseline Calendule)",
+    eveningRoutine: "1. Nettoyage avec Huile Jojoba + Eau Florale → 2. Application de Mousseline Calendule/Kukui → 3. Nutrition avec Sérum Chanvre & Chrysanthème ou Huile Jojoba"
+  },
+  "Boutons": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.huileTamanu,
+      skinProducts.exfopur,
+      skinProducts.gelSebo
+    ],
+    morningRoutine: "1. Nettoyage avec Huile Nettoyante/Tamanu → 2. Application d'Eau Florale → 3. Hydratation avec Gel Sébo",
+    eveningRoutine: "1. Nettoyage avec Exfopur + Huile + Eau Florale → 2. Nutrition avec Huile Nettoyante/Tamanu"
   },
   "Cernes": {
     products: [

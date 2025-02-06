@@ -1,6 +1,6 @@
 
 export type SkinType = "Sèche" | "Grasse" | "Mixte" | "Sensible" | "Terne" | "Normale" | "Asphyxiée" | "Atonie";
-export type SkinCondition = "Acné" | "Eczéma" | "Rougeurs" | "Cernes" | "Rides" | "Taches" | "Aucune";
+export type SkinCondition = "Acné" | "Eczéma" | "Rougeurs" | "Cernes" | "Rides" | "Taches" | "Boutons" | "Aucune";
 export type RoutineDuration = "< 5 minutes" | "5-10 minutes" | "> 10 minutes";
 export type TexturePreference = "Légère" | "Fluide" | "Crémeuse" | "Riche";
 export type ProductType = "Hydratant" | "Sérum" | "Masque" | "Nettoyant" | "Tonique" | "Traitement";
