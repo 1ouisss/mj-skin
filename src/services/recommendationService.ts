@@ -134,6 +134,22 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     ];
   }
 
+  // Si le type de peau est Atonie, retourner la routine spécifique
+  if (criteria.skinType === "Atonie") {
+    return [
+      skinProducts.huileAbricot,
+      skinProducts.huileJojoba,
+      skinProducts.huileKukui,
+      skinProducts.huileMoringa,
+      skinProducts.huileNettoyante,
+      skinProducts.exfopur,
+      skinProducts.gelAloes,
+      skinProducts.gelCoupEclat,
+      skinProducts.mousselineKukui,
+      skinProducts.kariteVanille
+    ];
+  }
+
   const recommendations: Product[] = [];
   
   // 1. Nettoyant

@@ -1,8 +1,24 @@
-
 import { SkinType, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
 export const routineRecommendations: Record<SkinType | "Acné", SkinRecommendation> = {
+  "Atonie": {
+    products: [
+      skinProducts.huileAbricot,
+      skinProducts.huileJojoba,
+      skinProducts.huileKukui,
+      skinProducts.huileMoringa,
+      skinProducts.huileNettoyante,
+      skinProducts.exfopur,
+      skinProducts.gelAloes,
+      skinProducts.gelCoupEclat,
+      skinProducts.mousselineKukui,
+      skinProducts.kariteVanille
+    ],
+    morningRoutine: "1. Nettoyage avec Huile (Abricot/Jojoba/Kukui/Moringa/Nettoyante) → 2. Application de l'Eau Florale → 3. Hydratation avec Gel d'Aloès ou Gel Coup d'Éclat → 4. Protection avec Mousseline Kukui ou Karité Vanillé",
+    eveningRoutine: "1. Nettoyage avec Huile → 2. Mélangez 2 pompes d'huile avec 1 noix d'Exfopur → 3. Application du Sérum choisi → 4. Protection avec Mousseline ou Karité",
+    results: "Peau revitalisée et tonifiée 🌿"
+  },
   "Asphyxiée": {
     products: [
       skinProducts.huileAbricot,

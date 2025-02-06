@@ -12,7 +12,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Asphyxiée", "Normale"],
+    skinTypes: ["Asphyxiée", "Normale", "Atonie"],
     timeOfDay: "both"
   },
   {
@@ -25,7 +25,33 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Acné"],
-    skinTypes: ["Grasse", "Mixte", "Asphyxiée"],
+    skinTypes: ["Grasse", "Mixte", "Asphyxiée", "Atonie"],
+    timeOfDay: "both"
+  },
+  {
+    id: "huile-kukui",
+    name: "Huile de Kukui",
+    type: "Nettoyant",
+    url: "https://maisonjacynthe.ca/fr/huile-kukui",
+    ingredients: "Aleurites moluccana seed oil",
+    texture: "Fluide",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Atonie"],
+    timeOfDay: "both"
+  },
+  {
+    id: "huile-moringa",
+    name: "Huile de Moringa",
+    type: "Nettoyant",
+    url: "https://maisonjacynthe.ca/fr/huile-moringa",
+    ingredients: "Moringa oleifera seed oil",
+    texture: "Fluide",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Atonie"],
     timeOfDay: "both"
   },
   {
