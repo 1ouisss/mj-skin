@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Waves, Eye, Circle, Sun, Heart, Zap, Sparkles } from "lucide-react";
+import { Waves, Eye, Circle, Sun, Heart, Sparkles } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import ProgressHeader from "@/components/ProgressHeader";
 import { useSkinType } from "@/contexts/SkinTypeContext";
@@ -35,7 +35,6 @@ const ConcernsQuiz = () => {
     { text: "Acné" as SkinCondition, icon: Circle },
     { text: "Taches" as SkinCondition, icon: Sun },
     { text: "Rougeurs" as SkinCondition, icon: Heart },
-    { text: "Eczéma" as SkinCondition, icon: Zap },
     { text: "Aucune" as SkinCondition, icon: Sparkles },
   ];
 
