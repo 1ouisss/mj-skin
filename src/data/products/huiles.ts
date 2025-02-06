@@ -1,6 +1,20 @@
+
 import { Product } from "../../types/skincare";
 
 export const huiles: Product[] = [
+  {
+    id: "huile-abricot",
+    name: "Huile d'Abricot",
+    type: "Nettoyant",
+    url: "https://maisonjacynthe.ca/fr/huile-abricot",
+    ingredients: "Prunus armeniaca kernel oil",
+    texture: "Fluide",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Asphyxiée", "Normale"],
+    timeOfDay: "both"
+  },
   {
     id: "huile-jojoba",
     name: "Huile de Jojoba",
@@ -11,7 +25,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Acné"],
-    skinTypes: ["Grasse", "Mixte"],
+    skinTypes: ["Grasse", "Mixte", "Asphyxiée"],
     timeOfDay: "both"
   },
   {
@@ -24,7 +38,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Acné", "Eczéma"],
-    skinTypes: ["Sensible", "Grasse"],
+    skinTypes: ["Sensible", "Grasse", "Asphyxiée"],
     timeOfDay: "evening"
   }
 ];

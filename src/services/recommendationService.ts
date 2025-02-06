@@ -119,6 +119,21 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     ];
   }
 
+  // Si le type de peau est Asphyxiée, retourner la routine spécifique
+  if (criteria.skinType === "Asphyxiée") {
+    return [
+      skinProducts.huileAbricot,
+      skinProducts.huileJojoba,
+      skinProducts.huileTamanu,
+      skinProducts.huileNettoyante,
+      skinProducts.exfopur,
+      skinProducts.gelAloes,
+      skinProducts.gelCoupEclat,
+      skinProducts.mousselineKukui,
+      skinProducts.mousselineTamanu
+    ];
+  }
+
   const recommendations: Product[] = [];
   
   // 1. Nettoyant

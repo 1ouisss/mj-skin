@@ -1,7 +1,24 @@
+
 import { SkinType, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
 export const routineRecommendations: Record<SkinType | "Acné", SkinRecommendation> = {
+  "Asphyxiée": {
+    products: [
+      skinProducts.huileAbricot,
+      skinProducts.huileJojoba,
+      skinProducts.huileTamanu,
+      skinProducts.huileNettoyante,
+      skinProducts.exfopur,
+      skinProducts.gelAloes,
+      skinProducts.gelCoupEclat,
+      skinProducts.mousselineKukui,
+      skinProducts.mousselineTamanu
+    ],
+    morningRoutine: "1. Nettoyage avec Huile (Abricot/Jojoba/Tamanu/Nettoyante) → 2. Application de l'Eau Florale → 3. Hydratation avec Gel d'Aloès ou Gel Coup d'Éclat → 4. Protection avec Mousseline Kukui ou Tamanu",
+    eveningRoutine: "1. Nettoyage avec Huile → 2. Masque Exfopur avec Eau Florale → 3. Application du Sérum choisi → 4. Protection avec Mousseline",
+    results: "Peau décongestionnée et oxygénée 🌿"
+  },
   "Acné": {
     products: [
       skinProducts.huileJojoba,
