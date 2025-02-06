@@ -102,7 +102,7 @@ export const hydratants: Product[] = [
     conditions: ["Rougeurs"],
     skinTypes: ["Sensible", "Très sensible"],
     timeOfDay: "both",
-    image: "/lovable-uploads/1ca729f7-4515-45e6-8945-eab64e647c53.png",
+    image: "/lovable-uploads/d3cc65ec-09ce-4800-9b36-a136ca9c5efa.png",
     benefits: [
       "Hydrate et revitalise la peau",
       "Améliore l'apparence des cicatrices",
