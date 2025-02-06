@@ -2,6 +2,52 @@ import { Product } from "../../types/skincare";
 
 export const traitements: Product[] = [
   {
+    id: "exfopur",
+    name: "Exfopur",
+    type: "Traitement",
+    url: "https://maisonjacynthe.ca/fr/exfoliant-naturel-exfopur",
+    description: "Pour recréer la microdermabrasion à la maison, découvrez notre formule Exfopur qui combine une action exfoliante pour prévenir les signes du vieillissement, une action oxygénante pour éliminer les peaux mortes, et une action purifiante pour fluidifier les sécrétions séborrhéiques. Une technique inédite qui permet de réduire progressivement les inesthétismes cutanés, redonnant à la peau jeunesse et fraîcheur.",
+    ingredients: "Kaolin (Argile blanche), Pumice stone (Roche volcanique), Aqua (Eau), Glyceryl stearate (Glycéryl de stéarate), Cetyl alcohol (Alcool cétylique), Hydrolyzed soy (Soya) protein, Panthenol (Panthénol), Rosmarinus officinalis (Romarin) CO2 extract, Hedera helix (Lierre) leaf extract, Rosmarinus officinalis (Romarin) oil, Lavandula angustifolia (Lavande vraie) oil, Eucalyptus radiata (Eucalyptus radiée) oil, Abies balsamea (Sapin baumier) oil, Mentha piperita (Menthe poivrée) oil",
+    format: "50 g",
+    texture: "Crémeuse",
+    duration: "5-10 minutes",
+    hasEssentialOils: true,
+    conditions: ["Aucune"],
+    skinTypes: ["Normale", "Mixte", "Grasse"],
+    timeOfDay: "evening",
+    image: "/lovable-uploads/e09ec530-10b3-4e88-9643-2271e24f1d92.png",
+    benefits: [
+      "2 en 1, gommage et masque",
+      "Fraîcheur instantanée",
+      "Éclaircissant & raffermissant",
+      "Anti-âge"
+    ]
+  },
+  {
+    id: "rituel-facial-maison",
+    name: "Rituel Facial Maison",
+    type: "Traitement",
+    url: "https://maisonjacynthe.ca/fr/rituel-facial-maison",
+    description: "L'ensemble facial maison comprend : L'Exfopur & le Masque de miel Cardamome. Une combinaison parfaite pour un rituel complet de soin visage.",
+    ingredients: "Exfopur: Kaolin, Pumice stone, Aqua... Masque de miel: Mel (Miel), Glycerin (Glycérine végétale), Tocopherol D-alpha (Vitamine E), huiles essentielles sélectionnées",
+    format: "Exfopur 50ml + Masque de miel 45ml",
+    texture: "Crémeuse",
+    duration: "> 10 minutes",
+    hasEssentialOils: true,
+    conditions: ["Aucune"],
+    skinTypes: ["Normale", "Mixte", "Sèche"],
+    timeOfDay: "evening",
+    image: "/placeholder.svg",
+    benefits: [
+      "Nettoyage en profondeur",
+      "Éclairçit le teint",
+      "Resserre les pores",
+      "Repulpe la peau",
+      "Efface les ridules",
+      "Adoucit la peau"
+    ]
+  },
+  {
     id: "dermopur-acne",
     name: "Dermopur acné",
     type: "Traitement",
