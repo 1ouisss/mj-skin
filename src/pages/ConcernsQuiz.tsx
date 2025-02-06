@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Waves, Eye, Circle, Sun, Heart, Zap, Sparkles } from "lucide-react";
@@ -40,55 +41,73 @@ const ConcernsQuiz = () => {
 
   return (
     <div 
-      className="concerns-page flex items-center justify-center px-4"
+      className="flex items-center justify-center px-4 min-h-screen w-full relative"
       style={{
         background: `url('/lovable-uploads/fb3ff92a-8049-4229-b2ce-8e9a41f262f1.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        height: '100vh',
-        width: '100vw'
       }}
-    >      
+    >
       <ProgressHeader currentStep={3} />
       
-      <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start relative z-10 pt-16">
-        <div className="lg:pl-12 flex items-center h-full">
-          <motion.h1 
+      <div className="w-full max-w-2xl mx-auto relative z-10 p-12 bg-white/80 backdrop-blur-sm rounded-[32px] shadow-lg">
+        <div className="space-y-8">
+          <motion.div 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="glass-title text-left"
+            className="text-center space-y-4 mb-12"
           >
-            Quelles sont vos principales préoccupations ?
-          </motion.h1>
-        </div>
+            <h1 className="text-4xl md:text-5xl font-playfair font-light text-gray-900">
+              Quelles sont vos principales préoccupations ?
+            </h1>
+            <p className="text-lg text-gray-600 font-light">
+              Sélectionnez une ou plusieurs préoccupations
+            </p>
+          </motion.div>
 
-        <div className="w-full max-w-xl space-y-4">
-          {concerns.map((option, index) => (
-            <motion.div
-              key={option.text}
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-              className="concerns-button flex items-center space-x-4 p-4 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all cursor-pointer"
-              onClick={() => handleOptionToggle(option.text)}
+          <div className="grid grid-cols-1 gap-4 mt-8">
+            {concerns.map((option, index) => (
+              <motion.div
+                key={option.text}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center gap-4 bg-white hover:bg-gray-50 
+                          rounded-2xl p-6 shadow-md transition-all duration-300 
+                          group border border-gray-100"
+              >
+                <Checkbox
+                  checked={selectedConditions.includes(option.text)}
+                  onCheckedChange={() => handleOptionToggle(option.text)}
+                  id={option.text}
+                  className="data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-900"
+                />
+                <label
+                  htmlFor={option.text}
+                  className="flex items-center gap-4 flex-1 cursor-pointer"
+                >
+                  <option.icon className="w-6 h-6 stroke-[1.5] text-gray-700" />
+                  <span className="text-lg font-playfair">{option.text}</span>
+                </label>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex justify-center mt-12"
+          >
+            <Button
+              onClick={handleNext}
+              className="bg-gray-900 hover:bg-gray-800 text-white px-12 py-6 rounded-full text-lg font-light"
+              disabled={selectedConditions.length === 0}
             >
-              <Checkbox 
-                checked={selectedConditions.includes(option.text)}
-                onCheckedChange={() => handleOptionToggle(option.text)}
-              />
-              <option.icon className="w-6 h-6 stroke-current" />
-              <span className="text-lg">{option.text}</span>
-            </motion.div>
-          ))}
-
-          <Button 
-            onClick={handleNext}
-            className="w-full mt-8 py-6"
-            disabled={selectedConditions.length === 0}
-          >
-            Continuer
-          </Button>
+              Suivant
+            </Button>
+          </motion.div>
         </div>
       </div>
     </div>
@@ -96,3 +115,4 @@ const ConcernsQuiz = () => {
 };
 
 export default ConcernsQuiz;
+
