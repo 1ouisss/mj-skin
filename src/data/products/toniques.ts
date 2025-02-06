@@ -67,7 +67,7 @@ export const toniques: Product[] = [
     conditions: ["Boutons"],
     skinTypes: ["Normale", "Mixte", "Grasse"],
     timeOfDay: "both",
-    image: "/lovable-uploads/a3ca43bc-96af-434e-a22e-3b175a4740ff.png",
+    image: "/lovable-uploads/9cb1f4e1-b2dc-4e99-a6e4-9ce4b73817a1.png",
     benefits: ["Purifiante", "Astringente", "Régénérante"]
   },
   {
