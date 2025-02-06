@@ -3,39 +3,35 @@ import { SkinCondition, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
 export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecommendation>> = {
-  "Acné": {
+  "Peau mixte": {
     products: [
-      skinProducts.exfopur,
+      skinProducts.huileNettoyante,
+      skinProducts.eauRomarin,
       skinProducts.gelSebo,
-      skinProducts.masquePurifiant,
-      skinProducts.hydrogelRafraichissant
+      skinProducts.serumRose
     ],
-    morningRoutine: "Nettoyage doux → Application de Gel Sébo → Protection solaire non comédogène",
-    eveningRoutine: "Double nettoyage → Application d'Exfopur → Hydratant léger non comédogène"
+    morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Tonification avec Eau de Romarin → 3. Application de Gel Sébo → 4. Sérum Rose pour une hydratation équilibrée.",
+    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de Gel Sébo → 3. Sérum Rose → 4. Masque Exfopur pour purifier les zones grasses."
   },
-  "Eczéma": {
+  "Peau grasse": {
     products: [
-      skinProducts.baumeApaisant,
-      skinProducts.huileJojoba,
-      skinProducts.cremeApaisante,
-      skinProducts.masqueApaisant
-    ],
-    morningRoutine: "Nettoyage très doux → Application de Baume Apaisant → Protection",
-    eveningRoutine: "Nettoyage doux → Application d'Huile de Jojoba → Baume Apaisant"
-  },
-  "Rougeurs": {
-    products: [
-      skinProducts.huileJojoba,
-      skinProducts.eauCamomille,
-      skinProducts.eauRose,
-      skinProducts.eauNeroli,
-      skinProducts.mousselineCalendule,
-      skinProducts.mousselineKukui,
-      skinProducts.gelApaisant,
+      skinProducts.huileNettoyante,
+      skinProducts.eauOrange,
+      skinProducts.gelSebo,
       skinProducts.serumChanvre
     ],
-    morningRoutine: "1. Nettoyage avec Eau Florale + Jojoba → 2. Application d'Eau Florale (Camomille/Rose/Néroli) → 3. Hydratation (Eau Florale Camomille ou Gel Apaisant) → 4. Protection (Mousseline Calendule)",
-    eveningRoutine: "1. Nettoyage avec Huile Jojoba + Eau Florale → 2. Application de Mousseline Calendule/Kukui → 3. Nutrition avec Sérum Chanvre & Chrysanthème ou Huile Jojoba"
+    morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Tonification avec Eau d'Orange → 3. Application de Gel Sébo → 4. Sérum Chanvre & Chrysanthème pour équilibrer.",
+    eveningRoutine: "1. Double nettoyage avec Huile Nettoyante → 2. Application de Gel Sébo → 3. Masque Exfopur → 4. Sérum Chanvre & Chrysanthème pour régulation."
+  },
+  "Déshydratation": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.eauNeroli,
+      skinProducts.lotusSacre,
+      skinProducts.serumImmortelle
+    ],
+    morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de l'Eau de Néroli enrichie → 3. Application de Lotus Sacré → 4. Sérum Immortelle pour sceller l'hydratation.",
+    eveningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Application de l'Eau de Néroli → 3. Sérum Immortelle → 4. Masque TYPE collagène avec Karité chaud."
   },
   "Boutons": {
     products: [
@@ -46,32 +42,6 @@ export const conditionRecommendations: Record<SkinCondition, Partial<SkinRecomme
     ],
     morningRoutine: "1. Nettoyage avec Huile Nettoyante/Tamanu → 2. Application d'Eau Florale → 3. Hydratation avec Gel Sébo",
     eveningRoutine: "1. Nettoyage avec Exfopur + Huile + Eau Florale → 2. Nutrition avec Huile Nettoyante/Tamanu"
-  },
-  "Cernes": {
-    products: [
-      skinProducts.masqueCollagene,
-      skinProducts.soinJeunesse
-    ],
-    morningRoutine: "Application délicate du Soin jeunesse contour des yeux",
-    eveningRoutine: "Application du Masque TYPE collagène (2x/semaine) → Soin jeunesse contour des yeux"
-  },
-  "Rides": {
-    products: [
-      skinProducts.cremeLotus,
-      skinProducts.masqueLiftant,
-      skinProducts.triphase,
-      skinProducts.phytocomplexe
-    ],
-    morningRoutine: "Application de Crème Lotus → Triphase",
-    eveningRoutine: "Application de Phytocomplexe → Masque TYPE liftant (2x/semaine)"
-  },
-  "Taches": {
-    products: [
-      skinProducts.serumEclat,
-      skinProducts.gelClarifiant
-    ],
-    morningRoutine: "Application du Sérum éclat → Protection solaire",
-    eveningRoutine: "Application du Gel clarifiant → Sérum éclat"
   },
   "Aucune": {
     products: [],
