@@ -16,7 +16,7 @@ export const baumes: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Sèche", "Sensible"],
     timeOfDay: "both",
-    image: "/lovable-uploads/7652abb5-ab1f-4a0a-80fe-ab2ae051055b.png",
+    image: "/lovable-uploads/922e18b3-08f1-446a-ac35-58bc8109eba8.png",
     benefits: [
       "Nourrissant",
       "Antiâge",
@@ -135,3 +135,4 @@ export const baumes: Product[] = [
     ]
   }
 ];
+
