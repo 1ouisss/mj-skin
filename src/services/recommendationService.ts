@@ -1,5 +1,5 @@
 
-import { SkinType, SkinCondition, Product, RoutineDuration, TexturePreference } from "../types/skincare";
+import { SkinType, SkinCondition, Product, TexturePreference } from "../types/skincare";
 import { generateRoutine } from "../data/skinRoutines";
 import { skinProducts } from "../data/products";
 import { skinTypeRecommendations } from "../data/skinTypes";
@@ -8,11 +8,8 @@ import { conditionRecommendations } from "../data/conditions";
 interface FilterCriteria {
   skinType: SkinType;
   conditions: SkinCondition[];
-  duration: RoutineDuration;
-  textures: TexturePreference[];
-  noEssentialOils: boolean;
-  timeOfDay?: 'morning' | 'evening';
-  fragrancePreference?: string;
+  textures?: TexturePreference[];
+  noEssentialOils?: boolean;
 }
 
 const PRODUCT_TYPE_ORDER = {
@@ -32,7 +29,7 @@ const calculateProductScore = (
   let score = 0;
 
   // Vérification des huiles essentielles
-  if (criteria.fragrancePreference === "Sans huiles essentielles" && product.hasEssentialOils) {
+  if (criteria.noEssentialOils && product.hasEssentialOils) {
     return 0;
   }
 
@@ -51,15 +48,8 @@ const calculateProductScore = (
   }
 
   // Score pour la texture
-  if (criteria.textures.includes(product.texture)) {
+  if (criteria.textures?.includes(product.texture)) {
     score += 15;
-  }
-
-  // Score pour le moment de la journée
-  if (criteria.timeOfDay) {
-    if (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both') {
-      score += 10;
-    }
   }
 
   // Bonus si le produit est dans la routine recommandée

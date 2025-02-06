@@ -14,15 +14,12 @@ import { Product } from "@/types/skincare";
 import { generateRoutine } from "@/data/skinRoutines";
 
 const Recommendations = () => {
-  const { selectedSkinType, selectedConditions, selectedTextures } = useSkinType();
+  const { selectedSkinType, selectedConditions } = useSkinType();
 
   const recommendations = selectedSkinType
     ? getFilteredRecommendations({
         skinType: selectedSkinType,
         conditions: selectedConditions,
-        duration: "5-10 minutes",
-        textures: selectedTextures,
-        noEssentialOils: false,
       })
     : [];
 
@@ -104,7 +101,7 @@ const Recommendations = () => {
                         <CardContent className="p-0">
                           <div className="aspect-square relative">
                             <img
-                              src={product.url}
+                              src={product.image}
                               alt={product.name}
                               className="w-full h-full object-cover"
                             />
