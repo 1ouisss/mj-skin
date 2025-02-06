@@ -80,7 +80,7 @@ export const hydratants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Terne"],
     timeOfDay: "morning",
-    image: "/lovable-uploads/1d440ab2-18af-4c01-8e87-95330abe6284.png",
+    image: "/lovable-uploads/1e129fb5-e59c-48d4-8061-d1b3b6d34119.png",
     benefits: [
       "Coup d'éclat instantané",
       "Teint lisse et unifié",
