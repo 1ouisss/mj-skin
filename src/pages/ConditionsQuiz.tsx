@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Flower2, Heart, Check } from "lucide-react";
@@ -43,25 +44,27 @@ const ConditionsQuiz = () => {
       className="flex items-center justify-center px-4 min-h-screen w-full relative"
       style={{
         background: `url('/lovable-uploads/ada41ff7-d054-4869-8e8a-8138b7c1aa81.png')`,
-        backgroundSize: '150%',
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        height: '100vh',
-        width: '100vw'
       }}
     >
       <ProgressHeader currentStep={2} />
       
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
-      <div className="w-full max-w-2xl mx-auto relative z-10">
+      <div className="w-full max-w-2xl mx-auto relative z-10 p-12 bg-white/80 backdrop-blur-sm rounded-[32px] shadow-lg">
         <div className="space-y-8">
-          <motion.h1 
+          <motion.div 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="glass-title text-4xl md:text-5xl font-light tracking-wider leading-tight text-center mb-12"
+            className="text-center space-y-4 mb-12"
           >
-            Quelles sont vos principales conditions ?
-          </motion.h1>
+            <h1 className="text-4xl md:text-5xl font-playfair font-light text-gray-900">
+              Quelles sont vos principales conditions ?
+            </h1>
+            <p className="text-lg text-gray-600 font-light">
+              Sélectionnez une ou plusieurs conditions
+            </p>
+          </motion.div>
 
           <div className="grid grid-cols-1 gap-4 mt-8">
             {conditions.map((option, index) => (
@@ -70,19 +73,22 @@ const ConditionsQuiz = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-4 bg-white/90 backdrop-blur-sm hover:bg-white text-[#222222] rounded-full py-4 px-6 transition-colors"
+                className="flex items-center gap-4 bg-white hover:bg-gray-50 
+                          rounded-2xl p-6 shadow-md transition-all duration-300 
+                          group border border-gray-100"
               >
                 <Checkbox
                   checked={selectedConditions.includes(option.value)}
                   onCheckedChange={() => handleConditionToggle(option.value)}
                   id={option.value}
+                  className="data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-900"
                 />
                 <label
                   htmlFor={option.value}
                   className="flex items-center gap-4 flex-1 cursor-pointer"
                 >
-                  <option.icon className="w-6 h-6 stroke-[1.5]" />
-                  <span className="text-lg">{option.text}</span>
+                  <option.icon className="w-6 h-6 stroke-[1.5] text-gray-700" />
+                  <span className="text-lg font-playfair">{option.text}</span>
                 </label>
               </motion.div>
             ))}
@@ -92,14 +98,14 @@ const ConditionsQuiz = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="flex justify-center mt-8"
+            className="flex justify-center mt-12"
           >
             <Button
               onClick={handleContinue}
-              className="bg-white/90 text-[#222222] hover:bg-white px-8 py-2 rounded-full"
+              className="bg-gray-900 hover:bg-gray-800 text-white px-12 py-6 rounded-full text-lg font-light"
               disabled={selectedConditions.length === 0}
             >
-              Continuer
+              Suivant
             </Button>
           </motion.div>
         </div>

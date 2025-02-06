@@ -17,7 +17,7 @@ const SkinTypeQuiz = () => {
 
   return (
     <div 
-      className="skintype-page flex flex-col items-center justify-center px-4 min-h-screen w-full relative"
+      className="flex items-center justify-center px-4 min-h-screen w-full relative"
       style={{
         background: `url('/lovable-uploads/686da753-061a-4c41-8ca0-ddada141a419.png')`,
         backgroundSize: 'cover',
@@ -27,23 +27,21 @@ const SkinTypeQuiz = () => {
     >
       <ProgressHeader currentStep={1} />
       
-      <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
-      
-      <div className="w-full max-w-[800px] mx-auto relative z-10 pt-16 px-4 md:px-6">
+      <div className="w-full max-w-4xl mx-auto relative z-10 p-12 bg-white/80 backdrop-blur-sm rounded-[32px] shadow-lg">
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="text-center space-y-4 mb-12"
         >
-          <h1 className="elegant-title text-3xl md:text-4xl lg:text-5xl">
+          <h1 className="text-4xl md:text-5xl font-playfair font-light text-gray-900">
             Quel est votre type de peau ?
           </h1>
-          <p className="elegant-subtitle text-lg text-gray-200/90">
+          <p className="text-lg text-gray-600 font-light">
             Sélectionnez l'option qui correspond le mieux à votre peau
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           {[
             { type: "Sèche" as SkinType, icon: Cloud, desc: "Tiraillements, rugosité, manque de confort" },
             { type: "Grasse" as SkinType, icon: Droplet, desc: "Excès de sébum, brillance, pores dilatés" },
@@ -58,15 +56,15 @@ const SkinTypeQuiz = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
               onClick={() => handleOptionClick(option.type)}
-              className="flex flex-col items-start gap-2 bg-white/95 backdrop-blur-sm hover:bg-white 
-                         text-gray-800 rounded-2xl p-6 shadow-lg transition-all duration-300 
-                         hover:transform hover:translate-y-[-2px] hover:shadow-xl w-full"
+              className="flex flex-col items-start gap-2 bg-white hover:bg-gray-50 
+                       text-gray-800 rounded-2xl p-6 shadow-md transition-all duration-300 
+                       group border border-gray-100"
             >
               <div className="flex items-center gap-4 w-full">
-                <option.icon className="w-6 h-6 stroke-[1.5]" />
-                <span className="text-xl font-light">{option.type}</span>
+                <option.icon className="w-6 h-6 stroke-[1.5] text-gray-700" />
+                <span className="text-xl font-playfair">{option.type}</span>
               </div>
-              <p className="text-sm text-gray-600 pl-10">{option.desc}</p>
+              <p className="text-sm text-gray-600 pl-10 font-light">{option.desc}</p>
             </motion.button>
           ))}
         </div>
@@ -76,3 +74,4 @@ const SkinTypeQuiz = () => {
 };
 
 export default SkinTypeQuiz;
+
