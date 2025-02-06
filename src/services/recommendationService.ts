@@ -64,7 +64,7 @@ const calculateProductScore = (
 
   // Bonus si le produit est dans la routine recommandée
   Object.values(routine).forEach(step => {
-    if (step.products && step.products.includes(product.id)) {
+    if (Array.isArray(step.products) && step.products.includes(product.id)) {
       score += 30;
     }
   });
