@@ -60,7 +60,7 @@ export const baumes: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Sèche"],
     timeOfDay: "morning",
-    image: "/lovable-uploads/7ef8fd01-bacd-4d59-8fcd-f205360ffb19.png",
+    image: "/lovable-uploads/8508dab6-d542-43f0-98de-203ad02164e3.png",
     benefits: [
       "Protection solaire",
       "Assouplissant",
