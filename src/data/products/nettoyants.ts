@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const nettoyants: Product[] = [
@@ -38,7 +37,7 @@ export const nettoyants: Product[] = [
     conditions: ["Peau grasse", "Acné"],
     skinTypes: ["Grasse", "Mixte", "Normale"],
     timeOfDay: "both",
-    image: "/lovable-uploads/3513b045-133a-4e44-aef3-c907dbce1e4b.png",
+    image: "/lovable-uploads/ffd86774-d7a1-4ed3-a169-94a0bf74e5fc.png",
     benefits: [
       "Apaise les glandes sébacées",
       "Adoucit & protège la peau",
@@ -132,4 +131,3 @@ export const nettoyants: Product[] = [
     ]
   }
 ];
-
