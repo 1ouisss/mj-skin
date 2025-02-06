@@ -1,4 +1,3 @@
-
 import { SkinType, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
@@ -89,5 +88,60 @@ export const skinTypeRecommendations: Record<SkinType, SkinRecommendation> = {
     morningRoutine: "1. Nettoyage avec Eau Florale + Jojoba → 2. Application d'Eau Florale (Camomille/Rose/Néroli) → 3. Hydratation (Eau Florale Camomille ou Gel Apaisant) → 4. Protection (Mousseline Calendule)",
     eveningRoutine: "1. Nettoyage avec Huile Jojoba + Eau Florale → 2. Application de Mousseline Calendule/Kukui → 3. Nutrition avec Sérum Chanvre & Chrysanthème ou Huile Jojoba",
     results: "Rougeurs atténuées et teint unifié 🌺"
+  },
+  "Normale": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.eauMagnolia,
+      skinProducts.cremeFraiche,
+      skinProducts.serumImmortelle
+    ],
+    morningRoutine: "1. Nettoyage avec Huile Nettoyante → 2. Tonification avec Eau de Magnolia → 3. Application de Crème Fraîche → 4. Sérum Immortelle",
+    eveningRoutine: "1. Nettoyage → 2. Hydratation → 3. Sérum nourrissant",
+    results: "Peau équilibrée et confortable 🌸"
+  },
+  "Mixte": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.eauRomarin,
+      skinProducts.gelSebo,
+      skinProducts.serumRose
+    ],
+    morningRoutine: "1. Nettoyage doux → 2. Tonification → 3. Hydratation légère",
+    eveningRoutine: "1. Double nettoyage → 2. Soin équilibrant → 3. Hydratation ciblée",
+    results: "Peau équilibrée et unifiée 🌿"
+  },
+  "Grasse": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.eauOrange,
+      skinProducts.gelSebo,
+      skinProducts.serumChanvre
+    ],
+    morningRoutine: "1. Nettoyage purifiant → 2. Tonification astringente → 3. Hydratation légère",
+    eveningRoutine: "1. Double nettoyage → 2. Soin séborégulateur → 3. Hydratation légère",
+    results: "Peau matifiée et purifiée 🍃"
+  },
+  "Sèche": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.eauNeroli,
+      skinProducts.lotusSacre,
+      skinProducts.serumImmortelle
+    ],
+    morningRoutine: "1. Nettoyage doux → 2. Tonification nourrissante → 3. Hydratation riche",
+    eveningRoutine: "1. Nettoyage → 2. Sérum nourrissant → 3. Crème riche",
+    results: "Peau nourrie et confortable 🌺"
+  },
+  "Terne": {
+    products: [
+      skinProducts.huileNettoyante,
+      skinProducts.eauOrange,
+      skinProducts.gelCoupEclat,
+      skinProducts.serumMagnolia
+    ],
+    morningRoutine: "1. Nettoyage exfoliant doux → 2. Tonification vivifiante → 3. Soin éclat",
+    eveningRoutine: "1. Double nettoyage → 2. Sérum éclat → 3. Soin revitalisant",
+    results: "Peau lumineuse et éclatante ✨"
   }
 };

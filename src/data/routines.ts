@@ -1,8 +1,9 @@
+
 import { SkinType, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
 export const routineRecommendations: Record<SkinType | "Acné", SkinRecommendation> = {
-  "Atonie": {
+  "Atonique": {
     products: [
       skinProducts.huileAbricot,
       skinProducts.huileJojoba,

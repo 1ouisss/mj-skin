@@ -12,7 +12,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Asphyxiée", "Normale", "Atonie"],
+    skinTypes: ["Asphyxiée", "Normale", "Atonique"],
     timeOfDay: "both"
   },
   {
@@ -25,7 +25,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Acné"],
-    skinTypes: ["Grasse", "Mixte", "Asphyxiée", "Atonie"],
+    skinTypes: ["Grasse", "Mixte", "Asphyxiée", "Atonique"],
     timeOfDay: "both"
   },
   {
@@ -38,7 +38,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Atonie"],
+    skinTypes: ["Atonique"],
     timeOfDay: "both"
   },
   {
@@ -51,7 +51,7 @@ export const huiles: Product[] = [
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Atonie"],
+    skinTypes: ["Atonique"],
     timeOfDay: "both"
   },
   {
