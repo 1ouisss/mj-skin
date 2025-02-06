@@ -185,7 +185,7 @@ export const serums: Product[] = [
     conditions: ["Acné"],
     skinTypes: ["Grasse", "Sensible"],
     timeOfDay: "both",
-    image: "/lovable-uploads/0b144618-439e-4d34-8833-3891fa636733.png",
+    image: "/lovable-uploads/b832ebd9-ccc1-4ee4-b49b-cef8ae666856.png",
     benefits: [
       "Raffermissant",
       "Antirides",
