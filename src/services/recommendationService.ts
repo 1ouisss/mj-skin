@@ -23,118 +23,110 @@ interface FilterCriteria {
 interface ScoredProduct {
   product: Product;
   score: number;
+  priority: number;
 }
 
-const ESSENTIAL_OIL_FREE_PRODUCTS = [
-  'huile-jojoba',
-  'creme-fraiche',
-  'sublimateur',
-  'gel-aloes',
-  'serum-neutre',
-  'mousseline-calendule'
-];
+const PRODUCT_TYPE_ORDER = {
+  "Nettoyant": 1,
+  "Tonique": 2,
+  "Sérum": 3,
+  "Traitement": 4,
+  "Masque": 5,
+  "Hydratant": 6
+};
 
-const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
+const calculateProductScore = (
+  product: Product, 
+  criteria: FilterCriteria, 
+  isFromSkinType: boolean,
+  isFromCondition: boolean
+): ScoredProduct => {
   let score = 0;
-  let criteriaMet = 0;
+  let priority = isFromSkinType ? 1 : (isFromCondition ? 2 : 3);
 
   // Vérification des huiles essentielles
   if (criteria.fragrancePreference === "Sans huiles essentielles" && product.hasEssentialOils) {
-    return 0;
+    return { product, score: 0, priority };
   }
 
-  // Vérification du type de peau
+  // Score pour le type de peau
   if (product.skinTypes.includes(criteria.skinType)) {
     score += 25;
-    criteriaMet++;
   }
 
-  // Score pour les conditions de peau
-  if (criteria.conditions.length > 0) {
-    const matchingConditions = criteria.conditions.filter(condition => 
-      product.conditions.includes(condition)
-    );
-    
-    if (matchingConditions.length > 0) {
-      score += (20 * (matchingConditions.length / criteria.conditions.length));
-      criteriaMet++;
-    }
+  // Score pour les conditions
+  const matchingConditions = criteria.conditions.filter(condition => 
+    product.conditions.includes(condition)
+  );
+  
+  if (matchingConditions.length > 0) {
+    score += (20 * (matchingConditions.length / criteria.conditions.length));
   }
 
-  // Vérification de la texture
+  // Score pour la texture
   if (criteria.textures.includes(product.texture)) {
     score += 15;
-    criteriaMet++;
   }
 
-  // Vérification de la durée
-  if (product.duration === criteria.duration) {
-    score += 15;
-    criteriaMet++;
-  }
-
-  // Vérification du moment de la journée
+  // Score pour le moment de la journée
   if (criteria.timeOfDay) {
     if (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both') {
       score += 10;
-      criteriaMet++;
     }
   }
 
-  return criteriaMet >= 2 ? score : 0;
+  return { product, score, priority };
 };
 
-const getBestProductForCategory = (
+const getProductsByStepAndType = (
   products: Product[], 
-  criteria: FilterCriteria, 
-  productType: string
-): Product | null => {
-  const categoryProducts = products.filter(p => p.type === productType);
-  const scoredProducts = categoryProducts
-    .map(product => ({
-      product,
-      score: calculateProductScore(product, criteria)
-    }))
-    .filter(sp => sp.score > 0)
-    .sort((a, b) => b.score - a.score);
+  criteria: FilterCriteria
+): Product[] => {
+  const scoredProducts = products.map(product => {
+    const isFromSkinType = skinTypeRecommendations[criteria.skinType]?.products.some(p => p.id === product.id);
+    const isFromCondition = criteria.conditions.some(condition => 
+      conditionRecommendations[condition]?.products.some(p => p.id === product.id)
+    );
+    
+    return calculateProductScore(product, criteria, isFromSkinType, isFromCondition);
+  });
 
-  return scoredProducts.length > 0 ? scoredProducts[0].product : null;
+  // Filtrer les produits avec un score > 0 et trier par type et priorité
+  return scoredProducts
+    .filter(sp => sp.score > 0)
+    .sort((a, b) => {
+      const typeOrderDiff = (PRODUCT_TYPE_ORDER[a.product.type] || 99) - (PRODUCT_TYPE_ORDER[b.product.type] || 99);
+      if (typeOrderDiff !== 0) return typeOrderDiff;
+      
+      // Si même type, trier par priorité puis par score
+      if (a.priority !== b.priority) return a.priority - b.priority;
+      return b.score - a.score;
+    })
+    .map(sp => sp.product);
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
-  let baseRecommendations: Product[] = [];
-  let conditionAdjustments: Product[] = [];
+  let baseProducts: Product[] = [];
+  let conditionProducts: Product[] = [];
 
-  // Obtenir les recommandations de base selon le type de peau
+  // Obtenir les produits de base selon le type de peau
   if (skinTypeRecommendations[criteria.skinType]) {
-    baseRecommendations = skinTypeRecommendations[criteria.skinType].products;
+    baseProducts = skinTypeRecommendations[criteria.skinType].products;
   }
 
-  // Ajouter les ajustements pour chaque condition
+  // Obtenir les produits spécifiques aux conditions
   criteria.conditions.forEach(condition => {
     if (condition !== "Aucune" && conditionRecommendations[condition]) {
-      conditionAdjustments = [
-        ...conditionAdjustments,
+      conditionProducts = [
+        ...conditionProducts,
         ...conditionRecommendations[condition].products
       ];
     }
   });
 
-  // Combiner les recommandations en évitant les doublons
-  const combinedProducts = [...baseRecommendations];
+  // Combiner tous les produits
+  const allProducts = [...baseProducts, ...conditionProducts];
   
-  conditionAdjustments.forEach(product => {
-    if (!combinedProducts.find(p => p.id === product.id)) {
-      combinedProducts.push(product);
-    }
-  });
-
-  // Trier les produits selon leur ordre d'utilisation
-  const productTypeOrder = ["Nettoyant", "Tonique", "Sérum", "Traitement", "Masque", "Hydratant"];
-  
-  return combinedProducts.sort((a, b) => {
-    const aIndex = productTypeOrder.indexOf(a.type);
-    const bIndex = productTypeOrder.indexOf(b.type);
-    return aIndex - bIndex;
-  });
+  // Organiser les produits par étape et type
+  return getProductsByStepAndType(allProducts, criteria);
 };
