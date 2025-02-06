@@ -33,7 +33,7 @@ export const toniques: Product[] = [
     conditions: ["Rougeurs"],
     skinTypes: ["Normale", "Mixte", "Sèche", "Sensible"],
     timeOfDay: "both",
-    image: "/lovable-uploads/c11d92a2-735d-4c1d-b732-9f70a7e71b35.png",
+    image: "/lovable-uploads/fdc40c4a-00c7-4735-91b2-0c569845d4e9.png",
     benefits: ["Régénérante", "Calmante", "Hydratante", "Rafraîchissante"]
   },
   {
