@@ -170,5 +170,49 @@ export const serums: Product[] = [
     timeOfDay: "evening",
     image: "/placeholder.svg",
     benefits: ["Régénère la peau", "Anti-âge", "Nourrit intensément"]
+  },
+  {
+    id: "serum-chanvre-vetiver",
+    name: "Sérum Chanvre & Vétiver",
+    type: "Sérum",
+    url: "https://maisonjacynthe.ca/fr/serum-chanvre-vetiver-15ml",
+    description: "Un parfum agréable et délicieux pour les peaux fragilisées et à tendance séborrhéique. Découvrez dès à présent notre Sérum Chanvre & Vétiver 100 % québécois afin d'offrir à votre peau une fraîcheur et un éclat sans précédent.",
+    ingredients: "Mélange d'huiles essentielles naturelles",
+    format: "15 ml",
+    texture: "Huile légère",
+    duration: "5-10 minutes",
+    hasEssentialOils: true,
+    conditions: ["Acné"],
+    skinTypes: ["Grasse", "Sensible"],
+    timeOfDay: "both",
+    image: "/lovable-uploads/0b144618-439e-4d34-8833-3891fa636733.png",
+    benefits: [
+      "Raffermissant",
+      "Antirides",
+      "Hydratant",
+      "Convient aux peaux sensibles"
+    ]
+  },
+  {
+    id: "lotus-sacre",
+    name: "Lotus Sacré",
+    type: "Sérum",
+    url: "https://maisonjacynthe.ca/fr/booster-d-hydratation-acide-hyaluronique-lotus-sacre",
+    description: "La peau est hydratée en profondeur, dynamisée, plus tonique. S'utilise en « base de soin » juste après l'eau florale et avant le sérum.",
+    ingredients: "Citrus sinensis water, Aloe barbadensis leaf juice, Glycerin, Hyaluronic acid, Sodium benzoate, Potassium sorbate, Xanthan gum, Nelumbo nucifera flower extract, Santalum album wood oil",
+    format: "30 ml",
+    texture: "Légère",
+    duration: "5-10 minutes",
+    hasEssentialOils: true,
+    conditions: ["Déshydratation"],
+    skinTypes: ["Terne", "Sèche"],
+    timeOfDay: "both",
+    image: "/lovable-uploads/12baf1b0-3ef6-4e1c-be16-ee6cdb226936.png",
+    benefits: [
+      "Hydrate en profondeur",
+      "Illumine le teint",
+      "Boost l'hydratation",
+      "Action anti-âge"
+    ]
   }
 ];
