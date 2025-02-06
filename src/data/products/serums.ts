@@ -5,18 +5,24 @@ export const serums: Product[] = [
     id: "serum-immortelle",
     name: "Sérum Immortelle",
     type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/serum-immortelle",
-    description: "Sérum anti-âge à l'immortelle",
-    ingredients: "Helichrysum italicum oil",
+    url: "https://maisonjacynthe.ca/fr/serum-immortelle-30-ml",
+    description: "Découvrez le Sérum Immortelle, votre élixir de jeunesse. Les phytocéramides renforcent la barrière cutanée, en l'hydratant et en la protégeant contre les agressions extérieures. Un allié précieux pour revitaliser, repulper et fortifier la peau du visage, tout en réduisant les signes visibles du vieillissement.",
+    ingredients: "Helichrysum italicum oil, Phytocéramides, Huiles essentielles de Romarin, Immortelle, Eucalyptus radié",
     format: "30 ml",
-    texture: "Légère",
+    texture: "Huile légère",
     duration: "5-10 minutes",
     hasEssentialOils: true,
     conditions: ["Rides"],
-    skinTypes: ["Sèche", "Normale"],
-    timeOfDay: "evening",
-    image: "/placeholder.svg",
-    benefits: ["Anti-rides", "Régénérant", "Raffermissant"]
+    skinTypes: ["Sèche", "Normale", "Mixte"],
+    timeOfDay: "both",
+    image: "/lovable-uploads/3513b045-133a-4e44-aef3-c907dbce1e4b.png",
+    benefits: [
+      "Antiâge",
+      "Hydratant",
+      "Repulpant",
+      "Tonifiant",
+      "100% naturel"
+    ]
   },
   {
     id: "serum-rose",
