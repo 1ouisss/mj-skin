@@ -2,6 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { validateProducts, validateProductImages } from '../productValidator';
 import { skinProducts } from '../../data/products';
+import { masques } from '../../data/products/masques';
+import { yeux } from '../../data/products/yeux';
 
 describe('Product Validator', () => {
   it('should identify products with missing required fields', () => {
@@ -39,6 +41,26 @@ describe('Product Validator', () => {
       expect(product.skinTypes.length).toBeGreaterThan(0);
       expect(product.conditions.length).toBeGreaterThan(0);
       expect(product.benefits.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('should validate masques images specifically', () => {
+    masques.forEach(product => {
+      const hasValidImage = product.image && !product.image.includes('placeholder');
+      if (!hasValidImage) {
+        console.warn(`Masque sans image valide : ${product.name}`);
+      }
+      expect(hasValidImage).toBe(true);
+    });
+  });
+
+  it('should validate yeux products images specifically', () => {
+    yeux.forEach(product => {
+      const hasValidImage = product.image && !product.image.includes('placeholder');
+      if (!hasValidImage) {
+        console.warn(`Produit yeux sans image valide : ${product.name}`);
+      }
+      expect(hasValidImage).toBe(true);
     });
   });
 });
