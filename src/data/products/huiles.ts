@@ -58,7 +58,7 @@ export const huiles: Product[] = [
     conditions: ["Eczéma", "Acné"],
     skinTypes: ["Sensible", "Grasse", "Asphyxiée"],
     timeOfDay: "both",
-    image: "/lovable-uploads/47895e75-e531-4cce-9b83-77d7ad0bcf31.png",
+    image: "/lovable-uploads/b2de444a-a0c0-4de5-acb9-5683ffc451f9.png",
     benefits: [
       "Apaisante",
       "Adoucissante",
@@ -67,3 +67,4 @@ export const huiles: Product[] = [
     ]
   }
 ];
+

@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const nettoyants: Product[] = [
@@ -108,6 +107,27 @@ export const nettoyants: Product[] = [
       "Protecteur",
       "Régénérant"
     ]
+  },
+  {
+    id: "huile-tamanu",
+    name: "Huile Tamanu",
+    type: "Traitement",
+    url: "https://maisonjacynthe.ca/fr/tamanu-huile-vegetale-vierge",
+    description: "L'huile est depuis longtemps utilisée dans les îles de l'Océan Pacifique et Indien pour ses nombreuses vertus qui font de l'huile de tamanu une des plus puissantes et réputées pour de nombreux bénéfices pour la peau, entre autres, du point de vue antiâge.",
+    ingredients: "Calophyllum onophyllum seed oil",
+    format: "30 ml",
+    texture: "Huile légère",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Eczéma", "Acné"],
+    skinTypes: ["Sensible", "Grasse", "Asphyxiée"],
+    timeOfDay: "both",
+    image: "/lovable-uploads/b2de444a-a0c0-4de5-acb9-5683ffc451f9.png",
+    benefits: [
+      "Apaisante",
+      "Adoucissante",
+      "Protectrice",
+      "Régénérante"
+    ]
   }
 ];
-
