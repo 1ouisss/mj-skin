@@ -45,12 +45,12 @@ export const hydratants: Product[] = [
     ]
   },
   {
-    id: "hydrogel",
-    name: "Hydrogel",
+    id: "gel-aloes",
+    name: "Gel d'Aloès",
     type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/hydrogel",
-    description: "Votre peau se retrouve sans cesse irritée? Notre Hydrogel agit rapidement pour soulager et calmer les démangeaisons et deviendra votre allié pour résorber les petits boutons disgracieux.",
-    ingredients: "Aloe barbadensis (Aloès) leaf juice, Chamaemelum nobile (Camomille romaine) floral water, Aqua (Eau distillée), Xanthan gum (Gomme xanthane), Glycerin (Glycérine), Sodium benzoate (Benzoate de sodium), Potassium sorbate (Sorbate de potassium), Calophyllum inophyllum (Tamanu) seed oil, Ledum Groenlandicum (Thé du Labrador) oil",
+    description: "Votre peau se retrouve sans cesse irritée? Notre Gel d'Aloès agit rapidement pour soulager et calmer les démangeaisons et deviendra votre allié pour résorber les petits boutons disgracieux.",
+    ingredients: "Aloe barbadensis (Aloès) leaf juice",
     format: "50 ml",
     texture: "Légère",
     duration: "< 5 minutes",
@@ -58,7 +58,7 @@ export const hydratants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sensible", "Normale"],
     timeOfDay: "both",
-    image: "/lovable-uploads/17c15527-2658-4f91-ab48-84649bb837d5.png",
+    image: "/lovable-uploads/eccf648f-9f2a-4364-b870-0185d58f6c62.png",
     benefits: [
       "Décongestionnant",
       "Rafraîchissant",
@@ -112,3 +112,4 @@ export const hydratants: Product[] = [
     ]
   }
 ];
+
