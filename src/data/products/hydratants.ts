@@ -45,11 +45,11 @@ export const hydratants: Product[] = [
     ]
   },
   {
-    id: "gel-aloes",
-    name: "Gel d'Aloès",
+    id: "hydrogel",
+    name: "Hydrogel",
     type: "Hydratant",
     url: "https://maisonjacynthe.ca/fr/hydrogel",
-    description: "Votre peau se retrouve sans cesse irritée? Notre Gel d'Aloès agit rapidement pour soulager et calmer les démangeaisons et deviendra votre allié pour résorber les petits boutons disgracieux.",
+    description: "Votre peau se retrouve sans cesse irritée? Notre Hydrogel agit rapidement pour soulager et calmer les démangeaisons et deviendra votre allié pour résorber les petits boutons disgracieux.",
     ingredients: "Aloe barbadensis (Aloès) leaf juice",
     format: "50 ml",
     texture: "Légère",
@@ -58,7 +58,7 @@ export const hydratants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sensible", "Normale"],
     timeOfDay: "both",
-    image: "/lovable-uploads/eccf648f-9f2a-4364-b870-0185d58f6c62.png",
+    image: "/lovable-uploads/ddac9a03-ee74-454f-a221-8f1f58cb5386.png",
     benefits: [
       "Décongestionnant",
       "Rafraîchissant",
