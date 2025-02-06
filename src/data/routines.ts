@@ -1,7 +1,22 @@
 import { SkinType, SkinRecommendation } from "../types/skincare";
 import { skinProducts } from "./products";
 
-export const routineRecommendations: Record<SkinType, SkinRecommendation> = {
+export const routineRecommendations: Record<SkinType | "Acné", SkinRecommendation> = {
+  "Acné": {
+    products: [
+      skinProducts.huileJojoba,
+      skinProducts.gelAloes,
+      skinProducts.eauNeroli,
+      skinProducts.exfopur,
+      skinProducts.gelSebo,
+      skinProducts.dermopurAcne,
+      skinProducts.huileTamanu,
+      skinProducts.mousselineKukui
+    ],
+    morningRoutine: "1. Nettoyage avec Huile Jojoba et Gel d'Aloès → 2. Application de l'Eau de Néroli → 3. Gel Sébo + Dermopur Acné → 4. Protection avec Mousseline Kukui",
+    eveningRoutine: "1. Nettoyage avec Huile Jojoba → 2. Masque Exfopur avec Eau Florale → 3. Application de l'Huile de Tamanu → 4. Protection avec Mousseline Kukui",
+    results: "Peau purifiée et équilibrée 🌿"
+  },
   "Sèche": {
     products: [
       skinProducts.huileNettoyante,

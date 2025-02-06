@@ -4,6 +4,8 @@ import { serums } from "../data/products/serums";
 import { masques } from "../data/products/masques";
 import { nettoyants } from "../data/products/nettoyants";
 import { skinProducts } from "../data/products";
+import { huiles } from "../data/products/huiles";
+import { specifiques } from "../data/products/specifiques";
 
 interface FilterCriteria {
   skinType: SkinType;
@@ -29,18 +31,15 @@ const ESSENTIAL_OIL_FREE_PRODUCTS = [
   'mousseline-calendule'
 ];
 
-const WEIGHT_MULTIPLIERS = {
-  SKIN_TYPE: 0.25,
-  CONDITIONS: 0.20,
-  TEXTURE: 0.15,
-  DURATION: 0.15,
-  ESSENTIAL_OILS: 0.15,
-  TIME_OF_DAY: 0.10
-};
-
 const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
   let score = 0;
   let criteriaMet = 0;
+
+  // Prioriser les produits pour l'acné si c'est la condition sélectionnée
+  if (criteria.conditions.includes("Acné") && product.conditions.includes("Acné")) {
+    score += 50;
+    criteriaMet++;
+  }
 
   // Vérification des huiles essentielles
   if (criteria.fragrancePreference === "Sans huiles essentielles" && product.hasEssentialOils) {
@@ -49,7 +48,7 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
 
   // Vérification du type de peau
   if (product.skinTypes.includes(criteria.skinType)) {
-    score += 25 * WEIGHT_MULTIPLIERS.SKIN_TYPE;
+    score += 25;
     criteriaMet++;
   }
 
@@ -60,27 +59,27 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     );
     
     if (matchingConditions.length > 0) {
-      score += (20 * (matchingConditions.length / criteria.conditions.length)) * WEIGHT_MULTIPLIERS.CONDITIONS;
+      score += (20 * (matchingConditions.length / criteria.conditions.length));
       criteriaMet++;
     }
   }
 
   // Vérification de la texture
   if (criteria.textures.includes(product.texture)) {
-    score += 15 * WEIGHT_MULTIPLIERS.TEXTURE;
+    score += 15;
     criteriaMet++;
   }
 
   // Vérification de la durée
   if (product.duration === criteria.duration) {
-    score += 15 * WEIGHT_MULTIPLIERS.DURATION;
+    score += 15;
     criteriaMet++;
   }
 
   // Vérification du moment de la journée
   if (criteria.timeOfDay) {
     if (product.timeOfDay === criteria.timeOfDay || product.timeOfDay === 'both') {
-      score += 10 * WEIGHT_MULTIPLIERS.TIME_OF_DAY;
+      score += 10;
       criteriaMet++;
     }
   }
@@ -106,6 +105,20 @@ const getBestProductForCategory = (
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
+  // Si la condition est Acné, retourner la routine spécifique
+  if (criteria.conditions.includes("Acné")) {
+    return [
+      skinProducts.huileJojoba,
+      skinProducts.gelAloes,
+      skinProducts.eauNeroli,
+      skinProducts.exfopur,
+      skinProducts.gelSebo,
+      skinProducts.dermopurAcne,
+      skinProducts.huileTamanu,
+      skinProducts.mousselineKukui
+    ];
+  }
+
   const recommendations: Product[] = [];
   
   // 1. Nettoyant
