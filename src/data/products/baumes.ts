@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const baumes: Product[] = [
@@ -82,7 +81,7 @@ export const baumes: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Sèche"],
     timeOfDay: "both",
-    image: "/lovable-uploads/fcdc6973-cb29-422d-8eff-9721532aa563.png",
+    image: "/lovable-uploads/cbf6f7ec-10a3-4204-a0a3-5ca54fe4a516.png",
     benefits: [
       "Réparateur",
       "Nourrissant",
@@ -135,4 +134,3 @@ export const baumes: Product[] = [
     ]
   }
 ];
-
