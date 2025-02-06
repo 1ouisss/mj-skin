@@ -207,7 +207,7 @@ export const serums: Product[] = [
     conditions: ["Déshydratation"],
     skinTypes: ["Terne", "Sèche"],
     timeOfDay: "both",
-    image: "/lovable-uploads/12baf1b0-3ef6-4e1c-be16-ee6cdb226936.png",
+    image: "/lovable-uploads/7ed43e51-3b3d-4985-a403-c7da6f80ce0b.png",
     benefits: [
       "Hydrate en profondeur",
       "Illumine le teint",
