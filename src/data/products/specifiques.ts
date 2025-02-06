@@ -6,13 +6,17 @@ export const specifiques: Product[] = [
     name: "Dermopur Acné",
     type: "Traitement",
     url: "https://maisonjacynthe.ca/fr/dermopur-acne",
+    description: "Traitement spécifique pour les peaux acnéiques",
     ingredients: "Complex anti-acné naturel",
+    format: "30 ml",
     texture: "Légère",
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Acné"],
     skinTypes: ["Grasse", "Mixte"],
-    timeOfDay: "both"
+    timeOfDay: "both",
+    image: "/placeholder.svg",
+    benefits: ["Purifiant", "Antibactérien", "Régulateur de sébum"]
   },
   {
     id: "exfopro",
@@ -25,7 +29,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Acné"],
     skinTypes: ["Grasse"],
-    timeOfDay: "evening"
+    timeOfDay: "evening",
+    description: "Exfoliant puissant pour les peaux grasses",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Exfoliant", "Anti-imperfections", "Lissant"]
   },
   {
     id: "claripro",
@@ -38,7 +46,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Taches"],
     skinTypes: ["Normale", "Mixte"],
-    timeOfDay: "evening"
+    timeOfDay: "evening",
+    description: "Soin éclaircissant pour réduire les taches pigmentaires",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Éclaircissant", "Anti-taches", "Unifiant"]
   },
   {
     id: "baume-apaisant",
@@ -51,7 +63,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Eczéma"],
     skinTypes: ["Sensible", "Sèche"],
-    timeOfDay: "both"
+    timeOfDay: "both",
+    description: "Baume pour apaiser et protéger les peaux irritées",
+    format: "50 ml",
+    image: "/placeholder.svg",
+    benefits: ["Apaisant", "Protecteur", "Réparateur"]
   },
   {
     id: "formule-eczema",
@@ -64,7 +80,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Eczéma"],
     skinTypes: ["Sensible"],
-    timeOfDay: "both"
+    timeOfDay: "both",
+    description: "Formule spécifique pour soulager l'eczéma",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Anti-inflammatoire", "Calmant", "Hydratant"]
   },
   {
     id: "bobome",
@@ -77,7 +97,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Aucune"],
     skinTypes: ["Sensible"],
-    timeOfDay: "both"
+    timeOfDay: "both",
+    description: "Soin pour les peaux sensibles et réactives",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Apaisant", "Réparateur", "Protecteur"]
   },
   {
     id: "formule-apaisante",
@@ -90,7 +114,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Aucune"],
     skinTypes: ["Sensible"],
-    timeOfDay: "both"
+    timeOfDay: "both",
+    description: "Formule pour apaiser les irritations cutanées",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Calmant", "Adoucissant", "Anti-rougeurs"]
   },
   {
     id: "exfopur",
@@ -103,7 +131,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Acné"],
     skinTypes: ["Grasse"],
-    timeOfDay: "evening"
+    timeOfDay: "evening",
+    description: "Exfoliant doux pour les peaux grasses à imperfections",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Exfoliant", "Purifiant", "Anti-imperfections"]
   },
   {
     id: "lotion-aha",
@@ -116,7 +148,11 @@ export const specifiques: Product[] = [
     hasEssentialOils: false,
     conditions: ["Taches"],
     skinTypes: ["Normale", "Mixte"],
-    timeOfDay: "evening"
+    timeOfDay: "evening",
+    description: "Lotion exfoliante pour atténuer les taches et imperfections",
+    format: "30 ml",
+    image: "/placeholder.svg",
+    benefits: ["Exfoliant", "Éclaircissant", "Lissant"]
   },
   {
     id: "spice-scrub",
@@ -129,6 +165,10 @@ export const specifiques: Product[] = [
     hasEssentialOils: true,
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Mixte"],
-    timeOfDay: "evening"
+    timeOfDay: "evening",
+    description: "Gommage aux épices pour une peau douce et éclatante",
+    format: "50 ml",
+    image: "/placeholder.svg",
+    benefits: ["Exfoliant", "Stimulant", "Adoucissant"]
   }
 ];
