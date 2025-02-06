@@ -74,7 +74,7 @@ const calculateProductScore = (
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   // Générer la routine personnalisée
-  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions);
+  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions[0]);
   
   // Obtenir tous les produits recommandés
   const allProducts = Object.values(skinProducts);
