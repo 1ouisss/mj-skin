@@ -102,7 +102,7 @@ export const nettoyants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Mixte", "Terne"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/6b3d8929-38d3-4f14-ba01-b80dc4972ea0.png",
     benefits: [
       "Antioxydant",
       "Protecteur",
@@ -110,3 +110,4 @@ export const nettoyants: Product[] = [
     ]
   }
 ];
+
