@@ -1,3 +1,4 @@
+
 import { Product } from "../../types/skincare";
 
 export const nettoyants: Product[] = [
@@ -5,39 +6,22 @@ export const nettoyants: Product[] = [
     id: "huile-nettoyante",
     name: "Huile Nettoyante",
     type: "Nettoyant",
-    url: "https://maisonjacynthe.ca/fr/huile-nettoyante",
+    url: "https://maisonjacynthe.ca/fr/huile-nettoyante-100-ml",
+    description: "Pour un nettoyage en douceur et en profondeur. Ce mélange non-comédogène calme les glandes sébacées et donc, par conséquent, elles sécrètent moins de sébum. Le géranium qu'il contient lutte contre le relâchement cutané et améliore l'élasticité de la peau.",
     ingredients: "Simmondsia chinensis seed oil, Prunus armeniaca kernel oil",
-    texture: "Fluide",
+    format: "100 ml",
+    texture: "Huile légère",
     duration: "5-10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
     skinTypes: ["Sèche", "Grasse", "Mixte", "Sensible", "Normale"],
-    timeOfDay: "both"
-  },
-  {
-    id: "creme-fraiche-nettoyante",
-    name: "Crème Fraîche",
-    type: "Nettoyant",
-    url: "https://maisonjacynthe.ca/fr/creme-fraiche-nettoyante",
-    ingredients: "Aqua, Glycerin, Decyl Glucoside",
-    texture: "Crémeuse",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible", "Normale"],
-    timeOfDay: "both"
-  },
-  {
-    id: "eau-micellaire",
-    name: "Eau Micellaire",
-    type: "Nettoyant",
-    url: "https://maisonjacynthe.ca/fr/eau-micellaire",
-    ingredients: "Aqua, Glycerin, Decyl Glucoside",
-    texture: "Légère",
-    duration: "< 5 minutes",
-    hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sensible", "Normale", "Mixte"],
-    timeOfDay: "both"
+    timeOfDay: "both",
+    image: "/lovable-uploads/7a479df1-5705-4433-9ece-1c80b98bf6b6.png",
+    benefits: [
+      "Nettoie & démaquille",
+      "Protège & raffermit",
+      "Améliore l'élasticité de la peau",
+      "Régulatrice & hydratante"
+    ]
   }
 ];
