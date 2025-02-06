@@ -38,7 +38,7 @@ export const traitements: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Mixte", "Sèche"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/d1e5de44-aab0-4035-8db6-dbb778b0d8cf.png",
     benefits: [
       "Nettoyage en profondeur",
       "Éclairçit le teint",
