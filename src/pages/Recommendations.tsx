@@ -8,7 +8,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
-import { Link } from "@/components/ui/link";
 import { getFilteredRecommendations } from "@/services/recommendationService";
 import { useSkinType } from "@/contexts/SkinTypeContext";
 import { Product } from "@/types/skincare";
@@ -27,8 +26,8 @@ const Recommendations = () => {
       })
     : [];
 
-  const customRoutine = selectedSkinType
-    ? generateRoutine(selectedSkinType, selectedConditions[0])
+  const customRoutine = selectedSkinType && selectedConditions.length > 0
+    ? generateRoutine(selectedSkinType, selectedConditions)
     : null;
 
   useEffect(() => {

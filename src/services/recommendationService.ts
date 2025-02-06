@@ -64,7 +64,7 @@ const calculateProductScore = (
 
   // Bonus si le produit est dans la routine recommandée
   Object.values(routine).forEach(step => {
-    if (Array.isArray(step.products) && step.products.includes(product.id)) {
+    if (step && Array.isArray(step.products) && step.products.includes(product.id)) {
       score += 30;
     }
   });
@@ -74,7 +74,7 @@ const calculateProductScore = (
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   // Générer la routine personnalisée
-  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions[0]);
+  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions);
   
   // Obtenir tous les produits recommandés
   const allProducts = Object.values(skinProducts);
