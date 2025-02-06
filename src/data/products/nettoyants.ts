@@ -66,5 +66,47 @@ export const nettoyants: Product[] = [
       "Raffermissante",
       "Relipidante & nourrissante"
     ]
+  },
+  {
+    id: "huile-kukui",
+    name: "Huile de Kukui",
+    type: "Nettoyant",
+    url: "https://maisonjacynthe.ca/fr/huile-kukui",
+    description: "L'huile de kukui est reconnue pour ses propriétés nourrissantes et apaisantes. Elle pénètre rapidement sans laisser de film gras.",
+    ingredients: "Aleurites moluccana seed oil",
+    format: "30 ml",
+    texture: "Huile légère",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Sèche", "Normale", "Sensible"],
+    timeOfDay: "both",
+    image: "/placeholder.svg",
+    benefits: [
+      "Pénétration rapide",
+      "Nourrit la peau",
+      "Apaise les irritations"
+    ]
+  },
+  {
+    id: "huile-moringa",
+    name: "Huile de Moringa",
+    type: "Nettoyant",
+    url: "https://maisonjacynthe.ca/fr/huile-moringa",
+    description: "L'huile de moringa est riche en antioxydants et aide à protéger la peau contre les agressions environnementales.",
+    ingredients: "Moringa oleifera seed oil",
+    format: "30 ml",
+    texture: "Huile légère",
+    duration: "5-10 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Normale", "Mixte", "Terne"],
+    timeOfDay: "both",
+    image: "/placeholder.svg",
+    benefits: [
+      "Antioxydant",
+      "Protecteur",
+      "Régénérant"
+    ]
   }
 ];
