@@ -84,7 +84,7 @@ export const toniques: Product[] = [
     conditions: ["Rougeurs"],
     skinTypes: ["Sensible", "Normale"],
     timeOfDay: "both",
-    image: "/lovable-uploads/73007342-98e7-4a5c-b3b6-8f95acb05475.png",
+    image: "/lovable-uploads/9ee322bb-8f20-484b-b0f7-720d4cd854b8.png",
     benefits: ["Calmante", "Tonique", "Apaisante", "Régénérante"]
   }
 ];
