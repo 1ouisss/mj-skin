@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const toniques: Product[] = [
@@ -88,4 +87,3 @@ export const toniques: Product[] = [
     benefits: ["Calmante", "Tonique", "Apaisante", "Régénérante"]
   }
 ];
-

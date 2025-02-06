@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const baumes: Product[] = [
@@ -135,4 +134,3 @@ export const baumes: Product[] = [
     ]
   }
 ];
-
