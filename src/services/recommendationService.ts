@@ -172,7 +172,7 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   }
 
   // Si le type de peau est Atonie, retourner la routine spécifique
-  if (criteria.skinType === "Atonie") {
+  if (criteria.skinType === "Atonique") {
     return [
       skinProducts.huileAbricot,
       skinProducts.huileJojoba,
