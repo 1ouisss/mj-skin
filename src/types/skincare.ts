@@ -26,7 +26,7 @@ export type SkinCondition =
   | "Aucune";
 
 export type RoutineDuration = "< 5 minutes" | "5-10 minutes" | "> 10 minutes";
-export type TexturePreference = "Légère" | "Fluide" | "Crémeuse" | "Riche";
+export type TexturePreference = "Légère" | "Fluide" | "Crémeuse" | "Riche" | "Huile légère";
 export type ProductType = "Hydratant" | "Sérum" | "Masque" | "Nettoyant" | "Tonique" | "Traitement";
 export type TimeOfDay = "morning" | "evening" | "both";
 
@@ -35,6 +35,7 @@ export interface Product {
   name: string;
   url: string;
   type: ProductType;
+  description: string;
   ingredients: string;
   texture: TexturePreference;
   duration: RoutineDuration;
@@ -42,6 +43,9 @@ export interface Product {
   conditions: SkinCondition[];
   skinTypes: SkinType[];
   timeOfDay: TimeOfDay;
+  format: string;
+  image: string;
+  benefits: string[];
 }
 
 export interface SkinRecommendation {
