@@ -38,7 +38,7 @@ export const baumes: Product[] = [
     conditions: ["Déshydratation"],
     skinTypes: ["Sèche", "Sensible"],
     timeOfDay: "both",
-    image: "/lovable-uploads/f435ff89-1430-43f5-9add-b0d88f1d13d2.png",
+    image: "/lovable-uploads/4347eeb1-d9f6-45ed-93ea-32a42f31c5e7.png",
     benefits: [
       "Protection",
       "Régulation",
