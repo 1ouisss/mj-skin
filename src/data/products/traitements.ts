@@ -62,7 +62,7 @@ export const traitements: Product[] = [
     conditions: ["Acné"],
     skinTypes: ["Grasse", "Mixte"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/7601f788-8a97-4d24-b864-d3471a737f4f.png",
     benefits: ["Purifiant", "Antibactérien", "Assainissant"]
   },
   {
@@ -219,3 +219,4 @@ export const traitements: Product[] = [
     benefits: ["Exfoliant", "Stimulant", "Illumine le teint"]
   }
 ];
+
