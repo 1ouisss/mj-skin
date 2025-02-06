@@ -24,24 +24,21 @@
   }
 }
 
-.glass-title {
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+/* Typography Styles */
+.elegant-title {
+  font-family: 'Playfair Display', serif;
   color: white;
-  font-size: 3.5rem;
-  line-height: 1.2;
+  letter-spacing: 0.02em;
   font-weight: 300;
-  letter-spacing: 0.05em;
+  line-height: 1.4;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.elegant-subtitle {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  line-height: 1.6;
 }
 
 /* Styles spécifiques à la page Index */
