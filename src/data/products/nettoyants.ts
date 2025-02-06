@@ -81,7 +81,7 @@ export const nettoyants: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sèche", "Normale", "Sensible"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/1229a0a3-ff47-4410-8bde-771dea6a918b.png",
     benefits: [
       "Pénétration rapide",
       "Nourrit la peau",
