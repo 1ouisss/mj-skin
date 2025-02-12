@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const masques: Product[] = [
@@ -41,17 +40,17 @@ export const masques: Product[] = [
     name: "Masque au Chocolat",
     type: "Masque",
     url: "https://maisonjacynthe.ca/fr/masque-chocolat",
-    description: "Masque gourmand au chocolat pour une peau douce",
+    description: "Masque visage antiâge au chocolat",
     ingredients: "Theobroma cacao powder",
-    format: "50 ml",
+    format: "50 g",
     texture: "Crémeuse",
     duration: "> 10 minutes",
     hasEssentialOils: false,
-    conditions: ["Aucune"],
+    conditions: ["Rides"],
     skinTypes: ["Sèche", "Normale"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
-    benefits: ["Adoucit la peau", "Nourrit", "Antioxydant"]
+    image: "/lovable-uploads/ea448995-d23c-40d0-9a1c-13385f150a26.png",
+    benefits: ["Anti-âge", "Nourrit", "Antioxydant"]
   },
   {
     id: "masque-miel-cardamome",
