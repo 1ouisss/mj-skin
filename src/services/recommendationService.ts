@@ -31,30 +31,46 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   // Obtenir tous les produits
   const allProducts = Object.values(skinProducts);
 
-  // D'abord, s'assurer que les produits essentiels sont inclus
+  // Vérifier si les produits essentiels existent
   const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
     const product = allProducts.find(p => p.id === id);
-    if (product) {
-      return {
-        ...product,
-        description: `${product.description} (Essentiel)`
-      };
+    if (!product) {
+      console.warn(`Produit essentiel non trouvé : ${id}`);
+      return null;
     }
-    return null;
+    return {
+      ...product,
+      description: `${product.description} (Essentiel)`
+    };
   }).filter((p): p is Product => p !== null);
 
   // Récupérer les produits de la routine
   const routineProducts = new Set<string>();
   Object.values(customRoutine).forEach(step => {
     if (step && Array.isArray(step.products)) {
-      step.products.forEach(productId => routineProducts.add(productId));
+      step.products.forEach(productId => {
+        // Vérifier si le produit existe avant de l'ajouter
+        const product = allProducts.find(p => p.id === productId);
+        if (product) {
+          routineProducts.add(productId);
+        } else {
+          console.warn(`Produit de routine non trouvé : ${productId}`);
+        }
+      });
     }
   });
 
   // Obtenir les produits de la routine (en excluant les essentiels qui sont déjà inclus)
   const routineProductsList = Array.from(routineProducts)
     .filter(id => !ESSENTIAL_PRODUCTS.includes(id))
-    .map(id => allProducts.find(p => p.id === id))
+    .map(id => {
+      const product = allProducts.find(p => p.id === id);
+      if (!product) {
+        console.warn(`Produit non trouvé lors de la création de la liste : ${id}`);
+        return null;
+      }
+      return product;
+    })
     .filter((p): p is Product => p !== null)
     .sort((a, b) => {
       const typeOrderDiff = (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99);
@@ -65,6 +81,19 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   // Limiter à 6 produits de routine (pour avoir 8 au total avec les 2 essentiels)
   const limitedRoutineProducts = routineProductsList.slice(0, 6);
 
+  // Log du nombre de produits
+  console.log('Nombre de produits essentiels :', essentialProducts.length);
+  console.log('Nombre de produits de routine :', limitedRoutineProducts.length);
+  console.log('Produits essentiels :', essentialProducts.map(p => p.id));
+  console.log('Produits de routine :', limitedRoutineProducts.map(p => p.id));
+
   // Combiner les produits essentiels avec les produits de la routine
-  return [...essentialProducts, ...limitedRoutineProducts];
+  const finalProducts = [...essentialProducts, ...limitedRoutineProducts];
+
+  // Vérification finale
+  if (finalProducts.some(p => !p || !p.image)) {
+    console.error('Produits invalides détectés :', finalProducts);
+  }
+
+  return finalProducts;
 };
