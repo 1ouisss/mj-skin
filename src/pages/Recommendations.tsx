@@ -111,16 +111,16 @@ const Recommendations = () => {
                               {product.name}
                             </h3>
                             <div className="space-y-2">
-                              <p className="text-sm text-gray-600">
-                                {product.type}
+                              <p className="text-sm text-gray-600 line-clamp-2">
+                                {product.description}
                               </p>
                               <div className="flex flex-wrap gap-2">
-                                {product.skinTypes.map((type) => (
+                                {product.benefits.slice(0, 3).map((benefit) => (
                                   <span
-                                    key={type}
+                                    key={benefit}
                                     className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600"
                                   >
-                                    {type}
+                                    {benefit}
                                   </span>
                                 ))}
                               </div>
