@@ -9,14 +9,14 @@ export const yeux: Product[] = [
     url: "https://maisonjacynthe.ca/fr/cocktail-contour",
     description: "Soin spécifique pour le contour des yeux",
     ingredients: "Specialized eye area complex",
-    format: "15 ml",
+    format: "10 ml",
     texture: "Légère",
     duration: "< 5 minutes",
     hasEssentialOils: false,
     conditions: ["Cernes"],
     skinTypes: ["Normale", "Sensible"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/0a6bd174-0d69-4a45-94fd-1056582257b6.png",
     benefits: ["Atténue les cernes", "Décongestionne", "Rafraîchit le regard"]
   },
   {
