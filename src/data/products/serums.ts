@@ -56,7 +56,7 @@ export const serums: Product[] = [
     conditions: ["Acné"],
     skinTypes: ["Grasse", "Mixte"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/34897d30-1fdf-46ce-8cae-fad8e17dc761.png",
     benefits: ["Équilibre le sébum", "Anti-inflammatoire", "Réduit les imperfections"]
   },
   {
