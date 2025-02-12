@@ -80,7 +80,7 @@ export const serums: Product[] = [
     id: "serum-jasmin-rose",
     name: "Sérum Jasmin Rose",
     type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/serum-jasmin-rose",
+    url: "https://maisonjacynthe.ca/fr/serum-jasmin-rose-30-ml",
     description: "Sérum régénérant au jasmin et à la rose",
     ingredients: "Jasminum officinale oil, Rosa damascena flower oil",
     format: "30 ml",
@@ -90,7 +90,7 @@ export const serums: Product[] = [
     conditions: ["Rides"],
     skinTypes: ["Sèche", "Normale"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/7409e38a-2340-46f9-b99b-f41c2e390de0.png",
     benefits: ["Régénère la peau", "Lisse les rides", "Parfume délicatement"]
   },
   {
