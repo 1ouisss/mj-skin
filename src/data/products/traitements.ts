@@ -1,3 +1,4 @@
+
 import { Product } from "../../types/skincare";
 
 export const traitements: Product[] = [
@@ -65,23 +66,6 @@ export const traitements: Product[] = [
     benefits: ["Purifiant", "Antibactérien", "Assainissant"]
   },
   {
-    id: "exfopro",
-    name: "Exfopro",
-    type: "Traitement",
-    url: "https://maisonjacynthe.ca/fr/exfopro",
-    description: "Traitement exfoliant pour les peaux acnéiques",
-    ingredients: "Salicylic acid, Glycolic acid",
-    format: "30 ml",
-    texture: "Légère",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Acné"],
-    skinTypes: ["Grasse"],
-    timeOfDay: "evening",
-    image: "/placeholder.svg",
-    benefits: ["Exfoliant", "Anti-inflammatoire", "Réduit les imperfections"]
-  },
-  {
     id: "claripro",
     name: "Claripro",
     type: "Traitement",
@@ -95,7 +79,7 @@ export const traitements: Product[] = [
     conditions: ["Taches"],
     skinTypes: ["Normale", "Mixte"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/7ef8fd01-bacd-4d59-8fcd-f205360ffb19.png",
     benefits: ["Éclaircissant", "Antioxydant", "Unifie le teint"]
   },
   {
@@ -112,7 +96,7 @@ export const traitements: Product[] = [
     conditions: ["Eczéma"],
     skinTypes: ["Sensible", "Sèche"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/696e4663-023f-407e-987d-fbe53856877b.png",
     benefits: ["Apaisant", "Protecteur", "Réduit les rougeurs"]
   },
   {
@@ -129,7 +113,7 @@ export const traitements: Product[] = [
     conditions: ["Eczéma"],
     skinTypes: ["Sensible"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/6c98b636-504d-44a5-a016-55db5304a881.png",
     benefits: ["Anti-inflammatoire", "Hydratant", "Soulage les démangeaisons"]
   },
   {
@@ -146,7 +130,7 @@ export const traitements: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sensible"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/6ce065a0-2387-4e2a-8444-131821b2abdb.png",
     benefits: ["Cicatrisant", "Apaisant", "Hydratant"]
   },
   {
@@ -163,25 +147,8 @@ export const traitements: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Sensible"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/569c32b6-53a3-456f-bff1-b3719b894d98.png",
     benefits: ["Calmant", "Anti-rougeurs", "Réduit l'inflammation"]
-  },
-  {
-    id: "exfopur",
-    name: "Exfopur",
-    type: "Traitement",
-    url: "https://maisonjacynthe.ca/fr/exfopur",
-    description: "Exfoliant purifiant pour les peaux grasses",
-    ingredients: "Salicylic acid",
-    format: "30 ml",
-    texture: "Légère",
-    duration: "5-10 minutes",
-    hasEssentialOils: false,
-    conditions: ["Acné"],
-    skinTypes: ["Grasse"],
-    timeOfDay: "evening",
-    image: "/placeholder.svg",
-    benefits: ["Exfoliant", "Purifiant", "Resserre les pores"]
   },
   {
     id: "lotion-aha",
@@ -197,7 +164,7 @@ export const traitements: Product[] = [
     conditions: ["Taches"],
     skinTypes: ["Normale", "Mixte"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/2906bb34-a1e5-4f4e-966c-15e134a52004.png",
     benefits: ["Exfoliant", "Éclaircissant", "Lisse le grain de peau"]
   },
   {
@@ -214,7 +181,7 @@ export const traitements: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Mixte"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/ea448995-d23c-40d0-9a1c-13385f150a26.png",
     benefits: ["Exfoliant", "Stimulant", "Illumine le teint"]
   }
 ];
