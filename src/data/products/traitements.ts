@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const traitements: Product[] = [
@@ -16,7 +15,7 @@ export const traitements: Product[] = [
     conditions: ["Aucune"],
     skinTypes: ["Normale", "Mixte", "Grasse"],
     timeOfDay: "evening",
-    image: "/lovable-uploads/05c98e37-9948-43df-86e1-b284f52c942e.png",
+    image: "/lovable-uploads/e458af3a-dd8f-4d3c-a598-42aa8218f5fc.png",
     benefits: [
       "2 en 1, gommage et masque",
       "Fraîcheur instantanée",
@@ -219,4 +218,3 @@ export const traitements: Product[] = [
     benefits: ["Exfoliant", "Stimulant", "Illumine le teint"]
   }
 ];
-
