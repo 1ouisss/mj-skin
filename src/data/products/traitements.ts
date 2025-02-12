@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const traitements: Product[] = [
@@ -6,23 +5,18 @@ export const traitements: Product[] = [
     id: "exfopur",
     name: "Exfopur",
     type: "Traitement",
-    url: "https://maisonjacynthe.ca/fr/exfoliant-naturel-exfopur",
-    description: "Pour recréer la microdermabrasion à la maison, découvrez notre formule Exfopur qui combine une action exfoliante pour prévenir les signes du vieillissement, une action oxygénante pour éliminer les peaux mortes, et une action purifiante pour fluidifier les sécrétions séborrhéiques. Une technique inédite qui permet de réduire progressivement les inesthétismes cutanés, redonnant à la peau jeunesse et fraîcheur.",
-    ingredients: "Kaolin (Argile blanche), Pumice stone (Roche volcanique), Aqua (Eau), Glyceryl stearate (Glycéryl de stéarate), Cetyl alcohol (Alcool cétylique), Hydrolyzed soy (Soya) protein, Panthenol (Panthénol), Rosmarinus officinalis (Romarin) CO2 extract, Hedera helix (Lierre) leaf extract, Rosmarinus officinalis (Romarin) oil, Lavandula angustifolia (Lavande vraie) oil, Eucalyptus radiata (Eucalyptus radiée) oil, Abies balsamea (Sapin baumier) oil, Mentha piperita (Menthe poivrée) oil",
+    url: "https://maisonjacynthe.ca/fr/exfopur",
+    description: "Pour recréer la microdermabrasion à la maison, découvrez notre formule Exfopur qui combine une action exfoliante pour prévenir les signes du vieillissement, une action oxygénante pour éliminer les peaux mortes, et une action purifiante pour fluidifier les sécrétions séborrhéiques.",
+    ingredients: "Kaolin (Argile blanche), Pumice stone (Roche volcanique), Aqua (Eau), Glyceryl stearate (Glycéryl de stéarate), Cetyl alcohol (Alcool cétylique), Rosmarinus officinalis (Romarin) CO2 extract",
     format: "50 g",
     texture: "Crémeuse",
     duration: "5-10 minutes",
-    hasEssentialOils: true,
-    conditions: ["Aucune"],
-    skinTypes: ["Normale", "Mixte", "Grasse"],
+    hasEssentialOils: false,
+    conditions: ["Acné"],
+    skinTypes: ["Grasse"],
     timeOfDay: "evening",
-    image: "/lovable-uploads/e458af3a-dd8f-4d3c-a598-42aa8218f5fc.png",
-    benefits: [
-      "2 en 1, gommage et masque",
-      "Fraîcheur instantanée",
-      "Éclaircissant & raffermissant",
-      "Anti-âge"
-    ]
+    image: "/lovable-uploads/4ec5a220-6a53-47be-afb2-cf60dbda9997.png",
+    benefits: ["Exfoliant", "Purifiant", "Anti-imperfections"]
   },
   {
     id: "rituel-facial-maison",

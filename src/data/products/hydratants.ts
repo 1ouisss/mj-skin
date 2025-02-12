@@ -1,4 +1,3 @@
-
 import { Product } from "../../types/skincare";
 
 export const hydratants: Product[] = [
@@ -110,6 +109,27 @@ export const hydratants: Product[] = [
       "Rafraîchit la peau",
       "Atténue efficacement les rougeurs"
     ]
+  },
+  {
+    id: "gel-aloes",
+    name: "Gel d'Aloès",
+    type: "Hydratant",
+    url: "https://maisonjacynthe.ca/fr/gel-aloes",
+    description: "Gel d'Aloès pur et naturel, apaisant et hydratant pour tous types de peau.",
+    ingredients: "Aloe barbadensis leaf juice, Xanthan gum",
+    format: "50 ml",
+    texture: "Légère",
+    duration: "< 5 minutes",
+    hasEssentialOils: false,
+    conditions: ["Aucune"],
+    skinTypes: ["Normale", "Mixte", "Grasse", "Sensible"],
+    timeOfDay: "both",
+    image: "/lovable-uploads/d3cc65ec-09ce-4800-9b36-a136ca9c5efa.png",
+    benefits: [
+      "Hydratant",
+      "Apaisant",
+      "Réparateur",
+      "Rafraîchissant"
+    ]
   }
 ];
-
