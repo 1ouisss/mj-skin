@@ -22,7 +22,8 @@ const PRODUCT_TYPE_ORDER = {
 const ESSENTIAL_PRODUCTS = [
   "huile-nettoyante",  // Huile Nettoyante
   "eau-neroli-enrichie", // Eau de Néroli Enrichie
-  "gel-aloes" // Ajout du Gel d'Aloès comme produit essentiel
+  "gel-aloes", // Gel d'Aloès
+  "exfopur" // Ajout d'Exfopur comme produit essentiel
 ];
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
