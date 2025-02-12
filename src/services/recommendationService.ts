@@ -21,6 +21,11 @@ const PRODUCT_TYPE_ORDER = {
   "Hydratant": 6
 };
 
+const ESSENTIAL_PRODUCTS = [
+  "huile-nettoyante",  // Huile Nettoyante
+  "eau-neroli-enrichie" // Eau de Néroli Enrichie
+];
+
 const calculateProductScore = (
   product: Product, 
   criteria: FilterCriteria,
@@ -31,6 +36,11 @@ const calculateProductScore = (
   // Vérification des huiles essentielles
   if (criteria.noEssentialOils && product.hasEssentialOils) {
     return 0;
+  }
+
+  // Bonus pour les produits essentiels
+  if (ESSENTIAL_PRODUCTS.includes(product.id)) {
+    score += 100; // Score très élevé pour s'assurer qu'ils sont toujours inclus
   }
 
   // Score pour le type de peau
@@ -66,18 +76,33 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   // Générer la routine personnalisée
   const customRoutine = generateRoutine(criteria.skinType, criteria.conditions);
   
-  // Obtenir tous les produits recommandés
+  // Obtenir tous les produits
   const allProducts = Object.values(skinProducts);
 
-  // Calculer les scores et trier les produits
-  const scoredProducts = allProducts.map(product => ({
-    product,
-    score: calculateProductScore(product, criteria, customRoutine),
-    type: product.type
-  }));
+  // D'abord, s'assurer que les produits essentiels sont inclus
+  const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
+    const product = allProducts.find(p => p.id === id);
+    if (product) {
+      // Ajouter "Essentiel" à la description pour ces produits
+      return {
+        ...product,
+        description: `${product.description} (Essentiel)`
+      };
+    }
+    return null;
+  }).filter((p): p is Product => p !== null);
+
+  // Calculer les scores pour les autres produits
+  const scoredProducts = allProducts
+    .filter(product => !ESSENTIAL_PRODUCTS.includes(product.id))
+    .map(product => ({
+      product,
+      score: calculateProductScore(product, criteria, customRoutine),
+      type: product.type
+    }));
 
   // Filtrer les produits avec un score > 0 et trier
-  return scoredProducts
+  const rankedProducts = scoredProducts
     .filter(sp => sp.score > 0)
     .sort((a, b) => {
       const typeOrderDiff = (PRODUCT_TYPE_ORDER[a.product.type] || 99) - (PRODUCT_TYPE_ORDER[b.product.type] || 99);
@@ -85,4 +110,10 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
       return b.score - a.score;
     })
     .map(sp => sp.product);
+
+  // Prendre les 6 meilleurs produits (8 au total avec les 2 essentiels)
+  const topProducts = rankedProducts.slice(0, 6);
+
+  // Combiner les produits essentiels avec les meilleurs produits
+  return [...essentialProducts, ...topProducts];
 };
