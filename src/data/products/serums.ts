@@ -1,3 +1,4 @@
+
 import { Product } from "../../types/skincare";
 
 export const serums: Product[] = [
@@ -130,7 +131,7 @@ export const serums: Product[] = [
     id: "serum-or",
     name: "Sérum Or",
     type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/serum-or",
+    url: "https://maisonjacynthe.ca/fr/serum-or-24-carats-anti-age",
     description: "Sérum anti-âge à l'or colloïdal",
     ingredients: "Colloidal gold, Hyaluronic acid",
     format: "30 ml",
@@ -140,7 +141,7 @@ export const serums: Product[] = [
     conditions: ["Rides"],
     skinTypes: ["Normale", "Terne"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/0b6b316a-8e69-4c8c-8dd6-c671ea025b6e.png",
     benefits: ["Lisse les rides", "Hydrate en profondeur", "Illumine le teint"]
   },
   {
