@@ -19,24 +19,28 @@ const PRODUCT_TYPE_ORDER = {
   "Hydratant": 6
 };
 
+// Liste mise à jour des produits essentiels avec commentaires explicatifs
 const ESSENTIAL_PRODUCTS = [
-  "huile-nettoyante",
-  "eau-neroli-enrichie",
-  "gel-aloes",
-  "exfopur"
+  "huile-nettoyante",    // Nettoyant de base
+  "eau-neroli-enrichie", // Tonique essentiel
+  "gel-aloes",           // Hydratant universel
+  "exfopur"             // Traitement exfoliant
 ];
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
+  console.log('Démarrage de la génération des recommandations...'); // Nouveau log
+  
   // Obtenir tous les produits disponibles
   const allProducts = Object.values(skinProducts);
   
-  // Récupérer d'abord tous les produits essentiels
+  // Récupérer d'abord tous les produits essentiels avec vérification stricte
   const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
     const product = allProducts.find(p => p.id === id);
     if (!product) {
-      console.error(`Produit essentiel introuvable : ${id}`);
+      console.error(`ERREUR: Produit essentiel introuvable : ${id}`);
       return null;
     }
+    console.log(`Produit essentiel trouvé : ${id}`); // Nouveau log
     return product;
   }).filter((p): p is Product => p !== null);
 
@@ -63,10 +67,21 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
       return (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99);
     });
 
-  // Logs pour debug
-  console.log('Produits essentiels trouvés:', essentialProducts.map(p => p.id));
-  console.log('Images des produits essentiels:', essentialProducts.map(p => p.image));
-  console.log('Produits de routine trouvés:', routineProducts.map(p => p.id));
+  // Logs détaillés pour le debugging
+  console.log('État des produits essentiels:', {
+    total: essentialProducts.length,
+    ids: essentialProducts.map(p => p.id),
+    images: essentialProducts.map(p => p.image)
+  });
+
+  // Vérification finale des produits essentiels
+  const missingEssentials = ESSENTIAL_PRODUCTS.filter(id => 
+    !essentialProducts.some(p => p.id === id)
+  );
+
+  if (missingEssentials.length > 0) {
+    console.error('ALERTE: Produits essentiels manquants:', missingEssentials);
+  }
 
   // Combiner les produits en donnant priorité aux essentiels
   const finalProducts = [
@@ -74,5 +89,6 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     ...routineProducts.slice(0, Math.max(0, 8 - essentialProducts.length))
   ];
 
+  console.log('Recommandations finales générées:', finalProducts.map(p => p.id));
   return finalProducts;
 };
