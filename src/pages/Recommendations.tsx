@@ -106,25 +106,13 @@ const Recommendations = () => {
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          <div className="p-4 space-y-3">
-                            <h3 className="font-medium text-lg text-gray-900">
+                          <div className="p-4">
+                            <h3 className="font-medium text-lg text-gray-900 mb-2">
                               {product.name}
                             </h3>
-                            <div className="space-y-2">
-                              <p className="text-sm text-gray-600 line-clamp-2">
-                                {product.description}
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {product.benefits.slice(0, 3).map((benefit) => (
-                                  <span
-                                    key={benefit}
-                                    className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600"
-                                  >
-                                    {benefit}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
+                            <p className="text-sm text-gray-600 line-clamp-2">
+                              {product.description}
+                            </p>
                           </div>
                         </CardContent>
                       </Card>
