@@ -33,46 +33,31 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   // Obtenir tous les produits
   const allProducts = Object.values(skinProducts);
 
-  // Vérifier si les produits essentiels existent
+  // Vérifier si les produits essentiels existent et les récupérer
   const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
     const product = allProducts.find(p => p.id === id);
     if (!product) {
-      console.warn(`Produit essentiel non trouvé : ${id}`);
+      console.error(`Produit essentiel non trouvé : ${id}`); // Changé en error pour plus de visibilité
       return null;
     }
-    return {
-      ...product,
-      description: `${product.description} (Essentiel)`
-    };
+    return product;
   }).filter((p): p is Product => p !== null);
 
   // Récupérer les produits mentionnés dans la routine
-  const routineProducts = new Set<string>();
+  const routineProductIds = new Set<string>();
   Object.values(customRoutine).forEach(step => {
     if (step && Array.isArray(step.products)) {
-      step.products.forEach(productId => {
-        // Vérifier si le produit existe avant de l'ajouter
-        const product = allProducts.find(p => p.id === productId);
-        if (product) {
-          routineProducts.add(productId);
-        } else {
-          console.warn(`Produit de routine non trouvé : ${productId}`);
-        }
-      });
+      step.products.forEach(productId => routineProductIds.add(productId));
     }
   });
 
-  // Obtenir les produits de la routine (en excluant les essentiels qui sont déjà inclus)
-  const routineProductsList = Array.from(routineProducts)
+  // Ajouter les produits essentiels à la routine s'ils n'y sont pas déjà
+  ESSENTIAL_PRODUCTS.forEach(id => routineProductIds.add(id));
+
+  // Obtenir les produits de routine (en excluant les essentiels déjà inclus)
+  const routineProducts = Array.from(routineProductIds)
     .filter(id => !ESSENTIAL_PRODUCTS.includes(id))
-    .map(id => {
-      const product = allProducts.find(p => p.id === id);
-      if (!product) {
-        console.warn(`Produit non trouvé lors de la création de la liste : ${id}`);
-        return null;
-      }
-      return product;
-    })
+    .map(id => allProducts.find(p => p.id === id))
     .filter((p): p is Product => p !== null)
     .sort((a, b) => {
       const typeOrderDiff = (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99);
@@ -80,26 +65,33 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
       return a.name.localeCompare(b.name);
     });
 
-  // Combiner tous les produits en s'assurant que les produits de la routine sont inclus
-  const allRecommendedProducts = [...essentialProducts, ...routineProductsList];
+  // S'assurer que nous avons tous les produits essentiels
+  const missingEssentials = ESSENTIAL_PRODUCTS.filter(id => 
+    !essentialProducts.some(p => p.id === id)
+  );
+  
+  if (missingEssentials.length > 0) {
+    console.error('Produits essentiels manquants:', missingEssentials);
+  }
 
-  // Limiter à 8 produits maximum tout en gardant les produits essentiels
-  const maxRoutineProducts = 8 - essentialProducts.length;
+  // Combiner les produits en donnant la priorité aux essentiels
   const finalProducts = [
     ...essentialProducts,
-    ...routineProductsList.slice(0, maxRoutineProducts)
+    ...routineProducts.slice(0, Math.max(0, 8 - essentialProducts.length))
   ];
 
-  // Log du nombre de produits
+  // Logs de debug
   console.log('Nombre de produits essentiels :', essentialProducts.length);
-  console.log('Nombre de produits de routine :', routineProductsList.length);
-  console.log('Produits essentiels :', essentialProducts.map(p => p.id));
-  console.log('Produits de routine :', routineProductsList.map(p => p.id));
+  console.log('Produits essentiels présents :', essentialProducts.map(p => p.id));
+  console.log('Nombre total de produits :', finalProducts.length);
+  console.log('IDs des produits finaux :', finalProducts.map(p => p.id));
 
-  // Vérification finale
-  if (finalProducts.some(p => !p || !p.image)) {
-    console.error('Produits invalides détectés :', finalProducts);
-  }
+  // Vérification finale de la présence des images
+  finalProducts.forEach(p => {
+    if (!p.image) {
+      console.error(`Image manquante pour le produit : ${p.id}`);
+    }
+  });
 
   return finalProducts;
 };
