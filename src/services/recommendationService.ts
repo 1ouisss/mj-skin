@@ -21,7 +21,8 @@ const PRODUCT_TYPE_ORDER = {
 
 const ESSENTIAL_PRODUCTS = [
   "huile-nettoyante",  // Huile Nettoyante
-  "eau-neroli-enrichie" // Eau de Néroli Enrichie
+  "eau-neroli-enrichie", // Eau de Néroli Enrichie
+  "gel-aloes" // Ajout du Gel d'Aloès comme produit essentiel
 ];
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
@@ -44,7 +45,7 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     };
   }).filter((p): p is Product => p !== null);
 
-  // Récupérer les produits de la routine
+  // Récupérer les produits mentionnés dans la routine
   const routineProducts = new Set<string>();
   Object.values(customRoutine).forEach(step => {
     if (step && Array.isArray(step.products)) {
@@ -78,17 +79,21 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
       return a.name.localeCompare(b.name);
     });
 
-  // Limiter à 6 produits de routine (pour avoir 8 au total avec les 2 essentiels)
-  const limitedRoutineProducts = routineProductsList.slice(0, 6);
+  // Combiner tous les produits en s'assurant que les produits de la routine sont inclus
+  const allRecommendedProducts = [...essentialProducts, ...routineProductsList];
+
+  // Limiter à 8 produits maximum tout en gardant les produits essentiels
+  const maxRoutineProducts = 8 - essentialProducts.length;
+  const finalProducts = [
+    ...essentialProducts,
+    ...routineProductsList.slice(0, maxRoutineProducts)
+  ];
 
   // Log du nombre de produits
   console.log('Nombre de produits essentiels :', essentialProducts.length);
-  console.log('Nombre de produits de routine :', limitedRoutineProducts.length);
+  console.log('Nombre de produits de routine :', routineProductsList.length);
   console.log('Produits essentiels :', essentialProducts.map(p => p.id));
-  console.log('Produits de routine :', limitedRoutineProducts.map(p => p.id));
-
-  // Combiner les produits essentiels avec les produits de la routine
-  const finalProducts = [...essentialProducts, ...limitedRoutineProducts];
+  console.log('Produits de routine :', routineProductsList.map(p => p.id));
 
   // Vérification finale
   if (finalProducts.some(p => !p || !p.image)) {
