@@ -2,8 +2,6 @@
 import { SkinType, SkinCondition, Product, TexturePreference } from "../types/skincare";
 import { generateRoutine } from "../data/skinRoutines";
 import { skinProducts } from "../data/products";
-import { skinTypeRecommendations } from "../data/skinTypes";
-import { conditionRecommendations } from "../data/conditions";
 
 interface FilterCriteria {
   skinType: SkinType;
@@ -26,52 +24,6 @@ const ESSENTIAL_PRODUCTS = [
   "eau-neroli-enrichie" // Eau de Néroli Enrichie
 ];
 
-const calculateProductScore = (
-  product: Product, 
-  criteria: FilterCriteria,
-  routine: ReturnType<typeof generateRoutine>
-): number => {
-  let score = 0;
-
-  // Vérification des huiles essentielles
-  if (criteria.noEssentialOils && product.hasEssentialOils) {
-    return 0;
-  }
-
-  // Bonus pour les produits essentiels
-  if (ESSENTIAL_PRODUCTS.includes(product.id)) {
-    score += 100; // Score très élevé pour s'assurer qu'ils sont toujours inclus
-  }
-
-  // Score pour le type de peau
-  if (product.skinTypes.includes(criteria.skinType)) {
-    score += 25;
-  }
-
-  // Score pour les conditions
-  const matchingConditions = criteria.conditions.filter(condition => 
-    product.conditions.includes(condition)
-  );
-  
-  if (matchingConditions.length > 0) {
-    score += (20 * (matchingConditions.length / criteria.conditions.length));
-  }
-
-  // Score pour la texture
-  if (criteria.textures?.includes(product.texture)) {
-    score += 15;
-  }
-
-  // Bonus si le produit est dans la routine recommandée
-  Object.values(routine).forEach(step => {
-    if (step && Array.isArray(step.products) && step.products.includes(product.id)) {
-      score += 30;
-    }
-  });
-
-  return score;
-};
-
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   // Générer la routine personnalisée
   const customRoutine = generateRoutine(criteria.skinType, criteria.conditions);
@@ -83,7 +35,6 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
     const product = allProducts.find(p => p.id === id);
     if (product) {
-      // Ajouter "Essentiel" à la description pour ces produits
       return {
         ...product,
         description: `${product.description} (Essentiel)`
@@ -92,28 +43,28 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     return null;
   }).filter((p): p is Product => p !== null);
 
-  // Calculer les scores pour les autres produits
-  const scoredProducts = allProducts
-    .filter(product => !ESSENTIAL_PRODUCTS.includes(product.id))
-    .map(product => ({
-      product,
-      score: calculateProductScore(product, criteria, customRoutine),
-      type: product.type
-    }));
+  // Récupérer les produits de la routine
+  const routineProducts = new Set<string>();
+  Object.values(customRoutine).forEach(step => {
+    if (step && Array.isArray(step.products)) {
+      step.products.forEach(productId => routineProducts.add(productId));
+    }
+  });
 
-  // Filtrer les produits avec un score > 0 et trier
-  const rankedProducts = scoredProducts
-    .filter(sp => sp.score > 0)
+  // Obtenir les produits de la routine (en excluant les essentiels qui sont déjà inclus)
+  const routineProductsList = Array.from(routineProducts)
+    .filter(id => !ESSENTIAL_PRODUCTS.includes(id))
+    .map(id => allProducts.find(p => p.id === id))
+    .filter((p): p is Product => p !== null)
     .sort((a, b) => {
-      const typeOrderDiff = (PRODUCT_TYPE_ORDER[a.product.type] || 99) - (PRODUCT_TYPE_ORDER[b.product.type] || 99);
+      const typeOrderDiff = (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99);
       if (typeOrderDiff !== 0) return typeOrderDiff;
-      return b.score - a.score;
-    })
-    .map(sp => sp.product);
+      return a.name.localeCompare(b.name);
+    });
 
-  // Prendre les 6 meilleurs produits (8 au total avec les 2 essentiels)
-  const topProducts = rankedProducts.slice(0, 6);
+  // Limiter à 6 produits de routine (pour avoir 8 au total avec les 2 essentiels)
+  const limitedRoutineProducts = routineProductsList.slice(0, 6);
 
-  // Combiner les produits essentiels avec les meilleurs produits
-  return [...essentialProducts, ...topProducts];
+  // Combiner les produits essentiels avec les produits de la routine
+  return [...essentialProducts, ...limitedRoutineProducts];
 };
