@@ -1,3 +1,4 @@
+
 import { Product } from "../../types/skincare";
 
 export const masques: Product[] = [
@@ -73,17 +74,17 @@ export const masques: Product[] = [
     id: "masque-miel-rose",
     name: "Masque Miel Rose de Bulgarie",
     type: "Masque",
-    url: "https://maisonjacynthe.ca/fr/masque-miel-rose",
-    description: "Masque apaisant au miel et à la rose de Bulgarie",
+    url: "https://maisonjacynthe.ca/fr/masque-miel-rose-de-bulgarie",
+    description: "Masque de miel liftant, tenseur et anti-âge à la rose de Bulgarie",
     ingredients: "Honey, Rosa damascena flower extract",
-    format: "50 ml",
+    format: "45 ml",
     texture: "Riche",
     duration: "> 10 minutes",
     hasEssentialOils: false,
-    conditions: ["Aucune"],
-    skinTypes: ["Sèche", "Sensible"],
+    conditions: ["Rides"],
+    skinTypes: ["Sèche", "Normale"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
-    benefits: ["Apaise", "Hydrate", "Adoucit"]
+    image: "/lovable-uploads/7cb1947b-bb7a-49e9-bff2-b420e70ad883.png",
+    benefits: ["Liftant", "Tenseur", "Anti-âge"]
   }
 ];
