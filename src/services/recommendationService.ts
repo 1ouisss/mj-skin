@@ -28,10 +28,20 @@ const ESSENTIAL_PRODUCTS = [
 ];
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
-  console.log('Démarrage de la génération des recommandations...'); // Nouveau log
+  console.log('Démarrage de la génération des recommandations...'); 
   
+  if (!criteria || !criteria.skinType) {
+    console.error('Critères invalides pour les recommandations');
+    return [];
+  }
+
   // Obtenir tous les produits disponibles
   const allProducts = Object.values(skinProducts);
+  
+  if (!allProducts || allProducts.length === 0) {
+    console.error('Aucun produit disponible');
+    return [];
+  }
   
   // Récupérer d'abord tous les produits essentiels avec vérification stricte
   const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
@@ -40,20 +50,22 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
       console.error(`ERREUR: Produit essentiel introuvable : ${id}`);
       return null;
     }
-    console.log(`Produit essentiel trouvé : ${id}`); // Nouveau log
+    console.log(`Produit essentiel trouvé : ${id}`);
     return product;
   }).filter((p): p is Product => p !== null);
 
   // Générer la routine personnalisée
-  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions);
+  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions || []);
 
   // Collecter les IDs des produits de la routine
   const routineProductIds = new Set<string>();
-  Object.values(customRoutine).forEach(step => {
-    if (step && Array.isArray(step.products)) {
-      step.products.forEach(id => routineProductIds.add(id));
-    }
-  });
+  if (customRoutine) {
+    Object.values(customRoutine).forEach(step => {
+      if (step && Array.isArray(step.products)) {
+        step.products.forEach(id => routineProductIds.add(id));
+      }
+    });
+  }
 
   // Ajouter automatiquement tous les produits essentiels
   ESSENTIAL_PRODUCTS.forEach(id => routineProductIds.add(id));
@@ -62,7 +74,7 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   const routineProducts = Array.from(routineProductIds)
     .filter(id => !ESSENTIAL_PRODUCTS.includes(id))
     .map(id => allProducts.find(p => p.id === id))
-    .filter((p): p is Product => p !== null)
+    .filter((p): p is Product => p !== null && p !== undefined) // Ajout de la vérification undefined
     .sort((a, b) => {
       return (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99);
     });
