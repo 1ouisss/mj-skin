@@ -165,7 +165,7 @@ export const serums: Product[] = [
     id: "elixir-myrrhe",
     name: "Élixir à la myrrhe",
     type: "Sérum",
-    url: "https://maisonjacynthe.ca/fr/elixir-myrrhe",
+    url: "https://maisonjacynthe.ca/fr/elixir-a-la-myrrhe",
     description: "Élixir régénérant à la myrrhe",
     ingredients: "Commiphora myrrha oil",
     format: "30 ml",
@@ -175,7 +175,7 @@ export const serums: Product[] = [
     conditions: ["Rides"],
     skinTypes: ["Sèche", "Normale"],
     timeOfDay: "evening",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/4b96f244-5ee6-4679-96b8-0b509b6d3cf7.png",
     benefits: ["Régénère la peau", "Anti-âge", "Nourrit intensément"]
   },
   {
