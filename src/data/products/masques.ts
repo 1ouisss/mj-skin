@@ -1,22 +1,23 @@
+
 import { Product } from "../../types/skincare";
 
 export const masques: Product[] = [
   {
     id: "karite-vanille-masque",
-    name: "Karité vanillé en masque de type collagène",
+    name: "Pour ma protection solaire - Karité vanillé & Oxyde de zinc",
     type: "Masque",
-    url: "https://maisonjacynthe.ca/fr/karite-vanille-masque",
-    description: "Masque nourrissant au karité et à la vanille",
-    ingredients: "Butyrospermum parkii butter, Vanilla planifolia extract",
-    format: "50 ml",
+    url: "https://maisonjacynthe.ca/fr/pour-ma-protection-solaire-karite-vanille-oxyde-de-zinc",
+    description: "Protection solaire naturelle au karité et à l'oxyde de zinc",
+    ingredients: "Butyrospermum parkii butter, Zinc oxide, Vanilla planifolia extract",
+    format: "50 g",
     texture: "Riche",
     duration: "> 10 minutes",
     hasEssentialOils: false,
     conditions: ["Aucune"],
-    skinTypes: ["Sèche"],
-    timeOfDay: "evening",
-    image: "/placeholder.svg",
-    benefits: ["Nourrit en profondeur", "Apaise la peau", "Effet collagène"]
+    skinTypes: ["Sèche", "Normale", "Sensible"],
+    timeOfDay: "both",
+    image: "/lovable-uploads/99333a92-7332-4386-810c-303c510dac4d.png",
+    benefits: ["Protection solaire naturelle", "Nourrit la peau", "Apaise"]
   },
   {
     id: "masque-eclaircissant",
