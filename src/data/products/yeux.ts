@@ -23,17 +23,17 @@ export const yeux: Product[] = [
     id: "soin-jeunesse-contour",
     name: "Soin jeunesse contour",
     type: "Traitement",
-    url: "https://maisonjacynthe.ca/fr/soin-jeunesse-contour",
+    url: "https://maisonjacynthe.ca/fr/soin-contour-jeunesse-yeux",
     description: "Soin anti-âge spécifique pour le contour des yeux",
     ingredients: "Anti-aging eye complex",
-    format: "15 ml",
+    format: "7,5 g",
     texture: "Légère",
     duration: "< 5 minutes",
     hasEssentialOils: false,
     conditions: ["Cernes", "Rides"],
     skinTypes: ["Normale", "Sèche"],
     timeOfDay: "both",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/3d5a223e-b8c1-42b2-9311-b605bb539492.png",
     benefits: ["Lisse les rides", "Atténue les cernes", "Effect tenseur"]
   }
 ];
