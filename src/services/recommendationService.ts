@@ -26,15 +26,20 @@ const ESSENTIAL_PRODUCTS = [
 ];
 
 const CONDITION_SPECIFIC_PRODUCTS = {
-  "Rougeurs": ["formule-apaisante"]
+  "Rougeurs": ["formule-apaisante"],
+  "Eczéma": ["formule-eczema", "baume-apaisant"],
+  "Acné": ["dermopur-acne", "exfopur"],
+  "Taches": ["claripro", "lotion-aha"]
 };
 
 const EXCLUDED_PRODUCTS = {
-  "Acnéique": ["huile-tamanu"]
+  "Acnéique": ["huile-tamanu"],
+  "Sensible": ["spice-scrub"]  // Éviter les produits trop agressifs pour les peaux sensibles
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   console.log('Démarrage de la génération des recommandations...'); 
+  console.log('Critères reçus:', { ...criteria });
   
   if (!criteria || !criteria.skinType) {
     console.error('Critères invalides pour les recommandations');
@@ -48,16 +53,17 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     return [];
   }
 
-  // Générer d'abord la routine personnalisée
+  // Générer la routine personnalisée
   const customRoutine = generateRoutine(criteria.skinType, criteria.conditions || []);
   
-  // Collecter tous les IDs de produits mentionnés dans la routine
+  // Collecter tous les IDs de produits
   const routineProductIds = new Set<string>();
+  
+  // 1. Ajouter les produits de la routine
   if (customRoutine) {
     Object.values(customRoutine).forEach(step => {
       if (step && Array.isArray(step.products)) {
         step.products.forEach(id => {
-          // Vérifier si le produit n'est pas exclu pour ce type de peau
           if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
             routineProductIds.add(id);
           }
@@ -66,14 +72,23 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     });
   }
   
-  // Ajouter les produits essentiels
-  ESSENTIAL_PRODUCTS.forEach(id => routineProductIds.add(id));
+  // 2. Ajouter les produits essentiels
+  ESSENTIAL_PRODUCTS.forEach(id => {
+    if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
+      routineProductIds.add(id);
+    }
+  });
   
-  // Ajouter les produits spécifiques aux conditions
+  // 3. Ajouter les produits spécifiques à chaque condition
   criteria.conditions.forEach(condition => {
     const specificProducts = CONDITION_SPECIFIC_PRODUCTS[condition];
     if (specificProducts) {
-      specificProducts.forEach(id => routineProductIds.add(id));
+      specificProducts.forEach(id => {
+        if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
+          routineProductIds.add(id);
+          console.log(`Ajout du produit spécifique ${id} pour la condition ${condition}`);
+        }
+      });
     }
   });
 
@@ -87,7 +102,7 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
       }
       return product;
     })
-    .filter((p): p is Product => p !== null && !EXCLUDED_PRODUCTS[criteria.skinType]?.includes(p.id))
+    .filter((p): p is Product => p !== null)
     .sort((a, b) => (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99));
 
   console.log('Recommandations finales générées:', finalProducts.map(p => p.id));
