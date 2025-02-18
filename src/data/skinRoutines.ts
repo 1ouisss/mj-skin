@@ -1,4 +1,3 @@
-
 import { SkinType, SkinCondition } from "../types/skincare";
 import { skinProducts } from "../data/products";
 
@@ -63,8 +62,8 @@ export const skinRoutines: {
     "Asphyxiée": {
       routine: {
         nettoyage: {
-          products: ["huile-abricot", "huile-jojoba", "huile-tamanu"],
-          instructions: "Utiliser une combinaison des huiles"
+          products: ["huile-nettoyante", "huile-abricot"],
+          instructions: "Utiliser l'huile nettoyante pour un premier nettoyage, puis l'huile d'abricot pour un second nettoyage si nécessaire"
         },
         eauFlorale: {
           products: ["eau-neroli", "eau-orange", "eau-helichryse"],
@@ -92,31 +91,31 @@ export const skinRoutines: {
       routine: {
         nettoyage: {
           products: ["huile-nettoyante"],
-          instructions: "Nettoyer avec l'Huile Nettoyante"
+          instructions: "Nettoyer délicatement avec l'Huile Nettoyante"
         }
       }
     },
     "Sensible": {
       routine: {
         nettoyage: {
-          products: ["creme-fraiche-nettoyante"],
-          instructions: "Nettoyer délicatement avec la Crème Fraîche"
+          products: ["huile-nettoyante", "creme-fraiche-nettoyante"],
+          instructions: "Commencer par l'huile nettoyante puis utiliser la Crème Fraîche Nettoyante"
         }
       }
     },
     "Très sensible": {
       routine: {
         nettoyage: {
-          products: ["eau-micellaire"],
-          instructions: "Nettoyer doucement avec l'Eau Micellaire"
+          products: ["huile-nettoyante", "eau-micellaire"],
+          instructions: "Au choix : utiliser l'huile nettoyante ou l'eau micellaire selon la sensibilité de la peau"
         }
       }
     },
     "Rougeurs": {
       routine: {
         nettoyage: {
-          products: ["eau-micellaire"],
-          instructions: "Nettoyer délicatement avec l'Eau Micellaire"
+          products: ["huile-nettoyante", "eau-micellaire"],
+          instructions: "Nettoyer délicatement avec l'huile nettoyante ou l'eau micellaire selon la sensibilité"
         }
       }
     },
@@ -124,7 +123,7 @@ export const skinRoutines: {
       routine: {
         nettoyage: {
           products: ["huile-nettoyante"],
-          instructions: "Nettoyer avec l'Huile Nettoyante"
+          instructions: "Nettoyer avec l'Huile Nettoyante en massage circulaire"
         }
       }
     },
@@ -132,23 +131,23 @@ export const skinRoutines: {
       routine: {
         nettoyage: {
           products: ["huile-nettoyante", "gel-aloes"],
-          instructions: "Combiner l'Huile Nettoyante et le Gel d'Aloès"
+          instructions: "Débuter avec l'Huile Nettoyante puis rafraîchir avec le Gel d'Aloès"
         }
       }
     },
     "Grasse": {
       routine: {
         nettoyage: {
-          products: ["huile-jojoba", "gel-aloes"],
-          instructions: "Utiliser l'Huile de Jojoba puis le Gel d'Aloès"
+          products: ["huile-nettoyante", "huile-jojoba"],
+          instructions: "Utiliser l'Huile Nettoyante ou l'Huile de Jojoba selon les besoins de la peau"
         }
       }
     },
     "Sèche": {
       routine: {
         nettoyage: {
-          products: ["creme-fraiche-nettoyante"],
-          instructions: "Nettoyer avec la Crème Fraîche"
+          products: ["huile-nettoyante", "creme-fraiche-nettoyante"],
+          instructions: "Commencer par l'huile nettoyante puis terminer avec la Crème Fraîche Nettoyante"
         }
       }
     },
@@ -156,7 +155,7 @@ export const skinRoutines: {
       routine: {
         nettoyage: {
           products: ["huile-nettoyante"],
-          instructions: "Nettoyer avec l'Huile Nettoyante"
+          instructions: "Nettoyer avec l'Huile Nettoyante en massage tonique pour stimuler l'éclat"
         }
       }
     }
@@ -166,7 +165,7 @@ export const skinRoutines: {
       ajustement: {
         nettoyageImbibition: {
           products: ["exfopur", "huile-nettoyante"],
-          instructions: "Appliquer Exfopur et l'Huile Nettoyante en masque"
+          instructions: "Utiliser l'huile nettoyante pour le démaquillage, puis appliquer Exfopur"
         }
       }
     },
@@ -266,7 +265,6 @@ export const generateRoutine = (skinType: SkinType, conditions: SkinCondition[])
     }
   });
 
-  // Vérifier que tous les produits mentionnés existent dans le catalogue
   Object.entries(finalRoutine).forEach(([stepName, step]) => {
     if (step && Array.isArray(step.products)) {
       const validProducts = step.products.filter(productId => {
