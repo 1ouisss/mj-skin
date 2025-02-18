@@ -9,6 +9,7 @@ interface FilterCriteria {
   textures?: TexturePreference[];
 }
 
+// Ordre logique des produits dans la routine
 const PRODUCT_TYPE_ORDER = {
   "Nettoyant": 1,
   "Tonique": 2,
@@ -18,93 +19,142 @@ const PRODUCT_TYPE_ORDER = {
   "Hydratant": 6
 };
 
-const ESSENTIAL_PRODUCTS = [
-  "huile-nettoyante",    // Nettoyant de base
-  "eau-neroli-enrichie", // Tonique essentiel
-  "gel-aloes",           // Hydratant universel
-  "exfopur"             // Traitement exfoliant
-];
-
-const CONDITION_SPECIFIC_PRODUCTS = {
-  "Rougeurs": ["formule-apaisante"],
-  "Eczéma": ["formule-eczema", "baume-apaisant"],
-  "Acné": ["dermopur-acne", "exfopur"],
-  "Taches": ["claripro", "lotion-aha"]
+// Produits essentiels par type de peau
+const ESSENTIAL_PRODUCTS = {
+  "default": [
+    "huile-nettoyante",    // Nettoyant de base universel
+    "eau-neroli-enrichie", // Tonique essentiel
+    "gel-aloes"            // Hydratant universel
+  ],
+  "Acnéique": [
+    "huile-nettoyante",    // Nettoyant adapté
+    "eau-neroli-enrichie", // Tonique apaisant
+    "gel-sebo",            // Hydratant spécifique
+    "exfopur"              // Traitement exfoliant
+  ],
+  "Sensible": [
+    "huile-nettoyante",    // Nettoyant doux
+    "eau-neroli-enrichie", // Tonique apaisant
+    "gel-apaisant"         // Hydratant calmant
+  ]
 };
 
+// Produits spécifiques par condition avec leurs descriptions
+const CONDITION_SPECIFIC_PRODUCTS = {
+  "Rougeurs": {
+    products: ["formule-apaisante", "eau-camomille"],
+    description: "Formules apaisantes pour calmer les rougeurs"
+  },
+  "Eczéma": {
+    products: ["formule-eczema", "baume-apaisant"],
+    description: "Soins spécifiques pour l'eczéma"
+  },
+  "Acné": {
+    products: ["dermopur-acne", "exfopur"],
+    description: "Traitement purifiant anti-acné"
+  },
+  "Taches": {
+    products: ["claripro", "lotion-aha"],
+    description: "Soins éclaircissants anti-taches"
+  },
+  "Déshydratation": {
+    products: ["hydrogel", "mousseline-kukui"],
+    description: "Soins ultra-hydratants"
+  }
+};
+
+// Produits exclus par type de peau
 const EXCLUDED_PRODUCTS = {
   "Acnéique": ["huile-tamanu"],
-  "Sensible": ["spice-scrub"]  // Éviter les produits trop agressifs pour les peaux sensibles
+  "Sensible": ["spice-scrub", "lotion-aha"]  // Éviter les produits agressifs
+};
+
+// Produits de remplacement pour les exclusions
+const REPLACEMENT_PRODUCTS = {
+  "Acnéique": {
+    "huile-tamanu": "huile-nettoyante" // Remplacer Tamanu par l'huile nettoyante
+  }
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
-  console.log('Démarrage de la génération des recommandations...'); 
-  console.log('Critères reçus:', { ...criteria });
-  
-  if (!criteria || !criteria.skinType) {
+  console.log('Démarrage de la génération des recommandations...', criteria); 
+
+  if (!criteria?.skinType) {
     console.error('Critères invalides pour les recommandations');
     return [];
   }
 
   const allProducts = Object.values(skinProducts);
-  
-  if (!allProducts || allProducts.length === 0) {
+  if (!allProducts?.length) {
     console.error('Aucun produit disponible');
     return [];
   }
 
-  // Générer la routine personnalisée
-  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions || []);
-  
-  // Collecter tous les IDs de produits
-  const routineProductIds = new Set<string>();
-  
-  // 1. Ajouter les produits de la routine
+  // Collecter les IDs de produits
+  const productIds = new Set<string>();
+
+  // 1. Ajouter les produits essentiels selon le type de peau
+  const essentialProducts = ESSENTIAL_PRODUCTS[criteria.skinType] || ESSENTIAL_PRODUCTS.default;
+  essentialProducts.forEach(id => productIds.add(id));
+
+  // 2. Ajouter les produits de la routine personnalisée
+  const customRoutine = generateRoutine(criteria.skinType, criteria.conditions);
   if (customRoutine) {
     Object.values(customRoutine).forEach(step => {
-      if (step && Array.isArray(step.products)) {
+      if (step?.products) {
         step.products.forEach(id => {
           if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
-            routineProductIds.add(id);
+            productIds.add(id);
+          } else {
+            // Si le produit est exclu, ajouter son remplaçant
+            const replacement = REPLACEMENT_PRODUCTS[criteria.skinType]?.[id];
+            if (replacement) {
+              productIds.add(replacement);
+              console.log(`Produit ${id} remplacé par ${replacement}`);
+            }
           }
         });
       }
     });
   }
-  
-  // 2. Ajouter les produits essentiels
-  ESSENTIAL_PRODUCTS.forEach(id => {
-    if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
-      routineProductIds.add(id);
-    }
-  });
-  
-  // 3. Ajouter les produits spécifiques à chaque condition
+
+  // 3. Ajouter les produits spécifiques pour chaque condition
   criteria.conditions.forEach(condition => {
-    const specificProducts = CONDITION_SPECIFIC_PRODUCTS[condition];
-    if (specificProducts) {
-      specificProducts.forEach(id => {
+    const conditionProducts = CONDITION_SPECIFIC_PRODUCTS[condition]?.products;
+    if (conditionProducts) {
+      conditionProducts.forEach(id => {
         if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
-          routineProductIds.add(id);
-          console.log(`Ajout du produit spécifique ${id} pour la condition ${condition}`);
+          productIds.add(id);
+          console.log(`Ajout du produit spécifique ${id} pour ${condition}`);
         }
       });
     }
   });
 
-  // Convertir les IDs en produits réels
-  const finalProducts = Array.from(routineProductIds)
+  // Convertir les IDs en produits et appliquer les filtres finaux
+  const finalProducts = Array.from(productIds)
     .map(id => {
       const product = allProducts.find(p => p.id === id);
       if (!product) {
-        console.error(`ERREUR: Produit non trouvé : ${id}`);
+        console.warn(`Produit non trouvé : ${id}`);
         return null;
       }
       return product;
     })
-    .filter((p): p is Product => p !== null)
-    .sort((a, b) => (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99));
+    .filter((p): p is Product => {
+      if (!p) return false;
+      // Vérifier la compatibilité avec le type de peau
+      if (!p.skinTypes.includes(criteria.skinType)) {
+        console.log(`Produit ${p.id} incompatible avec le type de peau ${criteria.skinType}`);
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      // Trier par type de produit selon l'ordre logique
+      return (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99);
+    });
 
-  console.log('Recommandations finales générées:', finalProducts.map(p => p.id));
+  console.log('Recommandations finales :', finalProducts.map(p => p.name));
   return finalProducts;
 };
