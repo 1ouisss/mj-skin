@@ -29,8 +29,18 @@ const CONDITION_SPECIFIC_PRODUCTS = {
   "Rougeurs": ["formule-apaisante"]
 };
 
+// Produits à exclure pour certains types de peau
+const EXCLUDED_PRODUCTS = {
+  "Acnéique": ["huile-tamanu"]
+};
+
 const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
   let score = 0;
+  
+  // Vérifier si le produit doit être exclu pour ce type de peau
+  if (EXCLUDED_PRODUCTS[criteria.skinType]?.includes(product.id)) {
+    return -1000; // Score très négatif pour exclure le produit
+  }
   
   if (product.skinTypes.includes(criteria.skinType)) {
     score += 2;
@@ -134,6 +144,7 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
 
   const routineProducts = scoredProducts
     .map(item => item.product)
+    .filter(product => item => item.score > -1000) // Exclure les produits avec un score très négatif
     .slice(0, Math.max(0, 8 - essentialProducts.length - conditionSpecificProducts.length));
 
   const finalProducts = [
