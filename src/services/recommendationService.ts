@@ -26,33 +26,38 @@ const ESSENTIAL_PRODUCTS = [
   "exfopur"             // Traitement exfoliant
 ];
 
-// Fonction pour calculer le score de pertinence d'un produit
+// Produits spéciaux pour certaines conditions
+const CONDITION_SPECIFIC_PRODUCTS = {
+  "Rougeurs": ["formule-apaisante"]
+};
+
 const calculateProductScore = (product: Product, criteria: FilterCriteria): number => {
   let score = 0;
   
-  // Points pour la compatibilité avec le type de peau
   if (product.skinTypes.includes(criteria.skinType)) {
     score += 2;
   }
   
-  // Points pour chaque condition traitée
   criteria.conditions.forEach(condition => {
     if (product.conditions.includes(condition)) {
       score += 3;
+      
+      // Bonus supplémentaire pour les produits spécifiques aux conditions
+      if (CONDITION_SPECIFIC_PRODUCTS[condition]?.includes(product.id)) {
+        score += 5; // Bonus important pour les produits spécifiquement recommandés
+      }
     }
   });
   
-  // Bonus pour les produits qui traitent plusieurs conditions simultanément
   if (criteria.conditions.length > 1) {
     const matchingConditions = product.conditions.filter(c => 
       criteria.conditions.includes(c)
     ).length;
     if (matchingConditions > 1) {
-      score += matchingConditions * 2; // Bonus supplémentaire pour chaque condition supplémentaire
+      score += matchingConditions * 2;
     }
   }
 
-  // Malus pour les huiles essentielles si l'utilisateur n'en veut pas
   if (criteria.noEssentialOils && product.hasEssentialOils) {
     score -= 5;
   }
@@ -68,7 +73,6 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     return [];
   }
 
-  // Obtenir tous les produits disponibles
   const allProducts = Object.values(skinProducts);
   
   if (!allProducts || allProducts.length === 0) {
@@ -87,10 +91,23 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     return product;
   }).filter((p): p is Product => p !== null);
 
+  // Ajouter les produits spécifiques aux conditions
+  const conditionSpecificIds = new Set<string>();
+  criteria.conditions.forEach(condition => {
+    const specificProducts = CONDITION_SPECIFIC_PRODUCTS[condition];
+    if (specificProducts) {
+      specificProducts.forEach(id => conditionSpecificIds.add(id));
+    }
+  });
+
+  // Récupérer les produits spécifiques aux conditions
+  const conditionSpecificProducts = Array.from(conditionSpecificIds)
+    .map(id => allProducts.find(p => p.id === id))
+    .filter((p): p is Product => p !== null);
+
   // Générer la routine personnalisée
   const customRoutine = generateRoutine(criteria.skinType, criteria.conditions || []);
 
-  // Collecter les IDs des produits de la routine et calculer leurs scores
   const routineProductIds = new Set<string>();
   if (customRoutine) {
     Object.values(customRoutine).forEach(step => {
@@ -100,12 +117,11 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     });
   }
 
-  // Ajouter les produits essentiels
   ESSENTIAL_PRODUCTS.forEach(id => routineProductIds.add(id));
+  conditionSpecificIds.forEach(id => routineProductIds.add(id));
 
-  // Obtenir les produits de routine avec leurs scores
   const scoredProducts = Array.from(routineProductIds)
-    .filter(id => !ESSENTIAL_PRODUCTS.includes(id))
+    .filter(id => !ESSENTIAL_PRODUCTS.includes(id) && !conditionSpecificIds.has(id))
     .map(id => {
       const product = allProducts.find(p => p.id === id);
       if (!product) return null;
@@ -116,28 +132,24 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     })
     .filter((item): item is { product: Product; score: number } => item !== null)
     .sort((a, b) => {
-      // D'abord trier par score
       const scoreDiff = b.score - a.score;
       if (scoreDiff !== 0) return scoreDiff;
-      // En cas d'égalité, utiliser l'ordre des types de produits
       return (PRODUCT_TYPE_ORDER[a.product.type] || 99) - (PRODUCT_TYPE_ORDER[b.product.type] || 99);
     });
 
-  // Logs pour le debugging
   console.log('Scores des produits:', scoredProducts.map(({ product, score }) => ({
     id: product.id,
     score,
     conditions: product.conditions
   })));
 
-  // Sélectionner les meilleurs produits
   const routineProducts = scoredProducts
     .map(item => item.product)
-    .slice(0, Math.max(0, 8 - essentialProducts.length));
+    .slice(0, Math.max(0, 8 - essentialProducts.length - conditionSpecificProducts.length));
 
-  // Combiner les produits en donnant priorité aux essentiels
   const finalProducts = [
     ...essentialProducts,
+    ...conditionSpecificProducts,
     ...routineProducts
   ];
 
