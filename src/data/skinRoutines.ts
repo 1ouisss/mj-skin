@@ -14,6 +14,7 @@ type SkinRoutine = {
   hydratation?: RoutineStep;
   nutrition?: RoutineStep;
   protection?: RoutineStep;
+  traitementSpecifique?: RoutineStep;
 };
 
 type SkinTypeRoutine = {
@@ -231,9 +232,9 @@ export const skinRoutines: {
     },
     "Cernes": {
       ajustement: {
-        protection: {
+        traitementSpecifique: {
           products: ["cocktail-contour"],
-          instructions: "Appliquer le Cocktail Contour"
+          instructions: "Appliquer le Cocktail Contour sur le contour des yeux"
         }
       }
     },
