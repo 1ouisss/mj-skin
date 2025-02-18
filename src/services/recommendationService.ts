@@ -56,7 +56,12 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
   if (customRoutine) {
     Object.values(customRoutine).forEach(step => {
       if (step && Array.isArray(step.products)) {
-        step.products.forEach(id => routineProductIds.add(id));
+        step.products.forEach(id => {
+          // Vérifier si le produit n'est pas exclu pour ce type de peau
+          if (!EXCLUDED_PRODUCTS[criteria.skinType]?.includes(id)) {
+            routineProductIds.add(id);
+          }
+        });
       }
     });
   }
@@ -85,7 +90,6 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     .filter((p): p is Product => p !== null && !EXCLUDED_PRODUCTS[criteria.skinType]?.includes(p.id))
     .sort((a, b) => (PRODUCT_TYPE_ORDER[a.type] || 99) - (PRODUCT_TYPE_ORDER[b.type] || 99));
 
-  // Filtrer les produits exclus pour ce type de peau
   console.log('Recommandations finales générées:', finalProducts.map(p => p.id));
   return finalProducts;
 };

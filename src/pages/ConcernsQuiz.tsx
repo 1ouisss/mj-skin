@@ -22,7 +22,7 @@ const ConcernsQuiz = () => {
       ? selectedConditions.filter(c => c !== condition && c !== "Aucune")
       : [...selectedConditions.filter(c => c !== "Aucune"), condition];
     
-    setSelectedConditions(newConditions);
+    setSelectedConditions(newConditions.length > 0 ? newConditions : ["Aucune"]);
   };
 
   const handleNext = () => {
