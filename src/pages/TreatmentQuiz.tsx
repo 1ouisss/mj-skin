@@ -13,7 +13,7 @@ const TreatmentQuiz = () => {
 
   const handleTextureSelect = (texture: TexturePreference) => {
     setSelectedTextures([texture]);
-    navigate("/fragrance-quiz");
+    navigate("/recommendations");
   };
 
   const textureOptions: { text: TexturePreference; icon: any; desc: string }[] = [

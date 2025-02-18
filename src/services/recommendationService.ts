@@ -7,7 +7,6 @@ interface FilterCriteria {
   skinType: SkinType;
   conditions: SkinCondition[];
   textures?: TexturePreference[];
-  noEssentialOils?: boolean;
 }
 
 const PRODUCT_TYPE_ORDER = {
@@ -26,7 +25,6 @@ const ESSENTIAL_PRODUCTS = [
   "exfopur"             // Traitement exfoliant
 ];
 
-// Produits spéciaux pour certaines conditions
 const CONDITION_SPECIFIC_PRODUCTS = {
   "Rougeurs": ["formule-apaisante"]
 };
@@ -42,9 +40,8 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     if (product.conditions.includes(condition)) {
       score += 3;
       
-      // Bonus supplémentaire pour les produits spécifiques aux conditions
       if (CONDITION_SPECIFIC_PRODUCTS[condition]?.includes(product.id)) {
-        score += 5; // Bonus important pour les produits spécifiquement recommandés
+        score += 5;
       }
     }
   });
@@ -56,10 +53,6 @@ const calculateProductScore = (product: Product, criteria: FilterCriteria): numb
     if (matchingConditions > 1) {
       score += matchingConditions * 2;
     }
-  }
-
-  if (criteria.noEssentialOils && product.hasEssentialOils) {
-    score -= 5;
   }
 
   return score;
@@ -80,7 +73,6 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     return [];
   }
   
-  // Récupérer les produits essentiels
   const essentialProducts = ESSENTIAL_PRODUCTS.map(id => {
     const product = allProducts.find(p => p.id === id);
     if (!product) {
@@ -91,7 +83,6 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     return product;
   }).filter((p): p is Product => p !== null);
 
-  // Ajouter les produits spécifiques aux conditions
   const conditionSpecificIds = new Set<string>();
   criteria.conditions.forEach(condition => {
     const specificProducts = CONDITION_SPECIFIC_PRODUCTS[condition];
@@ -100,12 +91,10 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     }
   });
 
-  // Récupérer les produits spécifiques aux conditions
   const conditionSpecificProducts = Array.from(conditionSpecificIds)
     .map(id => allProducts.find(p => p.id === id))
     .filter((p): p is Product => p !== null);
 
-  // Générer la routine personnalisée
   const customRoutine = generateRoutine(criteria.skinType, criteria.conditions || []);
 
   const routineProductIds = new Set<string>();

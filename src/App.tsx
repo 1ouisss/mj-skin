@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,7 +10,6 @@ import SkinTypeQuiz from "./pages/SkinTypeQuiz";
 import ConditionsQuiz from "./pages/ConditionsQuiz";
 import ConcernsQuiz from "./pages/ConcernsQuiz";
 import TreatmentQuiz from "./pages/TreatmentQuiz";
-import FragranceQuiz from "./pages/FragranceQuiz";
 import Recommendations from "./pages/Recommendations";
 
 const queryClient = new QueryClient();
@@ -27,7 +27,6 @@ const App = () => (
             <Route path="/conditions-quiz" element={<ConditionsQuiz />} />
             <Route path="/concerns-quiz" element={<ConcernsQuiz />} />
             <Route path="/treatment-quiz" element={<TreatmentQuiz />} />
-            <Route path="/fragrance-quiz" element={<FragranceQuiz />} />
             <Route path="/recommendations" element={<Recommendations />} />
           </Routes>
         </BrowserRouter>
