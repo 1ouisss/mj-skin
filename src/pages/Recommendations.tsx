@@ -139,9 +139,7 @@ const Recommendations = () => {
 
         <div className="text-center mt-12">
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Cette routine a été spécialement conçue pour votre type de peau{" "}
-            {selectedSkinType}. Pour des résultats optimaux, suivez l'ordre des
-            produits tel qu'indiqué.
+            Voici les formules pour répondre à vos besoins selon les allégations thérapeutiques homologuées.
           </p>
         </div>
       </motion.div>
