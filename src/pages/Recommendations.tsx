@@ -139,7 +139,7 @@ const Recommendations = () => {
 
         <div className="text-center mt-12">
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Voici les formules pour répondre à vos besoins selon les allégations thérapeutiques homologuées.
+            Ces recommandations sont basées sur votre profil. N'hésitez pas à nous contacter pour plus de conseils personnalisés.
           </p>
         </div>
       </motion.div>
