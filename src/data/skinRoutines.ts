@@ -1,3 +1,4 @@
+
 import { SkinType, SkinCondition } from "../types/skincare";
 import { skinProducts } from "../data/products";
 
@@ -214,9 +215,9 @@ export const skinRoutines: {
     },
     "Taches": {
       ajustement: {
-        nutrition: {
+        nettoyageImbibition: {
           products: ["claripro"],
-          instructions: "Appliquer Claripro"
+          instructions: "Appliquer Claripro en traitement spécifique"
         }
       }
     },
