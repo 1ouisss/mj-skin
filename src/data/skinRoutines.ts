@@ -1,5 +1,5 @@
-
 import { SkinType, SkinCondition } from "../types/skincare";
+import { skinProducts } from "../data/products";
 
 type RoutineStep = {
   products: string[];
@@ -261,6 +261,23 @@ export const generateRoutine = (skinType: SkinType, conditions: SkinCondition[])
         ...finalRoutine,
         ...adjustment
       };
+    }
+  });
+
+  // Vérifier que tous les produits mentionnés existent dans le catalogue
+  Object.entries(finalRoutine).forEach(([stepName, step]) => {
+    if (step && Array.isArray(step.products)) {
+      const validProducts = step.products.filter(productId => {
+        const exists = Object.values(skinProducts).some(p => p.id === productId);
+        if (!exists) {
+          console.error(`ERREUR: Produit manquant dans le catalogue: ${productId} pour l'étape ${stepName}`);
+        }
+        return exists;
+      });
+      if (step.products.length !== validProducts.length) {
+        console.warn(`ATTENTION: Certains produits ont été retirés de l'étape ${stepName} car ils n'existent pas dans le catalogue`);
+        step.products = validProducts;
+      }
     }
   });
 
