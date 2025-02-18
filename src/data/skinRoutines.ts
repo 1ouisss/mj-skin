@@ -42,8 +42,8 @@ export const skinRoutines: {
           instructions: "Choisir entre Néroli ou Rose"
         },
         nettoyageImbibition: {
-          products: ["exfopur"],
-          instructions: "Appliquer Exfopur avec l'eau florale"
+          products: ["exfopur", "dermopur-acne"],
+          instructions: "Appliquer Exfopur et Dermopur Acné comme traitement"
         },
         hydratation: {
           products: ["gel-sebo"],
@@ -196,8 +196,8 @@ export const skinRoutines: {
     "Acné": {
       ajustement: {
         nettoyageImbibition: {
-          products: ["exfopur"],
-          instructions: "Utiliser Exfopur comme traitement"
+          products: ["exfopur", "dermopur-acne"],
+          instructions: "Utiliser Exfopur et Dermopur Acné comme traitement"
         },
         nutrition: {
           products: ["huile-tamanu"],
