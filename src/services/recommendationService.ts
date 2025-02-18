@@ -1,4 +1,3 @@
-
 import { SkinType, SkinCondition, Product, TexturePreference } from "../types/skincare";
 import { generateRoutine } from "../data/skinRoutines";
 import { skinProducts } from "../data/products";
@@ -76,6 +75,14 @@ const REPLACEMENT_PRODUCTS = {
   }
 };
 
+// Mapping des textures alternatives acceptables
+const TEXTURE_ALTERNATIVES: Record<TexturePreference, TexturePreference[]> = {
+  "Légère": ["Légère", "Fluide"],
+  "Fluide": ["Fluide", "Légère"],
+  "Crémeuse": ["Crémeuse", "Riche"],
+  "Riche": ["Riche", "Crémeuse"]
+};
+
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
   console.log('Démarrage de la génération des recommandations...', criteria); 
 
@@ -143,11 +150,32 @@ export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] 
     })
     .filter((p): p is Product => {
       if (!p) return false;
+
       // Vérifier la compatibilité avec le type de peau
       if (!p.skinTypes.includes(criteria.skinType)) {
         console.log(`Produit ${p.id} incompatible avec le type de peau ${criteria.skinType}`);
         return false;
       }
+
+      // Filtrer par texture si spécifiée
+      if (criteria.textures?.length) {
+        const preferredTexture = criteria.textures[0];
+        const acceptableTextures = TEXTURE_ALTERNATIVES[preferredTexture] || [preferredTexture];
+        
+        if (!acceptableTextures.includes(p.texture)) {
+          console.log(`Produit ${p.id} exclu car texture ${p.texture} ne correspond pas à la préférence ${preferredTexture}`);
+          
+          // Exception pour les produits essentiels
+          if (ESSENTIAL_PRODUCTS[criteria.skinType]?.includes(p.id) || 
+              ESSENTIAL_PRODUCTS.default.includes(p.id)) {
+            console.log(`Produit ${p.id} conservé car essentiel malgré texture différente`);
+            return true;
+          }
+          
+          return false;
+        }
+      }
+
       return true;
     })
     .sort((a, b) => {
