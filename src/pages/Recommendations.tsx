@@ -13,6 +13,24 @@ import { useSkinType } from "@/contexts/SkinTypeContext";
 import { Product } from "@/types/skincare";
 import { generateRoutine } from "@/data/skinRoutines";
 
+// Définition des types pour la routine
+type RoutineStep = {
+  products: string[];
+  instructions?: string;
+};
+
+type RoutineTimeConfig = {
+  title: string;
+  timeOfDay: "morning" | "evening";
+  excludeSteps: string[];
+  modifySteps: {
+    [key: string]: {
+      addProducts: string[];
+      instructions: string;
+    };
+  };
+};
+
 const Recommendations = () => {
   const { selectedSkinType, selectedConditions } = useSkinType();
 
@@ -31,14 +49,13 @@ const Recommendations = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const routineTypes = [
+  const routineTypes: RoutineTimeConfig[] = [
     { 
       title: "Routine du Matin",
       timeOfDay: "morning",
-      excludeSteps: ["nutrition"], // Étapes à exclure le matin
+      excludeSteps: ["nutrition"],
       modifySteps: {
         protection: {
-          // Ajout de protection solaire le matin
           addProducts: ["karite-vanille"],
           instructions: "Terminer avec une protection solaire"
         }
@@ -47,37 +64,37 @@ const Recommendations = () => {
     { 
       title: "Routine du Soir", 
       timeOfDay: "evening",
-      excludeSteps: [], // Aucune exclusion le soir
+      excludeSteps: [],
       modifySteps: {
         nutrition: {
-          // Soins plus riches pour la nuit
           addProducts: ["serum-or", "mousseline-kukui"],
           instructions: "Appliquer des soins nourrissants pour la nuit"
         }
       }
     }
-  ] as const;
+  ];
 
-  const getRoutineForTimeOfDay = (routine: any, timeOfDay: "morning" | "evening") => {
+  const getRoutineForTimeOfDay = (
+    routine: Record<string, RoutineStep> | null,
+    timeOfDay: "morning" | "evening"
+  ): Record<string, RoutineStep> => {
     const routineConfig = routineTypes.find(r => r.timeOfDay === timeOfDay);
     if (!routine || !routineConfig) return {};
 
     const modifiedRoutine = { ...routine };
 
-    // Retirer les étapes exclues pour ce moment de la journée
     routineConfig.excludeSteps?.forEach(step => {
       delete modifiedRoutine[step];
     });
 
-    // Modifier les étapes selon la configuration
     Object.entries(routineConfig.modifySteps || {}).forEach(([step, config]) => {
       if (modifiedRoutine[step]) {
         modifiedRoutine[step] = {
           ...modifiedRoutine[step],
-          products: [...new Set([...modifiedRoutine[step].products, ...(config.addProducts || [])])],
+          products: [...new Set([...modifiedRoutine[step].products, ...config.addProducts])],
           instructions: config.instructions || modifiedRoutine[step].instructions
         };
-      } else if (config.addProducts) {
+      } else {
         modifiedRoutine[step] = {
           products: config.addProducts,
           instructions: config.instructions
