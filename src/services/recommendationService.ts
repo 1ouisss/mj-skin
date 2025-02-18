@@ -1,3 +1,4 @@
+
 import { SkinType, SkinCondition, Product, TexturePreference } from "../types/skincare";
 import { generateRoutine } from "../data/skinRoutines";
 import { skinProducts } from "../data/products";
@@ -80,7 +81,8 @@ const TEXTURE_ALTERNATIVES: Record<TexturePreference, TexturePreference[]> = {
   "Légère": ["Légère", "Fluide"],
   "Fluide": ["Fluide", "Légère"],
   "Crémeuse": ["Crémeuse", "Riche"],
-  "Riche": ["Riche", "Crémeuse"]
+  "Riche": ["Riche", "Crémeuse"],
+  "Huile légère": ["Huile légère", "Légère", "Fluide"]
 };
 
 export const getFilteredRecommendations = (criteria: FilterCriteria): Product[] => {
