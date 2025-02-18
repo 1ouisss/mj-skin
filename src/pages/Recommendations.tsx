@@ -32,9 +32,61 @@ const Recommendations = () => {
   }, []);
 
   const routineTypes = [
-    { title: "Routine du Matin", timeOfDay: "morning" },
-    { title: "Routine du Soir", timeOfDay: "evening" },
+    { 
+      title: "Routine du Matin",
+      timeOfDay: "morning",
+      excludeSteps: ["nutrition"], // Étapes à exclure le matin
+      modifySteps: {
+        protection: {
+          // Ajout de protection solaire le matin
+          addProducts: ["karite-vanille"],
+          instructions: "Terminer avec une protection solaire"
+        }
+      }
+    },
+    { 
+      title: "Routine du Soir", 
+      timeOfDay: "evening",
+      excludeSteps: [], // Aucune exclusion le soir
+      modifySteps: {
+        nutrition: {
+          // Soins plus riches pour la nuit
+          addProducts: ["serum-or", "mousseline-kukui"],
+          instructions: "Appliquer des soins nourrissants pour la nuit"
+        }
+      }
+    }
   ] as const;
+
+  const getRoutineForTimeOfDay = (routine: any, timeOfDay: "morning" | "evening") => {
+    const routineConfig = routineTypes.find(r => r.timeOfDay === timeOfDay);
+    if (!routine || !routineConfig) return {};
+
+    const modifiedRoutine = { ...routine };
+
+    // Retirer les étapes exclues pour ce moment de la journée
+    routineConfig.excludeSteps?.forEach(step => {
+      delete modifiedRoutine[step];
+    });
+
+    // Modifier les étapes selon la configuration
+    Object.entries(routineConfig.modifySteps || {}).forEach(([step, config]) => {
+      if (modifiedRoutine[step]) {
+        modifiedRoutine[step] = {
+          ...modifiedRoutine[step],
+          products: [...new Set([...modifiedRoutine[step].products, ...(config.addProducts || [])])],
+          instructions: config.instructions || modifiedRoutine[step].instructions
+        };
+      } else if (config.addProducts) {
+        modifiedRoutine[step] = {
+          products: config.addProducts,
+          instructions: config.instructions
+        };
+      }
+    });
+
+    return modifiedRoutine;
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] px-4 md:px-8 py-8 md:py-12">
@@ -54,29 +106,32 @@ const Recommendations = () => {
           </h2>
           {customRoutine && (
             <div className="space-y-8">
-              {routineTypes.map(({ title, timeOfDay }) => (
-                <div key={timeOfDay} className="space-y-4">
-                  <h3 className="text-xl font-medium text-gray-700">{title}</h3>
-                  <div className="space-y-3">
-                    {Object.entries(customRoutine).map(([step, details]) => {
-                      if (!details) return null;
-                      return (
-                        <div
-                          key={step}
-                          className="p-4 bg-gray-50 rounded-lg border border-gray-100"
-                        >
-                          <h4 className="font-medium text-gray-800 capitalize mb-2">
-                            {step.replace(/([A-Z])/g, " $1").trim()}
-                          </h4>
-                          <p className="text-gray-600 text-sm">
-                            {details.instructions}
-                          </p>
-                        </div>
-                      );
-                    })}
+              {routineTypes.map(({ title, timeOfDay }) => {
+                const routineForTime = getRoutineForTimeOfDay(customRoutine, timeOfDay);
+                return (
+                  <div key={timeOfDay} className="space-y-4">
+                    <h3 className="text-xl font-medium text-gray-700">{title}</h3>
+                    <div className="space-y-3">
+                      {Object.entries(routineForTime).map(([step, details]) => {
+                        if (!details) return null;
+                        return (
+                          <div
+                            key={step}
+                            className="p-4 bg-gray-50 rounded-lg border border-gray-100"
+                          >
+                            <h4 className="font-medium text-gray-800 capitalize mb-2">
+                              {step.replace(/([A-Z])/g, " $1").trim()}
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                              {details.instructions}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
